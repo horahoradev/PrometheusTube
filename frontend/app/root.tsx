@@ -100,7 +100,7 @@ export default function App() {
             )}
           </nav>
         </div>
-        <div 
+        <div
           className={
             navigation.state === "loading" ? "loading" : ""
           }
