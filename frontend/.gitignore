@@ -1,4 +1,6 @@
 node_modules
-build
+
 .cache
-public
+build
+public/build
+.env
