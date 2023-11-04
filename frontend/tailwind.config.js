@@ -1,13 +1,12 @@
 module.exports = {
-  content: ['./src/pages/**/*.{js,ts,jsx,tsx}', './src/components/**/*.{js,ts,jsx,tsx,mdx}'],
+  content: ['./app/**/*.{js,jsx,ts,tsx}'],
   theme: {
     fontFamily: {
-      sans: ['DM Sans', /* ... */,'sans-serif'],
-      serif: ['rotunda-variable', /* ... */, 'serif'],
+      sans: ['DM Sans','sans-serif'],
+      serif: ['rotunda-variable', 'serif'],
     },
     screens: {
       xs: '384px',
-      ...screens,
       '3xl': '2024px',
     },
     extend: {
@@ -26,6 +25,14 @@ module.exports = {
           md: '3rem',
           xl: '4rem',
         },
+      },
+      spacing: {
+        '1': '8px',
+        '2': '12px',
+        '3': '16px',
+        '4': '24px',
+        '5': '32px',
+        '6': '48px',
       },
       colors: {
         // primaries

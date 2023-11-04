@@ -13,10 +13,13 @@ import {
 } from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
 import appStylesHref from "./app.css";
+import stylesheet from "~/tailwind.css";
+
 import { json } from "@remix-run/node";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: appStylesHref },
+  { rel: "stylesheet", href: stylesheet },
 ];
 
 export const loader = async () => {

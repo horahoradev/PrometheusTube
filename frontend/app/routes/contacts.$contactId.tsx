@@ -31,7 +31,7 @@ export default function Contact() {
       </div>
 
       <div>
-        <h1>
+        <h1 className="font-sans">
           {contact.first || contact.last ? (
             <>
               {contact.first} {contact.last}
