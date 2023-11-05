@@ -35,6 +35,9 @@ module.exports = {
         6: "32px",
         7: "48px",
       },
+      width: {
+        128: "445px",
+      },
       colors: {
         // primaries
         "primary-blue-900": "#264A79",
@@ -116,5 +119,5 @@ module.exports = {
   variants: {
     extend: {},
   },
-  plugins: [require("@tailwindcss/typography")],
+  plugins: [require("@tailwindcss/typography", "tailwind-children")],
 };
