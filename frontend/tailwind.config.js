@@ -1,13 +1,13 @@
 module.exports = {
-  content: ['./app/**/*.{js,jsx,ts,tsx}'],
+  content: ["./app/**/*.{js,jsx,ts,tsx}"],
   theme: {
     fontFamily: {
-      sans: ['DM Sans','sans-serif'],
-      serif: ['rotunda-variable', 'serif'],
+      sans: ["DM Sans", "sans-serif"],
+      serif: ["rotunda-variable", "serif"],
     },
     screens: {
-      xs: '384px',
-      '3xl': '2024px',
+      xs: "384px",
+      "3xl": "2024px",
     },
     extend: {
       typography: (theme) => ({
@@ -21,18 +21,19 @@ module.exports = {
       }),
       container: {
         padding: {
-          DEFAULT: '2rem',
-          md: '3rem',
-          xl: '4rem',
+          DEFAULT: "2rem",
+          md: "3rem",
+          xl: "4rem",
         },
       },
       spacing: {
-        '1': '8px',
-        '2': '12px',
-        '3': '16px',
-        '4': '24px',
-        '5': '32px',
-        '6': '48px',
+        1: "4px",
+        2: "8px",
+        3: "12px",
+        4: "16px",
+        5: "24px",
+        6: "32px",
+        7: "48px",
       },
       colors: {
         // primaries
@@ -67,53 +68,53 @@ module.exports = {
         "white-50": "#ffffff",
       },
       breakpoints: {
-        xs: '384px',
+        xs: "384px",
       },
 
       gridTemplateColumns: {
-        '60/40': '6fr 4fr',
-        header: 'minmax(0, 1fr) auto minmax(0, 1fr)',
+        "60/40": "6fr 4fr",
+        header: "minmax(0, 1fr) auto minmax(0, 1fr)",
       },
 
       // When adding a font size, add classes for *all* breakpoints (i.e. -mobile, -xl) to reduce
       // cognitive load when using in app
       fontSize: {
-        'special-heading-1': ['90px'],
-        'special-heading-2': ['72px', '80px'],
-        'special-heading-3': ['44px', '50px'],
-        'special-heading-4': ['28px', '38px'],
+        "special-heading-1": ["90px"],
+        "special-heading-2": ["72px", "80px"],
+        "special-heading-3": ["44px", "50px"],
+        "special-heading-4": ["28px", "38px"],
 
-        'heading-1': ['56px', '66px'],
-        'heading-2': ['36px', '46px'],
-        'heading-3': ['24px', '34px'],
-        'heading-4': ['22px', '28px'],
-        'heading-5': ['18px', '24px'],
-        'heading-6': ['16px', '22px'],
+        "heading-1": ["56px", "66px"],
+        "heading-2": ["36px", "46px"],
+        "heading-3": ["24px", "34px"],
+        "heading-4": ["22px", "28px"],
+        "heading-5": ["18px", "24px"],
+        "heading-6": ["16px", "22px"],
 
-        'body-large': ['22px', '36px'],
-        'body-medium': ['18px', '30px'],
-        'body-small': ['16px', '28px'],
-        'body-tiny': ['12px', '24px'],
+        "body-large": ["22px", "36px"],
+        "body-medium": ["18px", "30px"],
+        "body-small": ["16px", "28px"],
+        "body-tiny": ["12px", "24px"],
 
-        'text-single-400': ['22px'],
-        'text-single-300': ['20px'],
-        'text-single-200': ['18px'],
-        'text-single-100': ['16px'],
+        "text-single-400": ["22px"],
+        "text-single-300": ["20px"],
+        "text-single-200": ["18px"],
+        "text-single-100": ["16px"],
 
-        'text-single-upper-400': ['24px', '26px'],
-        'text-single-upper-300': ['20px', '22px'],
-        'text-single-upper-200': ['18px', '20px'],
-        'text-single-upper-100': ['16px', '18px'],
+        "text-single-upper-400": ["24px", "26px"],
+        "text-single-upper-300": ["20px", "22px"],
+        "text-single-upper-200": ["18px", "20px"],
+        "text-single-upper-100": ["16px", "18px"],
 
-        'text-bold': ['18px', '30px'],
-        'text-link': ['18px', '30px'],
-        'text-bullet': ['18px', '30px'],
-        'text-numbered': ['18px', '30px'],
-      }
+        "text-bold": ["18px", "30px"],
+        "text-link": ["18px", "30px"],
+        "text-bullet": ["18px", "30px"],
+        "text-numbered": ["18px", "30px"],
+      },
     },
   },
   variants: {
     extend: {},
   },
-  plugins: [require('@tailwindcss/typography'), require('@tailwindcss/line-clamp')],
+  plugins: [require("@tailwindcss/typography")],
 };

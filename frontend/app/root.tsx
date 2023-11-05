@@ -9,16 +9,16 @@ import {
   Link,
   ScrollRestoration,
   useNavigation,
-  useLoaderData
+  useLoaderData,
 } from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
-import appStylesHref from "./app.css";
+
 import stylesheet from "~/tailwind.css";
+import { Navbar } from "app/components/navbar";
 
 import { json } from "@remix-run/node";
 
 export const links: LinksFunction = () => [
-  { rel: "stylesheet", href: appStylesHref },
   { rel: "stylesheet", href: stylesheet },
 ];
 
@@ -47,67 +47,10 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <div id="sidebar">
-          <h1>Remix Contacts</h1>
-          <div>
-            <Form id="search-form" role="search">
-              <input
-                id="q"
-                aria-label="Search contacts"
-                placeholder="Search"
-                type="search"
-                name="q"
-              />
-              <div id="search-spinner" aria-hidden hidden={true} />
-            </Form>
-            <Form method="post">
-              <button type="submit">New</button>
-            </Form>
-          </div>
-          <nav>
-          {contacts.length ? (
-              <ul>
-                {contacts.map((contact) => (
-                  <li key={contact.id}>
-                  <NavLink
-                  className={({ isActive, isPending }) =>
-                    isActive
-                      ? "active"
-                      : isPending
-                      ? "pending"
-                      : ""
-                  }
-                  to={`contacts/${contact.id}`}
-                >
-                        {contact.first || contact.last ? (
-                        <>
-                          {contact.first} {contact.last}
-                        </>
-                      ) : (
-                        <i>No Name</i>
-                      )}{" "}
-                      {contact.favorite ? (
-                        <span>★</span>
-                      ) : null}
-                  </NavLink>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p>
-                <i>No contacts</i>
-              </p>
-            )}
-          </nav>
+        <Navbar></Navbar>
+        <div className="bg-white-200 h-screen">
+          <Outlet></Outlet>
         </div>
-        <div
-          className={
-            navigation.state === "loading" ? "loading" : ""
-          }
-        id="detail">
-          <Outlet />
-        </div>
-
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
