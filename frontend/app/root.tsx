@@ -12,6 +12,7 @@ import {
   useLoaderData,
 } from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 
 import stylesheet from "~/tailwind.css";
 import { Navbar } from "app/components/navbar";
@@ -37,25 +38,34 @@ export const action = async () => {
 export default function App() {
   const { contacts } = useLoaderData<typeof loader>();
   const navigation = useNavigation();
+  const theme = createTheme({
+    palette: {
+      secondary: {
+        main: "#f6869c",
+      },
+    },
+  });
 
   return (
-    <html lang="en">
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <Meta />
-        <Links />
-      </head>
-      {/* LOL NO!! FIXME w-full */}
-      <body className="overflow-x-hidden">
-        <Navbar></Navbar>
-        <div className="bg-white-200 h-screen">
-          <Outlet></Outlet>
-        </div>
-        <ScrollRestoration />
-        <Scripts />
-        <LiveReload />
-      </body>
-    </html>
+    <ThemeProvider theme={theme}>
+      <html lang="en">
+        <head>
+          <meta charSet="utf-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <Meta />
+          <Links />
+        </head>
+        {/* LOL NO!! FIXME w-full */}
+        <body className="overflow-x-hidden">
+          <Navbar></Navbar>
+          <div className="bg-white-200 h-screen">
+            <Outlet></Outlet>
+          </div>
+          <ScrollRestoration />
+          <Scripts />
+          <LiveReload />
+        </body>
+      </html>
+    </ThemeProvider>
   );
 }

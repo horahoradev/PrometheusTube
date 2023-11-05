@@ -4,7 +4,7 @@ import Avatar from "@mui/material/Avatar";
 
 export function Navbar() {
   return (
-    <div className="grid grid-cols-8 w-screen py-2 px-5">
+    <div className="grid grid-cols-8 w-screen py-2 px-6">
       <div className="col-start-1 pt-1">
         <NavLink className="text-cherry-red-100 font-bold" to="/">
           PrometheusTube

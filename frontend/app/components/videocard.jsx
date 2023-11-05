@@ -14,7 +14,7 @@ export default function VideocardList() {
   const matches = useMediaQuery(theme.breakpoints.down("lg"));
 
   return (
-    <ImageList className="mx-5 overflow-visible" cols={6} gap={16}>
+    <ImageList className="mt-3 overflow-visible" cols={6} gap={16}>
       {itemData.map((item) => (
         <ImageListItem key={item.img}>
           <img
