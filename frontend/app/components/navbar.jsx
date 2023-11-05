@@ -7,7 +7,7 @@ export function Navbar() {
     <div className="grid grid-cols-8 w-screen py-2 px-6">
       <div className="col-start-1 pt-1">
         <NavLink className="text-cherry-red-100 font-bold" to="/">
-          PrometheusTube
+          PROMETHEUSTUBE
         </NavLink>
       </div>
       <div className="col-start-4 col-end-6">

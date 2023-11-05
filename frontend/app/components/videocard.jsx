@@ -18,6 +18,7 @@ export default function VideocardList() {
       {itemData.map((item) => (
         <ImageListItem key={item.img}>
           <img
+            className="rounded-lg"
             srcSet={`${item.img}`}
             src={`${item.img}`}
             alt={item.title}
