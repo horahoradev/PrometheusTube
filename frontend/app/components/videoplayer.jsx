@@ -1,11 +1,13 @@
 import React, { Suspense } from "react";
 import videojs from "video.js";
 import "video.js/dist/video-js.css";
-
+import Avatar from "@mui/material/Avatar";
+import { HandThumbUpIcon, EyeIcon } from "@heroicons/react/24/outline";
+import { Chip } from "@mui/material";
 export const VideoPlayer = (props) => {
   const videoRef = React.useRef(null);
   const playerRef = React.useRef(null);
-  const { options, onReady } = props;
+  const { options, onReady, videoID } = props;
 
   React.useEffect(() => {
     // Make sure Video.js player is only initialized once
@@ -49,6 +51,34 @@ export const VideoPlayer = (props) => {
       <Suspense>
         <div ref={videoRef} />
       </Suspense>
+      {/* video controls */}
+      <div className="bg-white-300">
+        <span className="text-heading-3">Video Title</span>
+        <br></br>
+        <div className="inline-block mt-3">
+          <div className="float-left inline-block">
+            <Avatar sx={{ width: 40, height: 40 }}>N</Avatar>
+          </div>
+          {/* whatever nerd... (FIXME) */}
+          <div className="inline-block align-middle my-1 ml-1">
+            <div className="text-white-900 font-bold leading-3">Cocanut</div>
+            {/* <br></br> */}
+            <div className="text-white-800">967k followers</div>
+          </div>
+          <span className="ml-3 align-top">
+            <Chip label="Follow" color="secondary" variant="outlined" />
+          </span>
+        </div>
+        <br></br>
+        <span className="align-center inline-block mt-3">
+          <HandThumbUpIcon className="w-4 inline-block relative align-middle" />
+          <span className="align-middle ml-1">0</span>
+          <EyeIcon className="ml-4 w-4 inline-block relative align-middle" />
+          <span className="align-middle ml-1">0</span>
+          <span className="ml-4">Anime</span>
+          <span className="ml-4">Uploaded 05/12/23</span>
+        </span>
+      </div>
     </div>
   );
 };
