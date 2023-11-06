@@ -40,9 +40,13 @@ export default function Video() {
   };
 
   return (
-    <div className="px-6 w-full h-screen">
-      <VideoPlayer options={videoJsOptions} onReady={handlePlayerReady} />
-      <RecommendationsList></RecommendationsList>
+    <div className="px-6 w-full h-screen inline-block flex justify-between">
+      <div className="w-[calc(100%-20rem)] mt-3 float-left">
+        <VideoPlayer options={videoJsOptions} onReady={handlePlayerReady} />
+      </div>
+      <div className="inline-block relative float-left">
+        <RecommendationsList></RecommendationsList>
+      </div>
     </div>
   );
 }

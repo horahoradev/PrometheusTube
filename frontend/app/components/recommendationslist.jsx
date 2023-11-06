@@ -1,5 +1,9 @@
 import { NavLink } from "@remix-run/react";
-import { HandThumbUpIcon, EyeIcon } from "@heroicons/react/24/outline";
+import {
+  HandThumbUpIcon,
+  EyeIcon,
+  PlusIcon,
+} from "@heroicons/react/24/outline";
 import Avatar from "@mui/material/Avatar";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
@@ -14,33 +18,40 @@ export default function RecommendationsList() {
   const matches = useMediaQuery(theme.breakpoints.down("lg"));
 
   return (
-    <ImageList className="mt-3 overflow-visible w-24" cols={1} gap={8}>
-      {itemData.map((item) => (
-        <span>
-          <ImageListItem key={item.img}>
-            <img
-              className="rounded-lg"
-              srcSet={`${item.img}`}
-              src={`${item.img}`}
-              alt={item.title}
-              loading="lazy"
-            />
-          </ImageListItem>
+    <div className="mt-2">
+      <PlusIcon className="text-cherry-red-200 w-5 relative inline-block align-bottom"></PlusIcon>
+      <b className="text-cherry-red-200 align-bottom ml-1">Recommendations</b>
+      <hr className="border-cherry-red-200"></hr>
+      <ImageList className="overflow-visible mt-2" cols={1} gap={8}>
+        {itemData.map((item) => (
           <span>
-            <div className="font-semibold font-sans">{item.title}</div>
-            <div className="mt-1 text-white-800 font-sans font-medium">
-              {item.author}
+            <div className="inline-block relative float-left w-36">
+              <ImageListItem key={item.img}>
+                <img
+                  className="rounded-lg"
+                  srcSet={`${item.img}`}
+                  src={`${item.img}`}
+                  alt={item.title}
+                  loading="lazy"
+                />
+              </ImageListItem>
             </div>
-            <div className="mt-1 font-sans text-white-700">
-              <HandThumbUpIcon className="w-4 inline-block relative align-middle" />
-              <span className="align-middle ml-1">0</span>
-              <EyeIcon className="ml-2 w-4 inline-block relative align-middle" />
-              <span className="align-middle ml-1">0</span>
+            <div className="inline-block relative ml-2">
+              <div className="font-semibold font-sans">{item.title}</div>
+              <div className="mt-2 text-white-800 font-sans font-medium">
+                {item.author}
+              </div>
+              <div className="mt-2 font-sans text-white-700">
+                <HandThumbUpIcon className="w-4 inline-block relative align-middle" />
+                <span className="align-middle ml-1">0</span>
+                <EyeIcon className="ml-2 w-4 inline-block relative align-middle" />
+                <span className="align-middle ml-1">0</span>
+              </div>
             </div>
           </span>
-        </span>
-      ))}
-    </ImageList>
+        ))}
+      </ImageList>
+    </div>
   );
 }
 
