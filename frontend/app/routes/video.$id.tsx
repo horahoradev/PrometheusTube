@@ -1,6 +1,7 @@
 import VideocardList from "app/components/videocard";
 import Categories from "app/components/categories";
 import Pages from "app/components/pagination";
+import RecommendationsList from "app/components/recommendationslist";
 
 import { Suspense } from "react";
 import * as React from "react";
@@ -40,9 +41,8 @@ export default function Video() {
 
   return (
     <div className="px-6 w-full h-screen">
-      <Suspense>
-        <VideoPlayer options={videoJsOptions} onReady={handlePlayerReady} />
-      </Suspense>
+      <VideoPlayer options={videoJsOptions} onReady={handlePlayerReady} />
+      <RecommendationsList></RecommendationsList>
     </div>
   );
 }
