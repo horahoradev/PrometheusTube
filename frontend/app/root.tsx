@@ -13,6 +13,7 @@ import {
 } from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
+import videojs from "video.js/dist/video-js.css";
 
 import stylesheet from "~/tailwind.css";
 import { Navbar } from "app/components/navbar";
@@ -21,6 +22,7 @@ import { json } from "@remix-run/node";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
+  { rel: "stylesheet", href: videojs },
 ];
 
 export const loader = async () => {
