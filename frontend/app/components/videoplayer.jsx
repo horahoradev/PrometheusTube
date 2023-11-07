@@ -3,7 +3,7 @@ import videojs from "video.js";
 import "video.js/dist/video-js.css";
 import Avatar from "@mui/material/Avatar";
 import { HandThumbUpIcon, EyeIcon } from "@heroicons/react/24/outline";
-import { Chip } from "@mui/material";
+import Comments from "app/components/comments";
 import { NavLink } from "@remix-run/react";
 export const VideoPlayer = (props) => {
   const videoRef = React.useRef(null);
@@ -97,6 +97,7 @@ export const VideoPlayer = (props) => {
           </NavLink>
         </div>
       </div>
+      <Comments></Comments>
     </div>
   );
 };
