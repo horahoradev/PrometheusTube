@@ -2,6 +2,8 @@ import { NavLink } from "@remix-run/react";
 import { BellAlertIcon } from "@heroicons/react/24/outline";
 import Avatar from "@mui/material/Avatar";
 import Login from "app/components/login";
+import Register from "app/components/register";
+
 import Modal from "@mui/material/Modal";
 import React from "react";
 
@@ -41,7 +43,7 @@ export function Navbar() {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Login></Login>
+        <Register></Register>
       </Modal>
     </div>
   );

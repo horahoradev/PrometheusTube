@@ -17,7 +17,7 @@ const style = {
   p: 3,
 };
 
-export default function Login() {
+export default function Register() {
   return (
     <Box
       className="rounded-lg"
@@ -26,7 +26,7 @@ export default function Login() {
       noValidate
       autoComplete="off"
     >
-      <div className="text-heading-3 flex justify-around">Welcome back!</div>
+      <div className="text-heading-3 flex justify-around">Register</div>
       <div className="mt-4">
         <TextField
           className="w-full"
@@ -41,22 +41,23 @@ export default function Login() {
           className="w-full"
           required
           id="outlined-required"
+          label="Email"
+          size="small"
+        />
+      </div>
+      <div className="mt-4">
+        <TextField
+          className="w-full"
+          required
+          id="outlined-required"
           label="Password"
           size="small"
         />
       </div>
-      <div className="flex justify-between items-center my-2 mx-0">
+      <div className="flex justify-around items-center my-2 mx-0">
         <span>
-          <Checkbox defaultChecked className="!ml-0 !pl-0" />
-          Remember me
-        </span>
-        <span>
-          <NavLink
-            to="/forgot-password"
-            className="text-single-100 underline text-primary-blue-400"
-          >
-            Forgot password
-          </NavLink>
+          Already have an account?
+          <a className="underline text-primary-blue-400 ml-1">Log in</a>
         </span>
       </div>
       <div>
