@@ -69,6 +69,8 @@ module.exports = {
         "white-200": "#f5f5f5",
         "white-100": "#fafafa",
         "white-50": "#ffffff",
+
+        "system-blue-200": "#c6d2fd",
       },
       breakpoints: {
         xs: "384px",
