@@ -14,11 +14,11 @@ export default function VideocardList() {
   const matches = useMediaQuery(theme.breakpoints.down("lg"));
 
   return (
-    <ImageList className="mt-3 overflow-visible" cols={6} gap={16}>
+    <ImageList className="mt-3 overflow-visible" cols={4} gap={4}>
       {itemData.map((item) => (
         <ImageListItem key={item.img}>
           <img
-            className="rounded-lg"
+            className="rounded-lg !w-128 !h-64"
             srcSet={`${item.img}`}
             src={`${item.img}`}
             alt={item.title}
@@ -27,16 +27,22 @@ export default function VideocardList() {
           <ImageListItemBar
             subtitle={
               <span>
-                <div className="font-semibold font-sans">{item.title}</div>
-                <div className="mt-1 text-white-800 font-sans font-medium">
-                  {item.author}
+                <NavLink to={"/video/" + item.id}>
+                  <div className="font-semibold text-white-900 text-text-single-400">
+                    {item.title}
+                  </div>
+                </NavLink>
+                <div className="mt-1 text-white-800 text-text-single-400 font-medium">
+                  <NavLink to="/profile/1">{item.author}</NavLink>
                 </div>
-                <div className="mt-1 font-sans text-white-700">
-                  <HandThumbUpIcon className="w-4 inline-block relative align-middle" />
-                  <span className="align-middle ml-1">0</span>
-                  <EyeIcon className="ml-2 w-4 inline-block relative align-middle" />
-                  <span className="align-middle ml-1">0</span>
-                </div>
+                <NavLink to={"/video/" + item.id}>
+                  <div className="mt-1 text-white-700 text-text-single-upper-200">
+                    <HandThumbUpIcon className="w-5 inline-block relative align-middle" />
+                    <span className="align-middle ml-1">0</span>
+                    <EyeIcon className="ml-2 w-5 inline-block relative align-middle" />
+                    <span className="align-middle ml-1">0</span>
+                  </div>
+                </NavLink>
               </span>
             }
             position="below"

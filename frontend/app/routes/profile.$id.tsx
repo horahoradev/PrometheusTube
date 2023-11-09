@@ -8,7 +8,7 @@ export default function Profile() {
   return (
     <div className="px-6 w-full h-screen">
       <div className="flex justify-center">
-        <div>
+        <div className="mt-4">
           <Avatar sx={{ width: 240, height: 240 }}>N</Avatar>
           <div className=" text-center text-special-heading-3">Cocanut</div>
           <div className="text-single-200 text-center">967k followers</div>

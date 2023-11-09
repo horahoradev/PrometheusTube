@@ -57,21 +57,22 @@ export const VideoPlayer = (props) => {
         <span className="text-special-heading-4">Video Title</span>
         <br></br>
         <div className="inline-block mt-3">
-          <div className="float-left inline-block">
-            <Avatar sx={{ width: 60, height: 60 }}>N</Avatar>
-          </div>
-          {/* whatever nerd... (FIXME) */}
-          <div className="inline-block align-middle my-3 ml-1">
-            <div className="text-white-900 font-bold leading-3 text-text-single-400">
-              Cocanut
+          <NavLink to={"/profile/1"}>
+            <div className="float-left inline-block">
+              <Avatar sx={{ width: 60, height: 60 }}>N</Avatar>
             </div>
-            {/* <br></br> */}
-            <div className="text-white-800 text-text-single-200">
-              967k followers
+            {/* whatever nerd... (FIXME) */}
+            <div className="inline-block align-middle my-3 ml-1">
+              <div className="text-white-900 font-bold leading-3 text-text-single-400">
+                Cocanut
+              </div>
+              <div className="text-white-800 text-text-single-200">
+                967k followers
+              </div>
             </div>
-          </div>
+          </NavLink>
           <span className="ml-3 align-top">
-            <button className="rounded-full p-3 border-cherry-red-200 text-cherry-red-200  border-2	">
+            <button className="rounded-full p-3 border-cherry-red-200 text-cherry-red-200 border-2	">
               Follow
             </button>
           </span>

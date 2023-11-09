@@ -13,20 +13,23 @@ export function Navbar() {
   const handleClose = () => setOpen(false);
 
   return (
-    <div className="grid grid-cols-8 w-screen py-2 px-6">
-      <div className="col-start-1 pt-1">
-        <NavLink className="text-cherry-red-100 font-extrabold" to="/">
+    <div className="flex justify-between w-screen py-2 px-6">
+      <div className="col-start-1 pt-1 self-start w-24">
+        <NavLink
+          className="text-cherry-red-100 font-extrabold text-text-single-400"
+          to="/"
+        >
           PrometheusTube
         </NavLink>
       </div>
-      <div className="col-start-4 col-end-6">
+      <div className="inline-block w-96">
         <input
           placeholder="Search"
-          className="w-full bg-white-300 rounded-full pl-3 p-1"
+          className="w-full bg-white-300 rounded-full w-full pl-3 p-1"
           type="text"
         />
       </div>
-      <div className="col-start-8 inline-block text-right mr-5 ">
+      <div className="col-start-8 inline-block text-right mr-5 w-24 ">
         <span className="w-5 inline-block relative align-middle">
           <BellAlertIcon className="w-5 text-cherry-red-100"></BellAlertIcon>
         </span>
