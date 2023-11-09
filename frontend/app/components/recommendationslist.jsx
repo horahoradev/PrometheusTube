@@ -14,9 +14,6 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 
 export default function RecommendationsList() {
   const theme = useTheme();
-  // TODO: expand responsiveness
-  const matches = useMediaQuery(theme.breakpoints.down("lg"));
-
   return (
     <div className="mt-2">
       <PlusIcon className="text-cherry-red-200 w-5 relative inline-block align-bottom"></PlusIcon>

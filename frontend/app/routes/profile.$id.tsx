@@ -1,8 +1,13 @@
-import VideocardList from "app/components/videocard";
 import Categories from "app/components/categories";
 import Pages from "app/components/pagination";
 import Avatar from "@mui/material/Avatar";
 import { Cog8ToothIcon } from "@heroicons/react/24/outline";
+
+import loadable from "@loadable/component";
+
+const VideocardList = loadable(() => import("app/components/videocard"), {
+  ssr: false,
+});
 
 export default function Profile() {
   return (

@@ -5,16 +5,20 @@ import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import ImageListItemBar from "@mui/material/ImageListItemBar";
 import { useTheme } from "@mui/material/styles";
+import React, { Suspense } from "react";
 
 import useMediaQuery from "@mui/material/useMediaQuery";
 
 export default function VideocardList() {
   const theme = useTheme();
-  // TODO: expand responsiveness
-  const matches = useMediaQuery(theme.breakpoints.down("lg"));
 
   return (
-    <ImageList className="mt-3 overflow-visible" cols={4} gap={4}>
+    <ImageList
+      className="mt-3 overflow-visible index-video-list"
+      // rowHeight={350}
+      // rowWidth={450}
+      gap={4}
+    >
       {itemData.map((item) => (
         <ImageListItem key={item.img}>
           <img
