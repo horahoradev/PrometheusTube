@@ -39,7 +39,7 @@ export default function Profile() {
         <VideocardList></VideocardList>
       </div>
 
-      <span className="absolute bottom-0 mb-6">
+      <span>
         <Pages></Pages>
       </span>
     </div>
