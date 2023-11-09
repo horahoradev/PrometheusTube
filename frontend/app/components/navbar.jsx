@@ -12,9 +12,13 @@ export function Navbar() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  const [openLogin, setOpenLogin] = React.useState(false);
+  const handleOpenLogin = () => setOpenLogin(true);
+  const handleCloseLogin = () => setOpenLogin(false);
+
   return (
     <div className="flex justify-between w-screen py-2 px-6">
-      <div className="col-start-1 pt-1 self-start w-24">
+      <div className="col-start-1 pt-1 self-start w-36">
         <NavLink
           className="text-cherry-red-100 font-extrabold text-text-single-400"
           to="/"
@@ -29,8 +33,24 @@ export function Navbar() {
           type="text"
         />
       </div>
-      <div className="col-start-8 inline-block text-right mr-5 w-24 ">
-        <span className="w-5 inline-block relative align-middle">
+      <div className="inline-block text-right w-36 ">
+        <span className="float-left">
+          <button
+            onClick={handleOpenLogin}
+            className="rounded-full py-1 px-2 border-cherry-red-200 text-cherry-red-200  border-2	"
+          >
+            <span className="float-left inline-block relative">Login</span>
+          </button>
+        </span>
+        <span>
+          <button
+            onClick={handleOpen}
+            className="rounded-full py-1 px-2 text-cherry-red-100	"
+          >
+            <span className="float-left inline-block relative">Register</span>
+          </button>
+        </span>
+        {/* <span className="w-5 inline-block relative align-middle">
           <BellAlertIcon className="w-5 text-cherry-red-100"></BellAlertIcon>
         </span>
         <span
@@ -38,7 +58,7 @@ export function Navbar() {
           className="w-5 inline-block relative align-middle ml-1"
         >
           <Avatar sx={{ width: 32, height: 32 }}>N</Avatar>
-        </span>
+        </span> */}
       </div>
       <Modal
         open={open}
@@ -47,6 +67,14 @@ export function Navbar() {
         aria-describedby="modal-modal-description"
       >
         <Register></Register>
+      </Modal>
+      <Modal
+        open={openLogin}
+        onClose={handleCloseLogin}
+        aria-labelledby="modal-modal-login"
+        aria-describedby="modal-modal-login"
+      >
+        <Login></Login>
       </Modal>
     </div>
   );
