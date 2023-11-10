@@ -1,0 +1,120 @@
+syntax = "proto3";
+
+package proto;
+option go_package = "github.com/horahoradev/horahora/scheduler/protocol";
+
+service Scheduler {
+    rpc dlURL(URLRequest) returns (Empty) {}
+
+    rpc listArchivalEntries(listArchivalEntriesRequest) returns (listArchivalEntriesResponse) {}
+
+    rpc listArchivalEvents(listArchivalEventsRequest) returns (listArchivalEventsResponse) {}
+
+    rpc deleteArchivalRequest(deletionRequest) returns (Empty) {}
+
+    rpc retryArchivalRequestDownloadss(retryRequest) returns (Empty) {}
+
+    rpc getDownloadsInProgress(downloadsInProgressRequest) returns (downloadsInProgressResponse) {}
+
+    rpc GetUnapprovedVideoList(Empty) returns (UnapprovedList) {}
+
+    rpc ApproveVideo(ApproveVideoReq) returns (Empty) {}
+
+    rpc UnapproveVideo(ApproveVideoReq) returns (Empty) {}
+
+    rpc GetInferenceCategories(Empty) returns (InferenceList) {}
+    rpc AddInferenceCategory(InferenceEntry) returns (Empty) {}
+}
+
+message InferenceList {
+    repeated InferenceEntry Entries = 1;
+}
+
+message InferenceEntry {
+    string Tag = 1;
+    string Category = 2;
+}
+
+message downloadsInProgressRequest {}
+
+
+message downloadsInProgressResponse {
+    repeated Video videos = 1;
+}
+
+message UnapprovedList {
+    repeated UnapprovedVideo UnapprovedVideos = 1;
+}
+
+message UnapprovedVideo {
+    string VideoID = 1;
+    string url = 2;
+    string category = 3;
+}
+
+message ApproveVideoReq {
+    string VideoID = 1;
+}
+
+message Video  {
+    string VideoID = 1;
+    string website = 2;
+    enum downloadStatus {
+        Queued = 0;
+        Downloading = 1;
+    }
+    downloadStatus dlStatus = 3;
+}
+
+message Empty {}
+
+message retryRequest {
+    uint64 downloadID = 1;
+    uint64 userID = 2;
+}
+
+message deletionRequest {
+    uint64 downloadID = 1;
+    uint64 userID = 2;
+}
+
+message listArchivalEntriesRequest {
+    int64 UserID = 1; // Need to standardize type on userID
+}
+
+message listArchivalEventsRequest {
+    int64 DownloadID = 1;
+    bool ShowAll = 2;
+}
+
+
+message listArchivalEntriesResponse {
+    repeated contentArchivalEntry entries = 1;
+}
+
+message listArchivalEventsResponse {
+    repeated archivalEvent events = 1;
+}
+
+message archivalEvent {
+    string video_url = 1;
+    string parent_url = 2;
+    string message = 3;
+    string timestamp = 4;
+}
+
+message URLRequest {
+    string url = 1;
+    int64 userID = 2;
+}
+
+message contentArchivalEntry {
+    int64 UserID = 1;
+    string Url = 2;
+    uint64 ArchivedVideos = 3;
+    uint64 CurrentTotalVideos = 4;
+    string LastSynced = 5;
+    uint32 BackoffFactor = 6;
+    uint64 downloadID = 7;
+    uint64 UndownloadableVideos = 8;
+}

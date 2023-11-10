@@ -1,0 +1,180 @@
+syntax = "proto3";
+
+option go_package = "github.com/KIRAKIRA-DOUGA/KIRAKIRA-golang-backend/user_service/protocol";
+
+package proto;
+
+import "validate/validate.proto";
+
+service UserService {
+    rpc EmailValidation(ValidationRequest) returns (None){}
+    rpc Register(RegisterRequest) returns (RegisterResponse){}
+    rpc Login(LoginRequest) returns (LoginResponse){}
+    rpc ValidateJWT(validateJWTRequest) returns (validateJWTResponse){}
+
+    rpc GetUserFromID(GetUserFromIDRequest) returns (UserResponse){}
+    rpc GetUserForForeignUID(GetForeignUserRequest) returns (GetForeignUserResponse){}
+    rpc GetUserIDsForUsername(GetUserIDsForUsernameRequest) returns (GetUserIDsForUsernameResponse){}
+    rpc BanUser(BanUserRequest) returns ( BanUserResponse){}
+    rpc SetUserRank(SetRankRequest) returns ( None ){}
+    rpc ResetPassword(ResetPasswordRequest) returns ( None ) {}
+
+    rpc AddAuditEvent(NewAuditEventRequest) returns ( None ) {}
+    rpc GetAuditEvents(AuditEventsListRequest) returns ( AuditListResponse ) {}
+
+    rpc GetFollowers(followerReq) returns ( followerResp ) {}
+    rpc AddFolllower(addFollowReq) returns ( None ) {}
+
+    rpc SetProfile(profileReq) returns ( None ) {}
+}
+
+message ValidationRequest {
+    string email = 1;
+}
+
+message profileReq {
+    int64 user_ID = 1;
+    string bio = 2;
+    string username = 3;
+    string birthdate = 4;
+    string gender = 5;
+}
+
+message followerReq {
+    int64 user_ID = 1;
+}
+
+message followerResp {
+    repeated int64 users = 1;
+}
+
+message addFollowReq {
+    int64 following_id = 1;
+    int64 followed_id = 2;
+}
+
+message NewAuditEventRequest {
+    int64 user_ID = 1;
+    string message = 2;
+}
+
+message AuditEventsListRequest {
+    int64 page = 1;
+    int64 user_id = 2; // -1 if all users
+}
+
+message AuditEvent {
+    int64 id = 1;
+    int64 user_ID = 2;
+    string message = 3;
+    string timestamp = 4;
+}
+
+message AuditListResponse {
+    repeated AuditEvent events = 1;
+    int64 NumEvents = 2;
+}
+
+message None {
+
+}
+
+message ResetPasswordRequest {
+    int64 UserID = 1;
+    string old_password = 2;
+    string new_password = 3;
+}
+
+message SetRankRequest {
+    int64 userID = 1;
+    user_rank rank = 2;
+}
+
+message BanUserRequest {
+    int64 userID = 1;
+}
+
+message BanUserResponse {
+}
+
+message GetUserIDsForUsernameRequest {
+    string username = 1;
+}
+
+message GetUserIDsForUsernameResponse {
+    repeated int64 userIDs = 1;
+}
+
+message GetForeignUserRequest {
+    string originalWebsite = 1;
+    string foreignUserID = 2;
+}
+
+message GetForeignUserResponse {
+    int64 newUID = 1;
+}
+
+message validateJWTRequest {
+    string jwt = 1;
+}
+
+message validateJWTResponse {
+    bool isValid = 1;
+    int64 uid = 2;
+}
+
+message RegisterRequest {
+    string email = 1 [(validate.rules).string.email = true];
+    string username = 2 [(validate.rules).string = {
+        pattern:   "^[a-zA-Z0-9]+$",
+        max_bytes: 10,
+     }];
+    string password = 3;
+    bool foreignUser = 4; // If true, indicates that the user was created due to archival from another website, in which case
+    // the password field will not be used
+    string foreignUserID = 5;
+    string foreignWebsite = 6;
+    int64 verificationCode = 7;
+}
+
+//enum site {
+//  niconico = 0;
+//  bilibili = 1;
+//  youtube = 2;
+//}
+
+message LoginRequest {
+    string username = 1;
+    string password = 2;
+}
+
+message LoginResponse {
+    string jwt = 1;
+}
+
+message RegisterResponse {
+    string jwt = 1;
+}
+
+message GetUserFromIDRequest {
+    int64 userID = 1;
+}
+
+enum user_rank {
+    regular = 0;
+    trusted = 1;
+    admin = 2;
+}
+
+message UserResponse {
+    string username = 1;
+    string email = 2;
+    user_rank rank = 3;
+    bool banned = 4;
+        
+    // Optional profile stuff
+    string bio = 5;
+    string birthdate = 6;
+    string gender = 7;
+    string join_date = 8;
+}

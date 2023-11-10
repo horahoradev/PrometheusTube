@@ -1,0 +1,30 @@
+# NOTE: because migrations come from outside the `postgres` directory,
+#       we build this image from project root, symlinking this file to
+#       Dockerfile.postgres
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+FROM postgres:13-bullseye
+
+USER root
+
+COPY --chown=postgres:postgres postgres/ /postgres/
+
+RUN apt-get update && \
+    apt install -y bison flex zlib1g zlib1g-dev \
+    pkg-config make libssl-dev libreadline-dev curl
+
+RUN apt-get install -y git clang postgresql-server-dev-13
+
+ENV PATH="/root/.cargo/bin:$PATH"
+
+RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain stable
+
+RUN git clone https://github.com/zombodb/zombodb.git
+
+RUN cd zombodb && cargo install cargo-pgrx --version=0.9.8 && \
+    cargo pgrx init --pg13=`which pg_config` && \
+    cargo pgrx install --release
+
+USER postgres
+
+ENTRYPOINT ["/postgres/entrypoint.sh"]

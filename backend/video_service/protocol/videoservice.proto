@@ -1,0 +1,277 @@
+syntax = "proto3";
+option go_package = "github.com/horahoradev/horahora/video_service/protocol";
+
+package proto;
+
+service VideoService {
+    rpc uploadVideo(stream InputVideoChunk) returns (uploadResponse) {}
+    rpc downloadVideo(VideoRequest) returns (stream ResponseVideoChunk) {}
+
+    rpc foreignVideoExists(ForeignVideoCheck) returns (VideoExistenceResponse) {}
+    rpc getVideoList(VideoQueryConfig) returns (VideoList) {}
+    rpc getVideo(VideoRequest) returns (videoMetadata) {}
+
+    rpc rateVideo(videoRating) returns (Nothing) {}
+    rpc viewVideo(videoViewing) returns (Nothing) {}
+
+    rpc MakeComment(videoComment) returns (Nothing) {}
+    rpc MakeCommentUpvote(commentUpvote) returns (Nothing) {}
+    rpc GetCommentsForVideo(commentRequest) returns (CommentListResponse) {}
+
+    rpc GetVideoRecommendations(recReq) returns (recResp) {}
+    rpc ApproveVideo(videoApproval) returns (Nothing) {}
+    rpc DeleteVideo(videoDeletionReq) returns (Nothing) {}
+    rpc DeleteComment(commentDeletionReq) returns (Nothing) {}
+
+    // rpc GetCategories(Nothing) returns (CategoryList) {}
+
+    rpc GetFollowFeed(feedReq) returns (VideoList) {}
+    
+    // rpc AddFavorite(favoriteReq) returns (Nothing) {}
+
+    rpc GetDanmaku(danmakuQueryReq) returns (danmakuList) {}
+    rpc addDanmaku(danmaku) returns (Nothing) {}
+}
+
+message danmakuQueryReq {
+    int64 video_id = 1;
+}
+
+message danmakuList {
+    repeated danmaku comments = 1;
+}
+
+message danmaku {
+    int64 video_id = 1;
+    string timestamp = 2;
+    string message = 3;
+    int64 author_id = 4;
+    string type = 5;
+    string color = 6;
+    string font_size = 7;
+    int64 id = 8;
+}
+
+message favoriteReq {
+    int64 user_id = 1;
+    int64 video_id = 2;
+}
+
+message feedReq {
+    repeated int64 followed_users = 1;
+}
+
+message CategoryList {
+    repeated Category categories = 1;
+}
+
+message Category {
+    string name = 1;
+    uint64 cardinality = 2;
+}
+
+message videoDeletionReq {
+    string videoID = 1;
+}
+
+message Nothing{}
+
+message recReq {
+    int64 user_id = 1;
+    int64 video_id = 2;
+}
+
+message recResp {
+    repeated Video videos = 1;
+}
+
+message VideoRec {
+    string thumbnailLoc = 1;
+    string videoTitle = 2;
+    int64 videoID = 3;
+}
+
+message videoComment {
+    int64 user_id = 1;
+    int64 video_id = 2;
+    string comment = 3;
+    int64 parent_comment = 4; // 0 if root
+}
+
+// Can add pagination in the future if needed (probably fine without it)
+message commentRequest {
+    int64 videoID = 1;
+    int64 currUserID = 2;
+}
+
+message commentUpvote {
+   int64 user_id = 1;
+   int64 comment_id = 2;
+   int64 score = 3; // -1, 0, 1
+}
+
+message CommentListResponse {
+    repeated Comment comments = 1;
+}
+
+message Comment {
+    int64 comment_id = 1;
+    string creation_date = 2;
+    string content = 3;
+    string author_username = 4;
+    string author_profile_image_url = 5;
+    int64 vote_score = 6;
+    bool current_user_has_upvoted = 7;
+    bool current_user_has_downvoted = 8;
+    int64 author_id = 9;
+    int64 parent_id = 10;
+}
+
+
+message videoMetadata {
+    string videoLoc = 1; // The location of the DASH manifest
+    string videoTitle = 2;
+    int64 rating = 3;
+    string authorName = 4; // Do I need this? probably not
+    uint64 views = 5;
+    int64 videoID = 6;
+    string uploadDate = 7;
+    string description = 8;
+    int64 authorID = 9;
+    repeated string tags = 10;
+    float videoDuration = 11;
+    string category = 12;
+    string thumbnail = 13;
+}
+
+message VideoList {
+    repeated Video videos = 1;
+    int64 numberOfVideos = 2;
+    CategoryList categories = 3;
+}
+
+message Video {
+    string videoTitle = 1;
+    uint64 views = 2;
+    int64 rating = 3;
+    string thumbnailLoc = 4;
+    int64 videoID = 5;
+    string authorName = 6;
+    string uploadDate = 7;
+    int64 authorID = 8;
+    float videoDuration = 9;
+}
+
+message videoRating {
+    int64 userID = 1;
+    int64 videoID = 2;
+    int64 rating = 3;
+}
+
+message videoViewing {
+    int64 videoID = 1;
+}
+
+message videoApproval {
+    int64 userID = 1;
+    int64 videoID = 2;
+}
+
+message VideoQueryConfig {
+    orderCategory orderBy = 1;
+    sortDirection direction = 2;
+    int64 pageNumber = 3;
+    string SearchVal = 4;
+    int64 fromUserID = 5; // domestic user ID
+    bool showUnapproved = 6;
+    bool unapprovedOnly = 7;
+    string category = 8;
+    // bool favoritesOnly = 9;
+}
+
+
+message VideoExistenceResponse {
+    bool Exists = 1;
+}
+
+message ForeignVideoCheck {
+    string ForeignVideoID = 1;
+    string ForeignWebsite = 2;
+}
+
+message VideoRequest {
+    string videoID = 1;
+}
+
+message InputVideoChunk {
+    oneof Payload {
+        FileContent content = 1;
+        InputFileMetadata meta = 2;
+        RawMetadata rawmeta = 3; // This was added after the above two fields, and is used for the metadata.json file for the video
+    }
+}
+
+message ResponseVideoChunk {
+    oneof Payload {
+        FileContent content = 1;
+        ResponseFileMetadata meta = 2;
+    }
+}
+
+message FileContent {
+    bytes Data = 1;
+}
+
+message RawMetadata {
+    bytes Data = 1;
+}
+
+// Could make the reupload fields optional
+message InputFileMetadata {
+    string title = 1;
+    string description = 2;
+    string authorUID = 3;// 0 if reupload
+    string originalVideoLink = 4; // If reupload
+    string authorUsername = 5; // If reupload
+    string originalSite = 6; // If reupload
+    string originalID = 7; // If reupload // this is a little dumb
+    int64 domesticAuthorID = 8;
+    repeated string Tags = 9;
+    bytes thumbnail = 10; // lol good enough, I could stream this but this is easier
+    string category = 11;
+}
+
+// For now, these two are the same, but may deviate in future
+message ResponseFileMetadata {
+    string title = 1;
+    string description = 2;
+    int64 authorUID = 3;// 0 if reupload
+    string originalVideoLink = 4; // If reupload
+}
+
+//enum website {
+//    niconico = 0;
+//    bilibili = 1;
+//    youtube = 2;
+//}
+
+enum orderCategory {
+    views = 0;
+    rating = 1;
+    upload_date = 2;
+    my_ratings = 3;
+}
+
+enum sortDirection {
+    asc = 0;
+    desc = 2;
+}
+
+message uploadResponse {
+    int64 videoID = 1;
+}
+
+message commentDeletionReq {
+    int64 commentID = 1;
+    int64 userID = 2;
+}

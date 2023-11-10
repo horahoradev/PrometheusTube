@@ -1,0 +1,205 @@
+package auth
+
+import (
+	"bytes"
+	"crypto/rsa"
+	"crypto/x509"
+	"encoding/json"
+	"encoding/pem"
+	"errors"
+	"net/http"
+
+	"github.com/KIRAKIRA-DOUGA/KIRAKIRA-golang-backend/user_service/internal/model"
+	"golang.org/x/crypto/bcrypt"
+	jose "gopkg.in/square/go-jose.v2"
+)
+
+const hashCost = 5
+
+func Login(username, password string, privateKey *rsa.PrivateKey, u *model.UserModel) (string, error) {
+	uid, err := u.GetUserWithUsername(username)
+	if err != nil {
+		return "", err
+	}
+
+	// No logins if user banned
+	banned, err := u.IsBanned(uid)
+	if err != nil {
+		return "", err
+	}
+
+	if banned {
+		return "", errors.New("User is banned")
+	}
+
+	passHash, err := u.GetPassHash(uid)
+	if err != nil {
+		return "", err
+	}
+
+	isValid, err := compareHashedPassword([]byte(password), []byte(passHash))
+	if err != nil {
+		return "", err
+	}
+
+	if !isValid {
+		return "", errors.New("invalid password")
+	}
+
+	// Password is valid
+	payload := JWTPayload{UID: uid}
+	return CreateJWT(payload, privateKey)
+}
+
+type revoltPayload struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+func RegisterRevolt(email string) error {
+	payload := revoltPayload{
+		Email:    email,
+		Password: "null01010",
+	}
+
+	buf, err := json.Marshal(&payload)
+	if err != nil {
+		return err
+	}
+
+	req, err := http.NewRequest("POST", "http://api:8000/auth/account/create", bytes.NewBuffer(buf))
+	if err != nil {
+		return err
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+
+	client := http.DefaultClient
+	_, err = client.Do(req)
+	if err != nil {
+		return err
+	}
+
+	// if resp.StatusCode != 204 {
+	// 	return fmt.Errorf("bad revolt response status for registration: %v", resp.StatusCode)
+	// }
+
+	return nil
+}
+
+func Register(username, email, password string, u *model.UserModel, privateKey *rsa.PrivateKey, foreignUser bool,
+	foreignUserID, foreignWebsite string) (string, error) {
+	pwBytes := []byte(password)
+
+	var passHash []byte
+	var err error
+	// TODO: salt + pepper?
+	if !foreignUser {
+		passHash, err = GenerateHash(pwBytes)
+		if err != nil {
+			return "", err
+		}
+	}
+
+	uid, err := u.NewUser(username, email, passHash, foreignUser, foreignUserID, foreignWebsite)
+	if err != nil {
+		return "", err
+	}
+
+	payload := JWTPayload{UID: uid}
+	return CreateJWT(payload, privateKey)
+}
+
+type JWTPayload struct {
+	UID int64 `json:"uid"`
+}
+
+func GenerateHash(password []byte) ([]byte, error) {
+	passHash, err := bcrypt.GenerateFromPassword(password, hashCost)
+	if err != nil {
+		return nil, err
+	}
+
+	return passHash, nil
+}
+
+func CreateJWT(payload JWTPayload, privateKey *rsa.PrivateKey) (string, error) {
+	// Instantiate a signer using RSASSA-PSS (SHA512) with the given private key.
+	signer, err := jose.NewSigner(jose.SigningKey{Algorithm: jose.PS512, Key: privateKey}, nil)
+	if err != nil {
+		return "", err
+	}
+
+	// Sign a sample payload. Calling the signer returns a protected JWS object,
+	// which can then be serialized for output afterwards. An error would
+	// indicate a problem in an underlying cryptographic primitive.
+
+	payloadBytes, err := json.Marshal(payload)
+	if err != nil {
+		return "", err
+	}
+
+	object, err := signer.Sign(payloadBytes)
+	if err != nil {
+		return "", err
+	}
+
+	// Serialize the encrypted object using the full serialization format.
+	// Alternatively you can also use the compact format here by calling
+	// object.CompactSerialize() instead.
+	serialized := object.FullSerialize()
+
+	return serialized, nil
+}
+
+func ValidateJWT(jwt string, privateKey rsa.PrivateKey) (int64, error) {
+	object, err := jose.ParseSigned(jwt)
+	if err != nil {
+		return 0, err
+	}
+
+	// Now we can verify the signature on the payload. An error here would
+	// indicate the the message failed to verify, e.g. because the signature was
+	// broken or the message was tampered with.
+	output, err := object.Verify(&privateKey.PublicKey)
+	if err != nil {
+		return 0, err
+	}
+
+	payload := JWTPayload{}
+
+	err = json.Unmarshal(output, &payload)
+	if err != nil {
+		return 0, err
+	}
+
+	return payload.UID, nil
+}
+
+// Must be pem encoded
+func ParsePrivateKey(keypair string) (*rsa.PrivateKey, error) {
+	p, _ := pem.Decode([]byte(keypair))
+	if p == nil {
+		return nil, errors.New("no PEM data found in ParsePrivateKey")
+	}
+
+	privateKey, err := x509.ParsePKCS1PrivateKey(p.Bytes)
+	if err != nil {
+		return nil, err
+	}
+
+	return privateKey, nil
+}
+
+// Returns true if equal
+func compareHashedPassword(password, hash []byte) (bool, error) {
+	err := bcrypt.CompareHashAndPassword(hash, password)
+	switch {
+	case err == bcrypt.ErrMismatchedHashAndPassword:
+		return false, nil
+	case err != nil:
+		return false, err
+	default:
+		return true, nil
+	}
+}

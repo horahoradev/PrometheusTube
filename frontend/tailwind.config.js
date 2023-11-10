@@ -121,5 +121,15 @@ module.exports = {
   variants: {
     extend: {},
   },
-  plugins: [require("@tailwindcss/typography", "tailwind-children")],
+  experimental: {
+    darkModeVariant: true,
+    applyComplexClasses: true,
+  },
+  dark: "class",
+  darkMode: "class",
+  plugins: [
+    require("@tailwindcss/typography"),
+    require("tailwind-children"),
+    require("nightwind"),
+  ],
 };

@@ -1,0 +1,10 @@
+[recommend.data_source]
+positive_feedback_types=["upvote"]
+read_feedback_types=["read"]
+
+[server]
+# Default number of returned items. The default value is 10.
+default_n = 10
+
+# Secret key for RESTful APIs (SSL required).
+api_key = "api_key"

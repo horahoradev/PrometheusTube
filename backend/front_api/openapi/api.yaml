@@ -1,0 +1,718 @@
+openapi: "3.0.0"
+servers:
+  - url: https://localhost:3000/api
+info:
+  version: 0.0.1
+  title: Kirakira Backend API
+  description: The API for Kirakira
+  contact:
+    name: Kirakira API Team
+    email: horahora1567@gmail.com
+  license:
+    name: BSD-2
+    url: https://github.com/horahoradev/kirakira-backend/blob/master/LICENSE
+paths:
+  /login:
+    post:
+      summary: Log the user in
+      operationId: login
+      parameters:
+        - name: username
+          in: header
+          style: form
+          required: true
+          description: search string
+          schema:
+            type: string
+        - name: password
+          in: header
+          style: form
+          required: true
+          description: sort category
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Login success
+        default:
+          description: Unexpected error
+  /register:
+    post:
+      summary: Register user
+      operationId: register
+      parameters:
+        - name: username
+          in: header
+          required: true
+          description: username to register
+          schema:
+            type: string
+        - name: password
+          in: header
+          required: true
+          description: sort category
+          schema:
+            type: string
+        - name: email
+          in: header
+          required: true
+          description: sort category
+          schema:
+            type: string
+        - name: VerificationCode
+          in: query
+          required: true
+          description: verification code
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: registration succeeded
+        default:
+          description: Unexpected error
+  /logout:
+    get:
+      summary: Log user out
+      operationId: logout
+      responses:
+        '200':
+          description: Logout successful
+        default:
+          description: Unexpected error
+  /upload:
+    post:
+      summary: Upload a new video
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                filename:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+      parameters:
+        - name: tags
+          in: header
+          required: true
+          description: list of video tags
+          schema:
+            type: array
+            items:
+              type: string
+        - name: title
+          in: header
+          required: true
+          description: video title
+          schema:
+            type: string
+        - name: description
+          in: header
+          required: true
+          description: video description
+          schema:
+            type: string
+        - name: category
+          in: header
+          required: true
+          description: category
+          schema:
+            type: string
+      operationId: upload
+      responses:
+        '200':
+          description: Logout successful
+        default:
+          description: Unexpected error
+  /videos:
+    get:
+      summary: Get list of videos
+      operationId: videos
+      parameters:
+        - name: search
+          in: header
+          required: false
+          description: search string
+          schema:
+            type: string
+            format: byte
+        - name: sortCategory
+          in: header
+          required: false
+          description: sort category
+          schema:
+            type: string
+        - name: order
+          in: header
+          required: false
+          description: sort category
+          schema:
+            type: string
+        - name: unapproved
+          in: header
+          required: false
+          description: sort category
+          schema:
+            type: string
+        - name: pageNumber
+          in: header
+          required: false
+          description: page number
+          schema:
+            type: integer
+        - name: category
+          in: header
+          required: false
+          description: category
+          schema:
+            type: string
+            format: byte
+      responses:
+        '200':
+          description: list of videos and pagination data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  PaginationData:
+                    type: object
+                    properties:
+                      NumberOfItems:
+                        type: number
+                      CurrentPage:
+                        type: number
+                  UserID:
+                    type: number
+                  Username:
+                    type: string
+                  ProfilePictureURL:
+                    type: string
+                  Videos:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        Title:
+                          type: string
+                        VideoID:
+                          type: number
+                        Views:
+                          type: number
+                        AuthorID:
+                          type: number
+                        AuthorName:
+                          type: string
+                        ThumbnailLoc:
+                          type: string
+                        Rating:
+                          type: number
+                        VideoDuration:
+                          type: number
+                  Categories:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        Name:
+                          type: string
+                        Cardinality:
+                          type: number
+        default:
+          description: Unexpected error
+  /videos/{id}:
+    get:
+      summary: Get list of videos
+      operationId: videoDetail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: video ID
+          schema:
+            type: number
+      responses:
+        '200':
+          description: get video details for a specific video
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Title:
+                    type: string
+                  MPDLoc:
+                    type: string
+                  Views:
+                    type: number
+                  Rating:
+                    type: number
+                  VideoID:
+                    type: number
+                  AuthorID:
+                    type: number
+                  Username:
+                    type: string
+                  UserDescription:
+                    type: string
+                  VideoDescription:
+                    type: string
+                  UserSubscribers:
+                    type: number
+                  ProfilePicture:
+                    type: string
+                  UploadDate:
+                    type: string
+                  Comments:
+                    type: object
+                  Thumbnail: 
+                    type: string
+                  Tags:
+                    type: array
+                    items:
+                      type: string
+                  VideoDuration:
+                    type: number
+        default:
+          description: Unexpected error
+  /comments/{id}:
+    get:
+      summary: Get comments for video ID
+      operationId: comments
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: video ID
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: get video details for a specific video
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: number
+                    created:
+                      type: string
+                    content:
+                      type: string
+                    fullname:
+                      type: string
+                    profile_picture_url:
+                      type: string
+                    upvote_count:
+                      type: number
+                    user_has_upvoted:
+                      type: boolean
+                    user_has_downvoted:
+                      type: boolean
+                    authored_by_current_user:
+                      type: boolean
+        default:
+          description: Unexpected error
+  /comment:
+    post:
+      summary: Comment on a video
+      operationId: comment
+      parameters:
+        - name: parent
+          in: header
+          required: true
+          description: parent comment ID
+          schema:
+            type: integer
+        - name: content
+          in: header
+          required: true
+          description: comment message
+          schema:
+            type: string
+            format: byte
+        - name: videoID
+          in: header
+          required: true
+          description: comment's video ID
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Comment success
+        default:
+          description: Unexpected error
+  /delete_comment:
+    post:
+      summary: Delete a comment
+      operationId: deleteComment
+      parameters:
+        - name: id
+          in: header
+          required: true
+          description: comment ID
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Comment deleted
+        default:
+          description: Unexpected error
+  /reset_password:
+    post:
+      summary: Reset password
+      operationId: resetPassword
+      parameters:
+        - name: oldpassword
+          in: header
+          required: true
+          description: old password
+          schema:
+            type: string
+        - name: newpassword
+          in: header
+          required: true
+          description: new password
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Password changed
+        default:
+          description: Unexpected error
+  /users/{id}:
+    get:
+      summary: Get user video data
+      operationId: users
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: user ID
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: get video details for a specific video
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  PaginationData:
+                    type: object
+                    properties:
+                      NumberOfItems:
+                        type: number
+                      CurrentPage:
+                        type: number
+                  UserID:
+                    type: number
+                  Username:
+                    type: string
+                  ProfilePictureURL:
+                    type: string
+                  Bio:
+                    type: string
+                  Birthdate:
+                    type: string
+                  Gender:
+                    type: string
+                  JoinDate:
+                    type: string
+                  Videos:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        Title:
+                          type: string
+                        VideoID:
+                          type: number
+                        Views:
+                          type: number
+                        AuthorID:
+                          type: number
+                        AuthorName:
+                          type: string
+                        ThumbnailLoc:
+                          type: string
+                        Rating:
+                          type: number
+                        VideoDuration:
+                          type: number
+        default:
+          description: Unexpected error
+  /upvote/{id}:
+    get:
+      summary: Get user video data
+      operationId: upvote
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: comment ID
+          schema:
+            type: integer
+        - name: score
+          in: header
+          required: true
+          description: upvote score
+          schema:
+            type: number
+      responses:
+        '200':
+          description: Upvote success
+        default:
+          description: Unexpected error
+  /upvotevideo/{id}:
+    post:
+      summary: Upvote a video
+      operationId: upvoteVideo
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: video ID
+          schema:
+            type: integer
+        - name: score
+          in: header
+          required: true
+          description: upvote score
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Upvote success
+        default:
+          description: Unexpected error
+  /recommendations/{id}:
+    get:
+      summary: Get list of videos
+      operationId: recommendations
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: video ID
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: list of video recommendations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    Title:
+                      type: string
+                    VideoID:
+                      type: number
+                    Views:
+                      type: number
+                    AuthorID:
+                      type: number
+                    AuthorName:
+                      type: string
+                    ThumbnailLoc:
+                      type: string
+                    Rating:
+                      type: number
+                    VideoDuration:
+                      type: number
+        default:
+          description: Unexpected error
+  /follow/{id}:
+    post:
+      summary: Upvote a video
+      operationId: follow
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: user ID
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Follow success
+        default:
+          description: Unexpected error
+  /follow-feed:
+    get:
+      summary: Upvote a video
+      operationId: followFeed
+      responses:
+        '200':
+          description: list of follow feed videos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    Title:
+                      type: string
+                    VideoID:
+                      type: number
+                    Views:
+                      type: number
+                    AuthorID:
+                      type: number
+                    AuthorName:
+                      type: string
+                    ThumbnailLoc:
+                      type: string
+                    Rating:
+                      type: number
+                    VideoDuration:
+                      type: number
+        default:
+          description: Unexpected error
+  /update-profile:
+    post:
+      summary: Update user's profile
+      operationId: updateProfile
+      parameters:
+        - name: username
+          in: header
+          required: true
+          description: new username
+          schema:
+            type: string
+            format: byte
+        - name: gender
+          in: header
+          required: true
+          description: new gender
+          schema:
+            type: string
+            format: byte
+        - name: birthdate
+          in: header
+          required: true
+          description: new birthdate
+          schema:
+            type: string
+        - name: bio
+          in: header
+          required: true
+          description: new bio
+          schema:
+            type: string
+            format: byte
+      responses:
+        '200':
+          description: Update profile success
+        default:
+          description: Unexpected error
+  /danmaku/{id}:
+    get:
+      summary: Get danmaku for video
+      operationId: getDanmaku
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: video ID
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: list of danmaku
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    ID:
+                      type: integer
+                    Timestamp:
+                      type: string
+                    Message:
+                      type: string
+                    AuthorID:
+                      type: integer
+                    Type:
+                      type: string
+                    Color:
+                      type: string
+                    CreationDate:
+                      type: string
+                    FontSize:
+                      type: string
+  /danmaku:
+    post:
+      summary: Create new danmaku
+      operationId: createDanmaku
+      parameters:
+        - name: VideoID
+          in: header
+          required: true
+          description: video ID for danmaku
+          schema:
+            type: integer
+        - name: timestamp
+          in: header
+          required: true
+          description: timestamp for danmaku
+          schema:
+            type: string
+        - name: message
+          in: header
+          required: true
+          description: message
+          schema:
+            type: string
+            format: byte
+        - name: Type
+          in: header
+          required: true
+          description: type of comment
+          schema:
+            type: string
+        - name: Color
+          in: header
+          required: true
+          description: comment color
+          schema:
+            type: string
+        - name: FontSize
+          in: header
+          required: true
+          description: comment font size
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Danmaku creation success
+        default:
+          description: Unexpected error
+  /email-verification:
+    post:
+      summary: Create new email validation
+      operationId: emailValidation
+      parameters:
+        - name: email
+          in: header
+          required: true
+          description: email
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Email validation success
+        default:
+          description: Unexpected error  
