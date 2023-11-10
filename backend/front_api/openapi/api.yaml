@@ -1,6 +1,6 @@
 openapi: "3.0.0"
 servers:
-  - url: https://localhost:3000/api
+  - url: http://localhost:3000/api
 info:
   version: 0.0.1
   title: Kirakira Backend API
@@ -267,7 +267,7 @@ paths:
                     type: string
                   Comments:
                     type: object
-                  Thumbnail: 
+                  Thumbnail:
                     type: string
                   Tags:
                     type: array
@@ -715,4 +715,4 @@ paths:
         '200':
           description: Email validation success
         default:
-          description: Unexpected error  
+          description: Unexpected error

@@ -158,8 +158,6 @@ services:
       labels:
         name: postgres
     restart: unless-stopped
-    ports:
-      - 5432:5432
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: password
@@ -243,7 +241,7 @@ services:
       - xpack.security.http.ssl.enabled=false
       - xpack.security.transport.ssl.enabled=false
       - discovery.type=single-node
-  
+
   kibana:
     image: docker.elastic.co/kibana/kibana:7.17.10
     restart: unless-stopped
@@ -266,8 +264,8 @@ services:
       # Use MySQL as data storage backend.
       GORSE_DATA_STORE: postgres://admin:password@postgres:5432/gorse?sslmode=disable
     command: >
-      -c /etc/gorse/config.toml 
-      --log-path /var/log/gorse/master.log 
+      -c /etc/gorse/config.toml
+      --log-path /var/log/gorse/master.log
       --cache-path /var/lib/gorse/master_cache.data
     volumes:
       # Mount the configuration file.

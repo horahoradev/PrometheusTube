@@ -5,6 +5,8 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
+import { useApi } from "~/lib/oapi";
+import React from "react";
 
 const style = {
   position: "absolute",
@@ -18,6 +20,14 @@ const style = {
 };
 
 export default function Login() {
+  const [username, setUsername] = React.useState('');
+  const [password, setPassword] = React.useState('');
+
+  async function LoginUser() {
+    let api = useApi();
+    await api.login(username, password);
+  }
+
   return (
     <Box
       className="rounded-lg"
@@ -34,6 +44,8 @@ export default function Login() {
           id="outlined-required"
           label="Username"
           size="small"
+          value={username}
+          onChange={e => setUsername(e.target.value)}
         />
       </div>
       <div className="mt-4">
@@ -43,6 +55,8 @@ export default function Login() {
           id="outlined-required"
           label="Password"
           size="small"
+          value={password}
+          onChange={e => setPassword(e.target.value)}
         />
       </div>
       <div className="flex justify-between items-center my-2 mx-0">
@@ -64,6 +78,7 @@ export default function Login() {
           color="primary"
           className="text-single-100 w-full"
           variant="contained"
+          onClick={LoginUser}
         >
           Login
         </Button>
