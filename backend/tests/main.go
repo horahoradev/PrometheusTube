@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	baseURL    = "https://kirakira.dev/api"
+	baseURL    = "http://localhost:9000/api"
 	sm9TestTag = "今年レンコンコマンダー常盤"
 )
 

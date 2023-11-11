@@ -19,13 +19,14 @@ const style = {
   p: 3,
 };
 
-export default function Login() {
+export default function Login({setLogin}) {
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
 
   async function LoginUser() {
     let api = useApi();
     await api.login(username, password);
+    setLogin(false);
   }
 
   return (

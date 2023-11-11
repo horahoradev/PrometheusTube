@@ -5,30 +5,30 @@
 
 @media only screen and (max-width: 4000px) {
   .index-video-list {
-    grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
   }
 }
 
 @media only screen and (max-width: 1532px) {
   .index-video-list {
-    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
   }
 }
 
 @media only screen and (max-width: 1200px) {
   .index-video-list {
-    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
 }
 
 @media only screen and (max-width: 900px) {
   .index-video-list {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
   }
 }
-
+/*
 @media only screen and (max-width: 600px) {
   .index-video-list {
     grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
   }
-}
+} */

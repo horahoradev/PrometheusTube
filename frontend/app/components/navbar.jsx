@@ -74,7 +74,7 @@ export function Navbar() {
         aria-labelledby="modal-modal-login"
         aria-describedby="modal-modal-login"
       >
-        <Login></Login>
+        <Login setLogin={setOpenLogin}></Login>
       </Modal>
     </div>
   );
