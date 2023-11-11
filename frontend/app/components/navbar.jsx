@@ -1,4 +1,4 @@
-import { NavLink } from "@remix-run/react";
+import { NavLink, useSearchParams } from "@remix-run/react";
 import { BellAlertIcon } from "@heroicons/react/24/outline";
 import Avatar from "@mui/material/Avatar";
 import Login from "app/components/login";
@@ -16,6 +16,8 @@ export function Navbar() {
   const handleOpenLogin = () => setOpenLogin(true);
   const handleCloseLogin = () => setOpenLogin(false);
 
+  let [searchParams, setSearchParams] = useSearchParams();
+
   return (
     <div className="flex justify-between w-screen py-2 px-6">
       <div className="col-start-1 pt-1 self-start w-36">
@@ -29,8 +31,15 @@ export function Navbar() {
       <div className="inline-block w-96">
         <input
           placeholder="Search"
+          value={searchParams.get("search") ?? ""}
           className="w-full bg-white-300 rounded-full w-full pl-3 p-1"
-          type="text"
+          onChange={async (event) => {
+            setSearchParams((prev) => {
+              prev.set("search", event.currentTarget.value);
+              return prev;
+            });
+          }
+        }
         />
       </div>
       <div className="inline-block text-right w-36 ">

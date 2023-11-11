@@ -10,7 +10,7 @@ import { useApi } from "~/lib/oapi";
 export async function loader({ request }) {
   const searchParams = new URL(request.url).searchParams;
   const utf8Encode = new TextEncoder();
-  const searchEncoded = utf8Encode.encode('none') as unknown as string;
+  const searchEncoded = utf8Encode.encode(searchParams.get('search') !== undefined && searchParams.get('search')?.length > 0 ? searchParams.get('search') : 'none') as unknown as string;
   const categoryEncoded = utf8Encode.encode("undefined") as unknown as string;
 
   let api = useApi();
@@ -19,8 +19,6 @@ export async function loader({ request }) {
 
 export default function Home() {
   const videos = useLoaderData<Videos200Response>();
-  console.log("WOW");
-  console.log(typeof videos.videos);
 
   return (
     <div className="px-6 w-full min-h-[calc(100%-53px)] flex flex-col justify-between">
