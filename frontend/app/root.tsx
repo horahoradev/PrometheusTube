@@ -61,10 +61,7 @@ export default function App() {
         </head>
         {/* LOL NO!! FIXME w-full */}
         <body className="overflow-x-hidden">
-          <Navbar></Navbar>
-          <div className="bg-white-200 h-screen">
             <Outlet></Outlet>
-          </div>
           <ScrollRestoration />
           <Scripts />
           <LiveReload />

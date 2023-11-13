@@ -7,8 +7,10 @@ import Register from "app/components/register";
 import Modal from "@mui/material/Modal";
 import React from "react";
 
-export function Navbar() {
+export function Navbar({ displayAvatar }) {
   const [open, setOpen] = React.useState(false);
+  const [showAvatar, setShowAvatar] = React.useState(displayAvatar);
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -38,36 +40,44 @@ export function Navbar() {
               prev.set("search", event.currentTarget.value);
               return prev;
             });
-          }
-        }
+          }}
         />
       </div>
       <div className="inline-block text-right w-36 ">
-        <span className="float-left">
-          <button
-            onClick={handleOpenLogin}
-            className="rounded-full py-1 px-2 border-cherry-red-200 text-cherry-red-200  border-2	"
-          >
-            <span className="float-left inline-block relative">Login</span>
-          </button>
-        </span>
-        <span>
-          <button
-            onClick={handleOpen}
-            className="rounded-full py-1 px-2 text-cherry-red-100	"
-          >
-            <span className="float-left inline-block relative">Register</span>
-          </button>
-        </span>
-        {/* <span className="w-5 inline-block relative align-middle">
-          <BellAlertIcon className="w-5 text-cherry-red-100"></BellAlertIcon>
-        </span>
-        <span
-          onClick={handleOpen}
-          className="w-5 inline-block relative align-middle ml-1"
-        >
-          <Avatar sx={{ width: 32, height: 32 }}>N</Avatar>
-        </span> */}
+        {!showAvatar ? (
+          <span className="float-left">
+            <span>
+              <button
+                onClick={handleOpenLogin}
+                className="rounded-full py-1 px-2 border-cherry-red-200 text-cherry-red-200  border-2	"
+              >
+                <span className="float-left inline-block relative">Login</span>
+              </button>
+            </span>
+            <span>
+              <button
+                onClick={handleOpen}
+                className="rounded-full py-1 px-2 text-cherry-red-100	"
+              >
+                <span className="float-left inline-block relative">
+                  Register
+                </span>
+              </button>
+            </span>
+          </span>
+        ) : (
+          <span>
+            <span className="w-5 inline-block relative align-middle">
+              <BellAlertIcon className="w-5 text-cherry-red-100"></BellAlertIcon>
+            </span>
+            <span
+              onClick={handleOpen}
+              className="w-5 inline-block relative align-middle ml-1"
+            >
+              <Avatar sx={{ width: 32, height: 32 }}>N</Avatar>
+            </span>
+          </span>
+        )}
       </div>
       <Modal
         open={open}
@@ -83,7 +93,12 @@ export function Navbar() {
         aria-labelledby="modal-modal-login"
         aria-describedby="modal-modal-login"
       >
-        <Login setLogin={setOpenLogin}></Login>
+        <Login
+          setLogin={() => {
+            setOpenLogin();
+            setShowAvatar(true);
+          }}
+        ></Login>
       </Modal>
     </div>
   );
