@@ -1,5 +1,4 @@
 -- +goose Up
-DROP MATERIALIZED VIEW videos_denormalized;
 CREATE MATERIALIZED VIEW videos_denormalized AS
 WITH tags_arr as (select videos.id, array_agg(tags.tag) as tag_arr from videos LEFT JOIN tags on videos.id = tags.video_id GROUP BY videos.id),
 favorites_arr as (select videos.id, array_agg(favorites.user_id) as favorite_arr from videos LEFT JOIN favorites on videos.id = favorites.video_id GROUP BY videos.id),

@@ -4,10 +4,10 @@ import VideocardList from "app/components/videocard";
 import loadable from "@loadable/component";
 import { Suspense } from "react";
 import { Videos200Response } from "node_modules/promtube-backend";
-import { useLoaderData, useSearchParams } from "@remix-run/react";
 import { useApi } from "~/lib/oapi";
 import { json, redirect, createCookie } from "@remix-run/node";
 import { Navbar } from "app/components/navbar";
+import { useLoaderData, NavLink, useSearchParams } from "@remix-run/react";
 
 export async function loader({ request }) {
   const searchParams = new URL(request.url).searchParams;

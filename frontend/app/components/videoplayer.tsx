@@ -10,7 +10,7 @@ import { VideoDetail200Response } from "node_modules/promtube-backend";
 export const VideoPlayer = (props) => {
   const videoRef = React.useRef(null);
   const playerRef = React.useRef(null);
-  let video : VideoDetail200Response = props.video;
+  let video: VideoDetail200Response = props.video;
   const { options, onReady } = props;
 
   React.useEffect(() => {
@@ -91,14 +91,16 @@ export const VideoPlayer = (props) => {
           <span className="ml-4">Uploaded {video.uploadDate}</span>
         </span>
         <div className="mt-3">
-        {video.tags?.map((item) => (
-          <NavLink to={"/?search=" + item} className="ml-2 text-cherry-red-100">
-            {'#' + item}
-          </NavLink>
-        ))}
-
+          {video.tags?.map((item) => (
+            <NavLink
+              to={"/?search=" + item}
+              className="mr-4 text-cherry-red-100"
+            >
+              {"#" + item}
+            </NavLink>
+          ))}
         </div>
-        </div>
+      </div>
       <Comments></Comments>
     </div>
   );

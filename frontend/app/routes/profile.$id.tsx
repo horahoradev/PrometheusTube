@@ -4,44 +4,72 @@ import Avatar from "@mui/material/Avatar";
 import { Cog8ToothIcon } from "@heroicons/react/24/outline";
 
 import loadable from "@loadable/component";
+import { Navbar } from "app/components/navbar";
+import { useApi } from "~/lib/oapi";
+import { Users200Response } from "node_modules/promtube-backend";
+import { useLoaderData, NavLink, useSearchParams } from "@remix-run/react";
+import { json, redirect, createCookie } from "@remix-run/node";
 
 const VideocardList = loadable(() => import("app/components/videocard"), {
   ssr: false,
 });
 
+export async function loader({ request, params }) {
+  const cookie = createCookie("jwt", {});
+  const cookieExists =
+    (await cookie.parse(request.headers.get("Cookie"))) !== null;
+
+  let api = useApi();
+  let userData: Users200Response = await api.users(params.id);
+
+  return { user: userData, banner: cookieExists };
+}
+
 export default function Profile() {
+  const { user, banner } = useLoaderData<typeof loader>();
   return (
-    <div className="px-6 w-full h-screen">
-      <div className="flex justify-center">
-        <div className="mt-4">
-          <Avatar sx={{ width: 240, height: 240 }}>N</Avatar>
-          <div className=" text-center text-special-heading-3">Cocanut</div>
-          <div className="text-single-200 text-center">967k followers</div>
-          <div className="text-single-200 text-center">12 videos</div>
+    <div>
+      <Navbar displayAvatar={banner}></Navbar>
+      <div className="bg-white-200 h-screen">
+        <div className="px-6 w-full h-screen">
           <div className="flex justify-center">
-            <button className="rounded-full p-3 border-cherry-red-200 text-cherry-red-200  border-2	">
-              Follow
-            </button>
-            <button className="rounded-full ml-1 p-3 border-cherry-red-200 text-cherry-red-200  border-2	">
-              <span className="float-left inline-block relative align-middle">
-                Edit Profile
-              </span>
-              <span className="inline-block relative align-middle ml-1">
-                <Cog8ToothIcon className="w-5 float-left	"></Cog8ToothIcon>
-              </span>
-            </button>
+            <div className="mt-4 flex-justify-center">
+              <Avatar className="mx-auto" sx={{ width: 240, height: 240 }}>
+                N
+              </Avatar>
+              <div className=" text-center text-special-heading-3">
+                {user.username}
+              </div>
+              <div className="text-single-200 text-center">0 followers</div>
+              <div className="text-single-200 text-center">
+                {user.videos?.length} videos
+              </div>
+              <div className="flex justify-center">
+                <button className="rounded-full p-3 border-cherry-red-200 text-cherry-red-200  border-2	">
+                  Follow
+                </button>
+                <button className="rounded-full ml-1 p-3 border-cherry-red-200 text-cherry-red-200  border-2	">
+                  <span className="float-left inline-block relative align-middle">
+                    Edit Profile
+                  </span>
+                  <span className="inline-block relative align-middle ml-1">
+                    <Cog8ToothIcon className="w-5 float-left	"></Cog8ToothIcon>
+                  </span>
+                </button>
+              </div>
+            </div>
           </div>
+
+          {/* <Categories></Categories> */}
+          <div className="mt-6">
+            <VideocardList videos={user.videos}></VideocardList>
+          </div>
+
+          <span>
+            <Pages></Pages>
+          </span>
         </div>
       </div>
-
-      <Categories></Categories>
-      <div className="mt-6">
-        <VideocardList></VideocardList>
-      </div>
-
-      <span>
-        <Pages></Pages>
-      </span>
     </div>
   );
 }
