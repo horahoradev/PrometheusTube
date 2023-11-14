@@ -726,7 +726,7 @@ paths:
           required: true
           description: download id to filter on
           schema:
-            type: integer
+            type: string
       responses:
         "200":
           description: list of follow feed videos
@@ -745,5 +745,37 @@ paths:
                       type: string
                     Timestamp:
                       type: string
+        default:
+          description: Unexpected error
+  /archive-requests:
+    get:
+      summary: Get archive requests
+      operationId: archiveRequests
+      responses:
+        "200":
+          description: list of archive requests
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    UserID:
+                      type: integer
+                    Url:
+                      type: string
+                    ArchivedVideos:
+                      type: integer
+                    CurrentTotalVideos:
+                      type: integer
+                    LastSynced:
+                      type: string
+                    BackoffFactor:
+                      type: integer
+                    DownloadID:
+                      type: integer
+                    UndownloadableVideos:
+                      type: integer
         default:
           description: Unexpected error

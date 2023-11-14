@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"net/url"
 	"strconv"
 	"strings"
 	"time"
@@ -816,12 +815,40 @@ func (s Server) EmailValidation(ctx echo.Context, params EmailValidationParams) 
 	return nil
 }
 
-func (s Server) ArchiveEvents(ctx echo.Context, params *ArchiveEventsParams) error {
-	downloadID, err := url.QueryUnescape(c.Param("id"))
+func (s Server) ArchiveRequests(c echo.Context) error {
+	data := ArchiveRequestsPageData{}
+
+	profileInfo, err := s.r.getUserProfileInfo(c)
 	if err != nil {
-		return ctx.String(http.StatusInternalServerError, err.Error())
+		return c.String(http.StatusForbidden, err.Error())
 	}
 
+	resp, err := s.r.s.ListArchivalEntries(context.TODO(), &schedulerproto.ListArchivalEntriesRequest{UserID: profileInfo.UserID})
+	if err != nil {
+		return err
+	}
+
+	var requests []ArchivalRequest
+	for _, archivalReq := range resp.Entries {
+		req := ArchivalRequest{
+			UserID:               archivalReq.UserID,
+			Url:                  archivalReq.Url,
+			ArchivedVideos:       archivalReq.ArchivedVideos,
+			CurrentTotalVideos:   archivalReq.CurrentTotalVideos,
+			LastSynced:           archivalReq.LastSynced,
+			BackoffFactor:        archivalReq.BackoffFactor,
+			DownloadID:           archivalReq.DownloadID,
+			UndownloadableVideos: archivalReq.UndownloadableVideos,
+		}
+		requests = append(requests, req)
+	}
+	data.ArchivalRequests = requests
+
+	return c.JSON(http.StatusOK, data)
+}
+
+func (s Server) ArchiveEvents(ctx echo.Context, params *ArchiveEventsParams) error {
+	downloadID := params.DownloadID
 	if downloadID == "all" {
 		data := ArchiveEventsData{}
 

@@ -25,7 +25,7 @@ import (
 // ArchiveEventsParams defines parameters for ArchiveEvents.
 type ArchiveEventsParams struct {
 	// DownloadID download id to filter on
-	DownloadID int `json:"downloadID"`
+	DownloadID string `json:"downloadID"`
 }
 
 // CommentParams defines parameters for Comment.
@@ -253,6 +253,9 @@ type ClientInterface interface {
 	// ArchiveEvents request
 	ArchiveEvents(ctx context.Context, params *ArchiveEventsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// ArchiveRequests request
+	ArchiveRequests(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// Comment request
 	Comment(ctx context.Context, params *CommentParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -316,6 +319,18 @@ type ClientInterface interface {
 
 func (c *Client) ArchiveEvents(ctx context.Context, params *ArchiveEventsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewArchiveEventsRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ArchiveRequests(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewArchiveRequestsRequest(c.Server)
 	if err != nil {
 		return nil, err
 	}
@@ -598,6 +613,33 @@ func NewArchiveEventsRequest(server string, params *ArchiveEventsParams) (*http.
 	}
 
 	req.Header.Set("downloadID", headerParam0)
+
+	return req, nil
+}
+
+// NewArchiveRequestsRequest generates requests for ArchiveRequests
+func NewArchiveRequestsRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/archive-requests")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	return req, nil
 }
@@ -1582,6 +1624,9 @@ type ClientWithResponsesInterface interface {
 	// ArchiveEvents request
 	ArchiveEventsWithResponse(ctx context.Context, params *ArchiveEventsParams, reqEditors ...RequestEditorFn) (*ArchiveEventsResponse, error)
 
+	// ArchiveRequests request
+	ArchiveRequestsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ArchiveRequestsResponse, error)
+
 	// Comment request
 	CommentWithResponse(ctx context.Context, params *CommentParams, reqEditors ...RequestEditorFn) (*CommentResponse, error)
 
@@ -1664,6 +1709,37 @@ func (r ArchiveEventsResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r ArchiveEventsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ArchiveRequestsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]struct {
+		ArchivedVideos       *int    `json:"ArchivedVideos,omitempty"`
+		BackoffFactor        *int    `json:"BackoffFactor,omitempty"`
+		CurrentTotalVideos   *int    `json:"CurrentTotalVideos,omitempty"`
+		DownloadID           *int    `json:"DownloadID,omitempty"`
+		LastSynced           *string `json:"LastSynced,omitempty"`
+		UndownloadableVideos *int    `json:"UndownloadableVideos,omitempty"`
+		Url                  *string `json:"Url,omitempty"`
+		UserID               *int    `json:"UserID,omitempty"`
+	}
+}
+
+// Status returns HTTPResponse.Status
+func (r ArchiveRequestsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ArchiveRequestsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -2204,6 +2280,15 @@ func (c *ClientWithResponses) ArchiveEventsWithResponse(ctx context.Context, par
 	return ParseArchiveEventsResponse(rsp)
 }
 
+// ArchiveRequestsWithResponse request returning *ArchiveRequestsResponse
+func (c *ClientWithResponses) ArchiveRequestsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ArchiveRequestsResponse, error) {
+	rsp, err := c.ArchiveRequests(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseArchiveRequestsResponse(rsp)
+}
+
 // CommentWithResponse request returning *CommentResponse
 func (c *ClientWithResponses) CommentWithResponse(ctx context.Context, params *CommentParams, reqEditors ...RequestEditorFn) (*CommentResponse, error) {
 	rsp, err := c.Comment(ctx, params, reqEditors...)
@@ -2404,6 +2489,41 @@ func ParseArchiveEventsResponse(rsp *http.Response) (*ArchiveEventsResponse, err
 			ParnetUrl *string `json:"ParnetUrl,omitempty"`
 			Timestamp *string `json:"Timestamp,omitempty"`
 			VideoUrl  *string `json:"VideoUrl,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseArchiveRequestsResponse parses an HTTP response from a ArchiveRequestsWithResponse call
+func ParseArchiveRequestsResponse(rsp *http.Response) (*ArchiveRequestsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ArchiveRequestsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []struct {
+			ArchivedVideos       *int    `json:"ArchivedVideos,omitempty"`
+			BackoffFactor        *int    `json:"BackoffFactor,omitempty"`
+			CurrentTotalVideos   *int    `json:"CurrentTotalVideos,omitempty"`
+			DownloadID           *int    `json:"DownloadID,omitempty"`
+			LastSynced           *string `json:"LastSynced,omitempty"`
+			UndownloadableVideos *int    `json:"UndownloadableVideos,omitempty"`
+			Url                  *string `json:"Url,omitempty"`
+			UserID               *int    `json:"UserID,omitempty"`
 		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -2908,6 +3028,9 @@ type ServerInterface interface {
 	// Get archive events
 	// (GET /archive-events)
 	ArchiveEvents(ctx echo.Context, params ArchiveEventsParams) error
+	// Get archive requests
+	// (GET /archive-requests)
+	ArchiveRequests(ctx echo.Context) error
 	// Comment on a video
 	// (POST /comment)
 	Comment(ctx echo.Context, params CommentParams) error
@@ -2985,7 +3108,7 @@ func (w *ServerInterfaceWrapper) ArchiveEvents(ctx echo.Context) error {
 	headers := ctx.Request().Header
 	// ------------- Required header parameter "downloadID" -------------
 	if valueList, found := headers[http.CanonicalHeaderKey("downloadID")]; found {
-		var DownloadID int
+		var DownloadID string
 		n := len(valueList)
 		if n != 1 {
 			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Expected one value for downloadID, got %d", n))
@@ -3003,6 +3126,15 @@ func (w *ServerInterfaceWrapper) ArchiveEvents(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshalled arguments
 	err = w.Handler.ArchiveEvents(ctx, params)
+	return err
+}
+
+// ArchiveRequests converts echo context to params.
+func (w *ServerInterfaceWrapper) ArchiveRequests(ctx echo.Context) error {
+	var err error
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.ArchiveRequests(ctx)
 	return err
 }
 
@@ -3903,6 +4035,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	}
 
 	router.GET(baseURL+"/archive-events", wrapper.ArchiveEvents)
+	router.GET(baseURL+"/archive-requests", wrapper.ArchiveRequests)
 	router.POST(baseURL+"/comment", wrapper.Comment)
 	router.GET(baseURL+"/comments/:id", wrapper.Comments)
 	router.POST(baseURL+"/danmaku", wrapper.CreateDanmaku)
@@ -3929,39 +4062,41 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"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",
+	"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",
+	"xiRj+PXX1/8HAAD//wW3dtoVNQAA",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file
