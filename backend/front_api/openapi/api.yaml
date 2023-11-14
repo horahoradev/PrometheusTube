@@ -779,3 +779,48 @@ paths:
                       type: integer
         default:
           description: Unexpected error
+  /audit-events:
+    get:
+      summary: Get archive requests
+      operationId: auditEvents
+      parameters:
+        - name: pageNumber
+          in: header
+          required: true
+          description: content page number
+          schema:
+            type: integer
+        - name: id
+          in: header
+          required: true
+          description: user id to filter on
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: list of archive requests
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    UserID:
+                      type: integer
+                    Url:
+                      type: string
+                    ArchivedVideos:
+                      type: integer
+                    CurrentTotalVideos:
+                      type: integer
+                    LastSynced:
+                      type: string
+                    BackoffFactor:
+                      type: integer
+                    DownloadID:
+                      type: integer
+                    UndownloadableVideos:
+                      type: integer
+        default:
+          description: Unexpected error

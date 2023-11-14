@@ -28,6 +28,15 @@ type ArchiveEventsParams struct {
 	DownloadID string `json:"downloadID"`
 }
 
+// AuditEventsParams defines parameters for AuditEvents.
+type AuditEventsParams struct {
+	// PageNumber content page number
+	PageNumber int `json:"pageNumber"`
+
+	// Id user id to filter on
+	Id int `json:"id"`
+}
+
 // CommentParams defines parameters for Comment.
 type CommentParams struct {
 	// Parent parent comment ID
@@ -256,6 +265,9 @@ type ClientInterface interface {
 	// ArchiveRequests request
 	ArchiveRequests(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// AuditEvents request
+	AuditEvents(ctx context.Context, params *AuditEventsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// Comment request
 	Comment(ctx context.Context, params *CommentParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -331,6 +343,18 @@ func (c *Client) ArchiveEvents(ctx context.Context, params *ArchiveEventsParams,
 
 func (c *Client) ArchiveRequests(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewArchiveRequestsRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) AuditEvents(ctx context.Context, params *AuditEventsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAuditEventsRequest(c.Server, params)
 	if err != nil {
 		return nil, err
 	}
@@ -640,6 +664,51 @@ func NewArchiveRequestsRequest(server string) (*http.Request, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	return req, nil
+}
+
+// NewAuditEventsRequest generates requests for AuditEvents
+func NewAuditEventsRequest(server string, params *AuditEventsParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/audit-events")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var headerParam0 string
+
+	headerParam0, err = runtime.StyleParamWithLocation("simple", false, "pageNumber", runtime.ParamLocationHeader, params.PageNumber)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set("pageNumber", headerParam0)
+
+	var headerParam1 string
+
+	headerParam1, err = runtime.StyleParamWithLocation("simple", false, "id", runtime.ParamLocationHeader, params.Id)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set("id", headerParam1)
 
 	return req, nil
 }
@@ -1627,6 +1696,9 @@ type ClientWithResponsesInterface interface {
 	// ArchiveRequests request
 	ArchiveRequestsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ArchiveRequestsResponse, error)
 
+	// AuditEvents request
+	AuditEventsWithResponse(ctx context.Context, params *AuditEventsParams, reqEditors ...RequestEditorFn) (*AuditEventsResponse, error)
+
 	// Comment request
 	CommentWithResponse(ctx context.Context, params *CommentParams, reqEditors ...RequestEditorFn) (*CommentResponse, error)
 
@@ -1740,6 +1812,37 @@ func (r ArchiveRequestsResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r ArchiveRequestsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type AuditEventsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]struct {
+		ArchivedVideos       *int    `json:"ArchivedVideos,omitempty"`
+		BackoffFactor        *int    `json:"BackoffFactor,omitempty"`
+		CurrentTotalVideos   *int    `json:"CurrentTotalVideos,omitempty"`
+		DownloadID           *int    `json:"DownloadID,omitempty"`
+		LastSynced           *string `json:"LastSynced,omitempty"`
+		UndownloadableVideos *int    `json:"UndownloadableVideos,omitempty"`
+		Url                  *string `json:"Url,omitempty"`
+		UserID               *int    `json:"UserID,omitempty"`
+	}
+}
+
+// Status returns HTTPResponse.Status
+func (r AuditEventsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r AuditEventsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -2289,6 +2392,15 @@ func (c *ClientWithResponses) ArchiveRequestsWithResponse(ctx context.Context, r
 	return ParseArchiveRequestsResponse(rsp)
 }
 
+// AuditEventsWithResponse request returning *AuditEventsResponse
+func (c *ClientWithResponses) AuditEventsWithResponse(ctx context.Context, params *AuditEventsParams, reqEditors ...RequestEditorFn) (*AuditEventsResponse, error) {
+	rsp, err := c.AuditEvents(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseAuditEventsResponse(rsp)
+}
+
 // CommentWithResponse request returning *CommentResponse
 func (c *ClientWithResponses) CommentWithResponse(ctx context.Context, params *CommentParams, reqEditors ...RequestEditorFn) (*CommentResponse, error) {
 	rsp, err := c.Comment(ctx, params, reqEditors...)
@@ -2509,6 +2621,41 @@ func ParseArchiveRequestsResponse(rsp *http.Response) (*ArchiveRequestsResponse,
 	}
 
 	response := &ArchiveRequestsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []struct {
+			ArchivedVideos       *int    `json:"ArchivedVideos,omitempty"`
+			BackoffFactor        *int    `json:"BackoffFactor,omitempty"`
+			CurrentTotalVideos   *int    `json:"CurrentTotalVideos,omitempty"`
+			DownloadID           *int    `json:"DownloadID,omitempty"`
+			LastSynced           *string `json:"LastSynced,omitempty"`
+			UndownloadableVideos *int    `json:"UndownloadableVideos,omitempty"`
+			Url                  *string `json:"Url,omitempty"`
+			UserID               *int    `json:"UserID,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseAuditEventsResponse parses an HTTP response from a AuditEventsWithResponse call
+func ParseAuditEventsResponse(rsp *http.Response) (*AuditEventsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &AuditEventsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -3031,6 +3178,9 @@ type ServerInterface interface {
 	// Get archive requests
 	// (GET /archive-requests)
 	ArchiveRequests(ctx echo.Context) error
+	// Get archive requests
+	// (GET /audit-events)
+	AuditEvents(ctx echo.Context, params AuditEventsParams) error
 	// Comment on a video
 	// (POST /comment)
 	Comment(ctx echo.Context, params CommentParams) error
@@ -3135,6 +3285,54 @@ func (w *ServerInterfaceWrapper) ArchiveRequests(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshalled arguments
 	err = w.Handler.ArchiveRequests(ctx)
+	return err
+}
+
+// AuditEvents converts echo context to params.
+func (w *ServerInterfaceWrapper) AuditEvents(ctx echo.Context) error {
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params AuditEventsParams
+
+	headers := ctx.Request().Header
+	// ------------- Required header parameter "pageNumber" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("pageNumber")]; found {
+		var PageNumber int
+		n := len(valueList)
+		if n != 1 {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Expected one value for pageNumber, got %d", n))
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "pageNumber", runtime.ParamLocationHeader, valueList[0], &PageNumber)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter pageNumber: %s", err))
+		}
+
+		params.PageNumber = PageNumber
+	} else {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Header parameter pageNumber is required, but not found"))
+	}
+	// ------------- Required header parameter "id" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("id")]; found {
+		var Id int
+		n := len(valueList)
+		if n != 1 {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Expected one value for id, got %d", n))
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "id", runtime.ParamLocationHeader, valueList[0], &Id)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
+		}
+
+		params.Id = Id
+	} else {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Header parameter id is required, but not found"))
+	}
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.AuditEvents(ctx, params)
 	return err
 }
 
@@ -4036,6 +4234,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 
 	router.GET(baseURL+"/archive-events", wrapper.ArchiveEvents)
 	router.GET(baseURL+"/archive-requests", wrapper.ArchiveRequests)
+	router.GET(baseURL+"/audit-events", wrapper.AuditEvents)
 	router.POST(baseURL+"/comment", wrapper.Comment)
 	router.GET(baseURL+"/comments/:id", wrapper.Comments)
 	router.POST(baseURL+"/danmaku", wrapper.CreateDanmaku)
@@ -4062,41 +4261,41 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"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",
-	"xiRj+PXX1/8HAAD//wW3dtoVNQAA",
+	"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",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

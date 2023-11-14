@@ -877,3 +877,41 @@ func (s Server) ArchiveEvents(ctx echo.Context, params *ArchiveEventsParams) err
 		return ctx.JSON(http.StatusOK, data)
 	}
 }
+
+func (s Server) AuditEventsWithResponse(c echo.Context, params *AuditEventsParams) error {
+	userIDInt := int64(params.Id)
+
+	profile, err := s.r.getUserProfileInfo(c)
+	if err != nil {
+		return err
+	}
+
+	// Only admins can see audit logs
+	if profile.Rank != 2 {
+		return c.String(http.StatusForbidden, "Insufficient user status")
+	}
+
+	pageNum := int64(params.PageNumber)
+
+	resp, err := s.r.u.GetAuditEvents(context.TODO(), &userproto.AuditEventsListRequest{
+		Page:   pageNum,
+		UserId: userIDInt,
+	})
+	if err != nil {
+		return err
+	}
+
+	var data AuditData
+	data.Length = int(resp.NumEvents)
+
+	for _, event := range resp.Events {
+		data.Events = append(data.Events, AuditEvent{
+			ID:        event.Id,
+			UserID:    event.User_ID,
+			Message:   event.Message,
+			Timestamp: event.Timestamp,
+		})
+	}
+
+	return c.JSON(http.StatusOK, data)
+}
