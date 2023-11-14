@@ -847,7 +847,7 @@ func (s Server) ArchiveRequests(c echo.Context) error {
 	return c.JSON(http.StatusOK, data)
 }
 
-func (s Server) ArchiveEvents(ctx echo.Context, params *ArchiveEventsParams) error {
+func (s Server) ArchiveEvents(ctx echo.Context, params ArchiveEventsParams) error {
 	downloadID := params.DownloadID
 	if downloadID == "all" {
 		data := ArchiveEventsData{}
@@ -878,7 +878,32 @@ func (s Server) ArchiveEvents(ctx echo.Context, params *ArchiveEventsParams) err
 	}
 }
 
-func (s Server) AuditEventsWithResponse(c echo.Context, params *AuditEventsParams) error {
+func (s Server) NewArchiveRequest(c echo.Context, params NewArchiveRequestParams) error {
+	urlVal := strings.TrimSpace(c.FormValue("url"))
+
+	profile, err := s.r.getUserProfileInfo(c)
+	if err != nil {
+		return err
+	}
+
+	if profile.Rank <= 1 {
+		return errors.New("insufficient permissions")
+	}
+
+	req := schedulerproto.URLRequest{
+		UserID: profile.UserID,
+		Url:    urlVal,
+	}
+
+	_, err = s.r.s.DlURL(context.TODO(), &req)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, nil)
+}
+
+func (s Server) AuditEvents(c echo.Context, params AuditEventsParams) error {
 	userIDInt := int64(params.Id)
 
 	profile, err := s.r.getUserProfileInfo(c)
@@ -914,4 +939,50 @@ func (s Server) AuditEventsWithResponse(c echo.Context, params *AuditEventsParam
 	}
 
 	return c.JSON(http.StatusOK, data)
+}
+
+func (s Server) RetryArchiveRequest(c echo.Context, params RetryArchiveRequestParams) error {
+	downloadIDInt := params.DownloadID
+
+	// Requesting profile
+	profile, err := s.r.getUserProfileInfo(c)
+	if err != nil {
+		return err
+	}
+
+	// We want an audit log entry for this one
+	_, err = s.r.u.AddAuditEvent(context.TODO(), &userproto.NewAuditEventRequest{
+		Message: fmt.Sprintf("User attempted to retry archival request %d", downloadIDInt),
+		User_ID: profile.UserID,
+	})
+	if err != nil {
+		return err // If the audit event can't be created, fail the operation
+	}
+
+	_, err = s.r.s.RetryArchivalRequestDownloadss(context.TODO(), &schedulerproto.RetryRequest{UserID: uint64(profile.UserID),
+		DownloadID: uint64(downloadIDInt)})
+
+	return err
+}
+
+func (s Server) DeleteArchiveRequest(c echo.Context, params DeleteArchiveRequestParams) error {
+	// Requesting profile
+	profile, err := s.r.getUserProfileInfo(c)
+	if err != nil {
+		return err
+	}
+
+	if profile.Rank < 1 {
+		return c.String(http.StatusForbidden, "Insufficient user status")
+	}
+
+	downloadID := c.FormValue("download_id")
+	downloadIDInt, err := strconv.ParseInt(downloadID, 10, 64) // just make sure we can parse it
+	if err != nil {
+		return err
+	}
+
+	_, err = s.r.s.DeleteArchivalRequest(context.TODO(), &schedulerproto.DeletionRequest{UserID: uint64(profile.UserID), DownloadID: uint64(downloadIDInt)})
+
+	return err
 }

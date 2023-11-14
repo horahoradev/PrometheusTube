@@ -824,3 +824,49 @@ paths:
                       type: integer
         default:
           description: Unexpected error
+  /archive-request:
+    post:
+      summary: Create new archive request
+      operationId: newArchiveRequest
+      parameters:
+        - name: url
+          in: header
+          required: true
+          description: url to archive
+          schema:
+            type: string
+      responses:
+        "200":
+          description: archival success
+        default:
+          description: Unexpected error
+    put:
+      summary: Retry archive request
+      operationId: retryArchiveRequest
+      parameters:
+        - name: downloadID
+          in: header
+          required: true
+          description: download ID of the request to retry
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: retry success
+        default:
+          description: Unexpected error
+    delete:
+      summary: Retry archive request
+      operationId: deleteArchiveRequest
+      parameters:
+        - name: downloadID
+          in: header
+          required: true
+          description: download ID of the request to retry
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: delete success
+        default:
+          description: Unexpected error

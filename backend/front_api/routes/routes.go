@@ -49,7 +49,7 @@ func SetupRoutes(e *echo.Echo, cfg *config.Config, srv *socketio.Server) {
 	e.GET("/api/videos", wrapper.Videos)
 	e.GET("/api/users/:id", wrapper.Users)
 	e.GET("/api/currentuserprofile/", r.getCurrentUserProfile)
-	e.GET("/api/auditevents/:id", r.handleGetAudits)
+	e.GET("/api/audit-events", wrapper.AuditEvents)
 
 	e.GET("/api/videos/:id", wrapper.VideoDetail)
 	e.POST("/api/upvotevideo/:id", wrapper.UpvoteVideo)
@@ -73,11 +73,11 @@ func SetupRoutes(e *echo.Echo, cfg *config.Config, srv *socketio.Server) {
 
 	// Scheduler
 	e.GET("/api/downloadsinprogress", r.handleGetDownloadsInProgress)
-	e.GET("/api/archiverequests", r.getArchiveRequests)
-	e.GET("/api/archiveevents/:id", wrapper.ArchiveEvents)
-	e.POST("/api/archiverequests", r.handleArchiveRequest)
-	e.POST("/api/delete-archiverequest", r.handleDeleteArchivalRequest)
-	e.POST("/api/retry-archiverequest", r.handleRetryArchivalRequest)
+	e.GET("/api/archive-requests", wrapper.ArchiveRequests)
+	e.GET("/api/archive-events", wrapper.ArchiveEvents)
+	e.POST("/api/archive-request", wrapper.NewArchiveRequest)
+	e.DELETE("/api/archive-request", wrapper.DeleteArchiveRequest)
+	e.POST("/api/archive-request", wrapper.RetryArchiveRequest)
 
 	e.POST("/api/follow/:id", wrapper.Follow)
 	e.GET("/api/follow-feed", wrapper.FollowFeed)

@@ -28,6 +28,24 @@ type ArchiveEventsParams struct {
 	DownloadID string `json:"downloadID"`
 }
 
+// DeleteArchiveRequestParams defines parameters for DeleteArchiveRequest.
+type DeleteArchiveRequestParams struct {
+	// DownloadID download ID of the request to retry
+	DownloadID int `json:"downloadID"`
+}
+
+// NewArchiveRequestParams defines parameters for NewArchiveRequest.
+type NewArchiveRequestParams struct {
+	// Url url to archive
+	Url string `json:"url"`
+}
+
+// RetryArchiveRequestParams defines parameters for RetryArchiveRequest.
+type RetryArchiveRequestParams struct {
+	// DownloadID download ID of the request to retry
+	DownloadID int `json:"downloadID"`
+}
+
 // AuditEventsParams defines parameters for AuditEvents.
 type AuditEventsParams struct {
 	// PageNumber content page number
@@ -262,6 +280,15 @@ type ClientInterface interface {
 	// ArchiveEvents request
 	ArchiveEvents(ctx context.Context, params *ArchiveEventsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// DeleteArchiveRequest request
+	DeleteArchiveRequest(ctx context.Context, params *DeleteArchiveRequestParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// NewArchiveRequest request
+	NewArchiveRequest(ctx context.Context, params *NewArchiveRequestParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// RetryArchiveRequest request
+	RetryArchiveRequest(ctx context.Context, params *RetryArchiveRequestParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// ArchiveRequests request
 	ArchiveRequests(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -331,6 +358,42 @@ type ClientInterface interface {
 
 func (c *Client) ArchiveEvents(ctx context.Context, params *ArchiveEventsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewArchiveEventsRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteArchiveRequest(ctx context.Context, params *DeleteArchiveRequestParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteArchiveRequestRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) NewArchiveRequest(ctx context.Context, params *NewArchiveRequestParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewNewArchiveRequestRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) RetryArchiveRequest(ctx context.Context, params *RetryArchiveRequestParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewRetryArchiveRequestRequest(c.Server, params)
 	if err != nil {
 		return nil, err
 	}
@@ -625,6 +688,114 @@ func NewArchiveEventsRequest(server string, params *ArchiveEventsParams) (*http.
 	}
 
 	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var headerParam0 string
+
+	headerParam0, err = runtime.StyleParamWithLocation("simple", false, "downloadID", runtime.ParamLocationHeader, params.DownloadID)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set("downloadID", headerParam0)
+
+	return req, nil
+}
+
+// NewDeleteArchiveRequestRequest generates requests for DeleteArchiveRequest
+func NewDeleteArchiveRequestRequest(server string, params *DeleteArchiveRequestParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/archive-request")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var headerParam0 string
+
+	headerParam0, err = runtime.StyleParamWithLocation("simple", false, "downloadID", runtime.ParamLocationHeader, params.DownloadID)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set("downloadID", headerParam0)
+
+	return req, nil
+}
+
+// NewNewArchiveRequestRequest generates requests for NewArchiveRequest
+func NewNewArchiveRequestRequest(server string, params *NewArchiveRequestParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/archive-request")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var headerParam0 string
+
+	headerParam0, err = runtime.StyleParamWithLocation("simple", false, "url", runtime.ParamLocationHeader, params.Url)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set("url", headerParam0)
+
+	return req, nil
+}
+
+// NewRetryArchiveRequestRequest generates requests for RetryArchiveRequest
+func NewRetryArchiveRequestRequest(server string, params *RetryArchiveRequestParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/archive-request")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PUT", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -1693,6 +1864,15 @@ type ClientWithResponsesInterface interface {
 	// ArchiveEvents request
 	ArchiveEventsWithResponse(ctx context.Context, params *ArchiveEventsParams, reqEditors ...RequestEditorFn) (*ArchiveEventsResponse, error)
 
+	// DeleteArchiveRequest request
+	DeleteArchiveRequestWithResponse(ctx context.Context, params *DeleteArchiveRequestParams, reqEditors ...RequestEditorFn) (*DeleteArchiveRequestResponse, error)
+
+	// NewArchiveRequest request
+	NewArchiveRequestWithResponse(ctx context.Context, params *NewArchiveRequestParams, reqEditors ...RequestEditorFn) (*NewArchiveRequestResponse, error)
+
+	// RetryArchiveRequest request
+	RetryArchiveRequestWithResponse(ctx context.Context, params *RetryArchiveRequestParams, reqEditors ...RequestEditorFn) (*RetryArchiveRequestResponse, error)
+
 	// ArchiveRequests request
 	ArchiveRequestsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ArchiveRequestsResponse, error)
 
@@ -1781,6 +1961,69 @@ func (r ArchiveEventsResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r ArchiveEventsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteArchiveRequestResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteArchiveRequestResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteArchiveRequestResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type NewArchiveRequestResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r NewArchiveRequestResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r NewArchiveRequestResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type RetryArchiveRequestResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r RetryArchiveRequestResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r RetryArchiveRequestResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -2383,6 +2626,33 @@ func (c *ClientWithResponses) ArchiveEventsWithResponse(ctx context.Context, par
 	return ParseArchiveEventsResponse(rsp)
 }
 
+// DeleteArchiveRequestWithResponse request returning *DeleteArchiveRequestResponse
+func (c *ClientWithResponses) DeleteArchiveRequestWithResponse(ctx context.Context, params *DeleteArchiveRequestParams, reqEditors ...RequestEditorFn) (*DeleteArchiveRequestResponse, error) {
+	rsp, err := c.DeleteArchiveRequest(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteArchiveRequestResponse(rsp)
+}
+
+// NewArchiveRequestWithResponse request returning *NewArchiveRequestResponse
+func (c *ClientWithResponses) NewArchiveRequestWithResponse(ctx context.Context, params *NewArchiveRequestParams, reqEditors ...RequestEditorFn) (*NewArchiveRequestResponse, error) {
+	rsp, err := c.NewArchiveRequest(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseNewArchiveRequestResponse(rsp)
+}
+
+// RetryArchiveRequestWithResponse request returning *RetryArchiveRequestResponse
+func (c *ClientWithResponses) RetryArchiveRequestWithResponse(ctx context.Context, params *RetryArchiveRequestParams, reqEditors ...RequestEditorFn) (*RetryArchiveRequestResponse, error) {
+	rsp, err := c.RetryArchiveRequest(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseRetryArchiveRequestResponse(rsp)
+}
+
 // ArchiveRequestsWithResponse request returning *ArchiveRequestsResponse
 func (c *ClientWithResponses) ArchiveRequestsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ArchiveRequestsResponse, error) {
 	rsp, err := c.ArchiveRequests(ctx, reqEditors...)
@@ -2607,6 +2877,54 @@ func ParseArchiveEventsResponse(rsp *http.Response) (*ArchiveEventsResponse, err
 		}
 		response.JSON200 = &dest
 
+	}
+
+	return response, nil
+}
+
+// ParseDeleteArchiveRequestResponse parses an HTTP response from a DeleteArchiveRequestWithResponse call
+func ParseDeleteArchiveRequestResponse(rsp *http.Response) (*DeleteArchiveRequestResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteArchiveRequestResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseNewArchiveRequestResponse parses an HTTP response from a NewArchiveRequestWithResponse call
+func ParseNewArchiveRequestResponse(rsp *http.Response) (*NewArchiveRequestResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &NewArchiveRequestResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseRetryArchiveRequestResponse parses an HTTP response from a RetryArchiveRequestWithResponse call
+func ParseRetryArchiveRequestResponse(rsp *http.Response) (*RetryArchiveRequestResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &RetryArchiveRequestResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
 	}
 
 	return response, nil
@@ -3175,6 +3493,15 @@ type ServerInterface interface {
 	// Get archive events
 	// (GET /archive-events)
 	ArchiveEvents(ctx echo.Context, params ArchiveEventsParams) error
+	// Retry archive request
+	// (DELETE /archive-request)
+	DeleteArchiveRequest(ctx echo.Context, params DeleteArchiveRequestParams) error
+	// Create new archive request
+	// (POST /archive-request)
+	NewArchiveRequest(ctx echo.Context, params NewArchiveRequestParams) error
+	// Retry archive request
+	// (PUT /archive-request)
+	RetryArchiveRequest(ctx echo.Context, params RetryArchiveRequestParams) error
 	// Get archive requests
 	// (GET /archive-requests)
 	ArchiveRequests(ctx echo.Context) error
@@ -3276,6 +3603,99 @@ func (w *ServerInterfaceWrapper) ArchiveEvents(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshalled arguments
 	err = w.Handler.ArchiveEvents(ctx, params)
+	return err
+}
+
+// DeleteArchiveRequest converts echo context to params.
+func (w *ServerInterfaceWrapper) DeleteArchiveRequest(ctx echo.Context) error {
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params DeleteArchiveRequestParams
+
+	headers := ctx.Request().Header
+	// ------------- Required header parameter "downloadID" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("downloadID")]; found {
+		var DownloadID int
+		n := len(valueList)
+		if n != 1 {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Expected one value for downloadID, got %d", n))
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "downloadID", runtime.ParamLocationHeader, valueList[0], &DownloadID)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter downloadID: %s", err))
+		}
+
+		params.DownloadID = DownloadID
+	} else {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Header parameter downloadID is required, but not found"))
+	}
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.DeleteArchiveRequest(ctx, params)
+	return err
+}
+
+// NewArchiveRequest converts echo context to params.
+func (w *ServerInterfaceWrapper) NewArchiveRequest(ctx echo.Context) error {
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params NewArchiveRequestParams
+
+	headers := ctx.Request().Header
+	// ------------- Required header parameter "url" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("url")]; found {
+		var Url string
+		n := len(valueList)
+		if n != 1 {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Expected one value for url, got %d", n))
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "url", runtime.ParamLocationHeader, valueList[0], &Url)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter url: %s", err))
+		}
+
+		params.Url = Url
+	} else {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Header parameter url is required, but not found"))
+	}
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.NewArchiveRequest(ctx, params)
+	return err
+}
+
+// RetryArchiveRequest converts echo context to params.
+func (w *ServerInterfaceWrapper) RetryArchiveRequest(ctx echo.Context) error {
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params RetryArchiveRequestParams
+
+	headers := ctx.Request().Header
+	// ------------- Required header parameter "downloadID" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("downloadID")]; found {
+		var DownloadID int
+		n := len(valueList)
+		if n != 1 {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Expected one value for downloadID, got %d", n))
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "downloadID", runtime.ParamLocationHeader, valueList[0], &DownloadID)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter downloadID: %s", err))
+		}
+
+		params.DownloadID = DownloadID
+	} else {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Header parameter downloadID is required, but not found"))
+	}
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.RetryArchiveRequest(ctx, params)
 	return err
 }
 
@@ -4233,6 +4653,9 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	}
 
 	router.GET(baseURL+"/archive-events", wrapper.ArchiveEvents)
+	router.DELETE(baseURL+"/archive-request", wrapper.DeleteArchiveRequest)
+	router.POST(baseURL+"/archive-request", wrapper.NewArchiveRequest)
+	router.PUT(baseURL+"/archive-request", wrapper.RetryArchiveRequest)
 	router.GET(baseURL+"/archive-requests", wrapper.ArchiveRequests)
 	router.GET(baseURL+"/audit-events", wrapper.AuditEvents)
 	router.POST(baseURL+"/comment", wrapper.Comment)
@@ -4261,41 +4684,43 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"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",
+	"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",
+	"hNLjn0ej0ZCkDO9/3f8/AAD///OVIA0CPAAA",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file
