@@ -176,6 +176,12 @@ services:
     volumes:
       - postgresdata_dev:/var/lib/postgresql/data
 
+  frontend:
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+
   horaminio:
     build:
       context: minio
@@ -280,8 +286,6 @@ services:
     user: "472"
     depends_on:
       - prometheus
-    ports:
-      - 3000:3000
     volumes:
       - grafana_data:/var/lib/grafana
       - ./grafana/:/etc/grafana/provisioning/
@@ -290,9 +294,6 @@ services:
   elasticsearch:
     image: elasticsearch:7.17.10
     restart: unless-stopped
-    ports:
-      - 9200:9200
-      - 9300:9300
     environment:
       - xpack.security.enabled=false
       - xpack.security.http.ssl.enabled=false
@@ -304,17 +305,12 @@ services:
     restart: unless-stopped
     depends_on:
       - elasticsearch
-    ports:
-      - 5601:5601
     environment:
       ELASTICSEARCH_HOSTS: '["http://elasticsearch:9200"]'
 
   gorse:
     image: zhenghaoz/gorse-in-one
     restart: unless-stopped
-    ports:
-      - 8086:8086   # gRPC port
-      - 8088:8088   # HTTP port
     environment:
       # Use Redis as cache storage backend.
       GORSE_CACHE_STORE: redis://redis:6379

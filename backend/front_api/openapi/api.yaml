@@ -3,14 +3,14 @@ servers:
   - url: http://localhost:3000/api
 info:
   version: 0.0.1
-  title: Kirakira Backend API
-  description: The API for Kirakira
+  title: Promtube Backend API
+  description: The API for Promtube
   contact:
-    name: Kirakira API Team
+    name: Promtube API Team
     email: horahora1567@gmail.com
   license:
     name: BSD-2
-    url: https://github.com/horahoradev/kirakira-backend/blob/master/LICENSE
+    url: https://github.com/horahoradev/prometheustube/blob/main/LICENSE
 paths:
   /login:
     post:
@@ -32,7 +32,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Login success
         default:
           description: Unexpected error
@@ -66,7 +66,7 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: registration succeeded
         default:
           description: Unexpected error
@@ -75,7 +75,7 @@ paths:
       summary: Log user out
       operationId: logout
       responses:
-        '200':
+        "200":
           description: Logout successful
         default:
           description: Unexpected error
@@ -122,7 +122,7 @@ paths:
             type: string
       operationId: upload
       responses:
-        '200':
+        "200":
           description: Logout successful
         default:
           description: Unexpected error
@@ -170,7 +170,7 @@ paths:
             type: string
             format: byte
       responses:
-        '200':
+        "200":
           description: list of videos and pagination data
           content:
             application/json:
@@ -234,7 +234,7 @@ paths:
           schema:
             type: number
       responses:
-        '200':
+        "200":
           description: get video details for a specific video
           content:
             application/json:
@@ -289,7 +289,7 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: get video details for a specific video
           content:
             application/json:
@@ -343,7 +343,7 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: Comment success
         default:
           description: Unexpected error
@@ -359,7 +359,7 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: Comment deleted
         default:
           description: Unexpected error
@@ -381,7 +381,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Password changed
         default:
           description: Unexpected error
@@ -397,7 +397,7 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: get video details for a specific video
           content:
             application/json:
@@ -466,7 +466,7 @@ paths:
           schema:
             type: number
       responses:
-        '200':
+        "200":
           description: Upvote success
         default:
           description: Unexpected error
@@ -488,7 +488,7 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: Upvote success
         default:
           description: Unexpected error
@@ -504,7 +504,7 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: list of video recommendations
           content:
             application/json:
@@ -543,7 +543,7 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: Follow success
         default:
           description: Unexpected error
@@ -552,7 +552,7 @@ paths:
       summary: Upvote a video
       operationId: followFeed
       responses:
-        '200':
+        "200":
           description: list of follow feed videos
           content:
             application/json:
@@ -612,7 +612,7 @@ paths:
             type: string
             format: byte
       responses:
-        '200':
+        "200":
           description: Update profile success
         default:
           description: Unexpected error
@@ -628,7 +628,7 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: list of danmaku
           content:
             application/json:
@@ -696,7 +696,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Danmaku creation success
         default:
           description: Unexpected error
@@ -712,7 +712,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Email validation success
         default:
           description: Unexpected error
