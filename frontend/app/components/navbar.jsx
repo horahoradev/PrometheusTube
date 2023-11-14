@@ -6,6 +6,7 @@ import Register from "app/components/register";
 
 import Modal from "@mui/material/Modal";
 import React from "react";
+import { userState } from "~/state";
 
 export function Navbar({ displayAvatar }) {
   const [open, setOpen] = React.useState(false);
@@ -19,6 +20,8 @@ export function Navbar({ displayAvatar }) {
   const handleCloseLogin = () => setOpenLogin(false);
 
   let [searchParams, setSearchParams] = useSearchParams();
+  let loggedIn = userState((state) => state.loggedIn);
+  let uid = userState((state) => state.uid);
 
   return (
     <div className="flex justify-between w-screen py-2 px-6">
@@ -44,7 +47,7 @@ export function Navbar({ displayAvatar }) {
         />
       </div>
       <div className="inline-block text-right w-36 ">
-        {!showAvatar ? (
+        {!loggedIn ? (
           <span className="float-left">
             <span>
               <button
@@ -74,7 +77,7 @@ export function Navbar({ displayAvatar }) {
               onClick={handleOpen}
               className="w-5 inline-block relative align-middle ml-1"
             >
-              <Avatar sx={{ width: 32, height: 32 }}>N</Avatar>
+              <Avatar sx={{ width: 32, height: 32 }}>{uid}</Avatar>
             </span>
           </span>
         )}

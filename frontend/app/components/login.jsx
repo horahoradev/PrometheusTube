@@ -19,14 +19,18 @@ const style = {
   p: 3,
 };
 
-export default function Login({setLogin}) {
-  const [username, setUsername] = React.useState('');
-  const [password, setPassword] = React.useState('');
+export default function Login({ setLogin }) {
+  let loggedIn = userState((state) => state.loggedIn);
+  let uid = userState((state) => state.uid);
+
+  const [username, setUsername] = React.useState("");
+  const [password, setPassword] = React.useState("");
 
   async function LoginUser() {
     let api = useApi();
     await api.login(username, password);
-    setLogin(false);
+    // setLogin(false);
+    setUserID();
   }
 
   return (
@@ -46,7 +50,7 @@ export default function Login({setLogin}) {
           label="Username"
           size="small"
           value={username}
-          onChange={e => setUsername(e.target.value)}
+          onChange={(e) => setUsername(e.target.value)}
         />
       </div>
       <div className="mt-4">
@@ -57,7 +61,7 @@ export default function Login({setLogin}) {
           label="Password"
           size="small"
           value={password}
-          onChange={e => setPassword(e.target.value)}
+          onChange={(e) => setPassword(e.target.value)}
         />
       </div>
       <div className="flex justify-between items-center my-2 mx-0">

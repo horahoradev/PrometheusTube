@@ -8,8 +8,13 @@ import { useApi } from "~/lib/oapi";
 import { json, redirect, createCookie } from "@remix-run/node";
 import { Navbar } from "app/components/navbar";
 import { useLoaderData, NavLink, useSearchParams } from "@remix-run/react";
+import { jwtDecode } from "jwt-decode";
+import { userState } from "~/state";
 
 export async function loader({ request }) {
+  let setUserID = userState((state) => state.setUserID);
+  let setLoggedIn = userState((state) => state.setLoggedIn);
+
   const searchParams = new URL(request.url).searchParams;
   const utf8Encode = new TextEncoder();
   const searchEncoded = utf8Encode.encode(
@@ -22,6 +27,11 @@ export async function loader({ request }) {
   const cookie = createCookie("jwt", {});
   const cookieExists =
     (await cookie.parse(request.headers.get("Cookie"))) !== null;
+  const uid = jwtDecode(await cookie.parse(request.headers.get("Cookie"))).uid;
+  console.log(uid);
+  setLoggedIn(cookieExists);
+  setUserID(uid);
+
   let api = useApi();
   let videoData = await api.videos(
     searchEncoded,
