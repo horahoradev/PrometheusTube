@@ -7,11 +7,14 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
+	"strconv"
 	"strings"
 	"time"
 
 	"github.com/eko/gocache/lib/v4/store"
 	"github.com/eko/gocache/store/redis/v4"
+	schedulerproto "github.com/horahoradev/horahora/scheduler/protocol"
 
 	userproto "github.com/KIRAKIRA-DOUGA/KIRAKIRA-golang-backend/user_service/protocol"
 	videoproto "github.com/KIRAKIRA-DOUGA/KIRAKIRA-golang-backend/video_service/protocol"
@@ -811,4 +814,39 @@ func (s Server) EmailValidation(ctx echo.Context, params EmailValidationParams) 
 		return err
 	}
 	return nil
+}
+
+func (s Server) ArchiveEvents(ctx echo.Context, params *ArchiveEventsParams) error {
+	downloadID, err := url.QueryUnescape(c.Param("id"))
+	if err != nil {
+		return ctx.String(http.StatusInternalServerError, err.Error())
+	}
+
+	if downloadID == "all" {
+		data := ArchiveEventsData{}
+
+		resp, err := s.r.s.ListArchivalEvents(context.TODO(), &schedulerproto.ListArchivalEventsRequest{DownloadID: 0, ShowAll: true})
+		if err != nil {
+			return err
+		}
+
+		data.ArchivalEvents = resp.Events
+		return ctx.JSON(http.StatusOK, data)
+	} else {
+		downloadIDInt, err := strconv.ParseInt(downloadID, 10, 64)
+		if err != nil {
+			return ctx.String(http.StatusInternalServerError, err.Error())
+		}
+
+		data := ArchiveEventsData{}
+
+		resp, err := s.r.s.ListArchivalEvents(context.TODO(), &schedulerproto.ListArchivalEventsRequest{DownloadID: downloadIDInt})
+		if err != nil {
+			return err
+		}
+
+		data.ArchivalEvents = resp.Events
+
+		return ctx.JSON(http.StatusOK, data)
+	}
 }

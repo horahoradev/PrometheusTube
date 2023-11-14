@@ -32,7 +32,7 @@ func Login(username, password string, privateKey *rsa.PrivateKey, u *model.UserM
 		return "", errors.New("User is banned")
 	}
 
-	passHash, err := u.GetPassHash(uid)
+	passHash, isAdmin, err := u.GetPassHash(uid)
 	if err != nil {
 		return "", err
 	}
@@ -47,7 +47,11 @@ func Login(username, password string, privateKey *rsa.PrivateKey, u *model.UserM
 	}
 
 	// Password is valid
-	payload := JWTPayload{UID: uid}
+	payload := JWTPayload{
+		UID:     uid,
+		IsAdmin: isAdmin,
+	}
+
 	return CreateJWT(payload, privateKey)
 }
 
@@ -106,12 +110,16 @@ func Register(username, email, password string, u *model.UserModel, privateKey *
 		return "", err
 	}
 
-	payload := JWTPayload{UID: uid}
+	payload := JWTPayload{
+		UID:     uid,
+		IsAdmin: false,
+	}
 	return CreateJWT(payload, privateKey)
 }
 
 type JWTPayload struct {
-	UID int64 `json:"uid"`
+	UID     int64 `json:"uid"`
+	IsAdmin bool  `json:"admin"`
 }
 
 func GenerateHash(password []byte) ([]byte, error) {

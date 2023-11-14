@@ -716,3 +716,34 @@ paths:
           description: Email validation success
         default:
           description: Unexpected error
+  /archive-events:
+    get:
+      summary: Get archive events
+      operationId: archiveEvents
+      parameters:
+        - name: downloadID
+          in: header
+          required: true
+          description: download id to filter on
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: list of follow feed videos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    VideoUrl:
+                      type: string
+                    ParnetUrl:
+                      type: string
+                    Message:
+                      type: string
+                    Timestamp:
+                      type: string
+        default:
+          description: Unexpected error

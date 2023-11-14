@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	baseURL    = "http://localhost:9000/api"
+	baseURL    = "https://prometheus.tube/api"
 	sm9TestTag = "今年レンコンコマンダー常盤"
 )
 

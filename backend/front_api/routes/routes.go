@@ -74,7 +74,7 @@ func SetupRoutes(e *echo.Echo, cfg *config.Config, srv *socketio.Server) {
 	// Scheduler
 	e.GET("/api/downloadsinprogress", r.handleGetDownloadsInProgress)
 	e.GET("/api/archiverequests", r.getArchiveRequests)
-	e.GET("/api/archiveevents/:id", r.getArchiveEvents)
+	e.GET("/api/archiveevents/:id", wrapper.ArchiveEvents)
 	e.POST("/api/archiverequests", r.handleArchiveRequest)
 	e.POST("/api/delete-archiverequest", r.handleDeleteArchivalRequest)
 	e.POST("/api/retry-archiverequest", r.handleRetryArchivalRequest)

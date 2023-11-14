@@ -92,18 +92,19 @@ func (m *UserModel) GetUserWithUsername(username string) (int64, error) {
 	return userID, nil
 }
 
-func (m *UserModel) GetPassHash(uid int64) (string, error) {
+func (m *UserModel) GetPassHash(uid int64) (string, bool, error) {
 	sql := "SELECT pass_hash FROM users WHERE id = $1"
 
 	row := m.Conn.QueryRow(sql, uid)
 
 	var passHash string
-	err := row.Scan(&passHash)
+	var isAdmin bool
+	err := row.Scan(&passHash, &isAdmin)
 	if err != nil {
-		return "", err
+		return "", false, err
 	}
 
-	return passHash, nil
+	return passHash, isAdmin, nil
 }
 
 func (m *UserModel) BanUser(uid int64) error {
