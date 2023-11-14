@@ -6,9 +6,17 @@ import Register from "app/components/register";
 
 import Modal from "@mui/material/Modal";
 import React from "react";
-import { userState } from "~/state";
+import { UserState } from "~/state";
+import { useEffect, useState } from "react";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 
 export function Navbar({ displayAvatar }) {
+  const [isHydrated, setIsHydrated] = useState(false);
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
+
   const [open, setOpen] = React.useState(false);
   const [showAvatar, setShowAvatar] = React.useState(displayAvatar);
 
@@ -20,8 +28,26 @@ export function Navbar({ displayAvatar }) {
   const handleCloseLogin = () => setOpenLogin(false);
 
   let [searchParams, setSearchParams] = useSearchParams();
-  let loggedIn = userState((state) => state.loggedIn);
-  let uid = userState((state) => state.uid);
+  let loggedIn = UserState((state) => state.loggedIn);
+  let uid = UserState((state) => state.UID);
+
+  // menu nav stuff
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const openMenu = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
+
+  let setLoggedIn = UserState((state) => state.setLoggedIn);
+  let setUID = UserState((state) => state.setUID);
+
+  function handleLogout() {
+    setLoggedIn(false);
+    setUID(null); // TODO clear the jwt cookie
+  }
 
   return (
     <div className="flex justify-between w-screen py-2 px-6">
@@ -47,7 +73,7 @@ export function Navbar({ displayAvatar }) {
         />
       </div>
       <div className="inline-block text-right w-36 ">
-        {!loggedIn ? (
+        {!loggedIn || !isHydrated ? (
           <span className="float-left">
             <span>
               <button
@@ -74,11 +100,25 @@ export function Navbar({ displayAvatar }) {
               <BellAlertIcon className="w-5 text-cherry-red-100"></BellAlertIcon>
             </span>
             <span
-              onClick={handleOpen}
+              onClick={handleClick}
               className="w-5 inline-block relative align-middle ml-1"
             >
               <Avatar sx={{ width: 32, height: 32 }}>{uid}</Avatar>
             </span>
+            <Menu
+              id="basic-menu"
+              anchorEl={anchorEl}
+              open={openMenu}
+              onClose={handleCloseMenu}
+              MenuListProps={{
+                "aria-labelledby": "basic-button",
+              }}
+            >
+              <NavLink to={"/profile/" + uid}>
+                <MenuItem>Profile</MenuItem>
+              </NavLink>
+              <MenuItem onClick={handleLogout}>Logout</MenuItem>
+            </Menu>
           </span>
         )}
       </div>

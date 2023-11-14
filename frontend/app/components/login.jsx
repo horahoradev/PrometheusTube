@@ -7,6 +7,10 @@ import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
 import { useApi } from "~/lib/oapi";
 import React from "react";
+import Cookies from "js-cookie";
+import { UserState } from "~/state";
+import { jwtDecode } from "jwt-decode";
+import { json, redirect, createCookie } from "@remix-run/node";
 
 const style = {
   position: "absolute",
@@ -20,8 +24,8 @@ const style = {
 };
 
 export default function Login({ setLogin }) {
-  let loggedIn = userState((state) => state.loggedIn);
-  let uid = userState((state) => state.uid);
+  let setLoggedIn = UserState((state) => state.setLoggedIn);
+  let setUID = UserState((state) => state.setUID);
 
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -29,8 +33,15 @@ export default function Login({ setLogin }) {
   async function LoginUser() {
     let api = useApi();
     await api.login(username, password);
-    // setLogin(false);
-    setUserID();
+    setLogin(false);
+    // nice code dweeb
+    const cook = Cookies.get("jwt");
+    let jwtParsed = jwtDecode(cook, { header: true });
+    let claims = jwtDecode(
+      jwtParsed.protected + "." + jwtParsed.payload + "." + jwtParsed.signature
+    );
+    setLoggedIn(true);
+    setUID(claims["uid"]);
   }
 
   return (

@@ -9,11 +9,11 @@ import { json, redirect, createCookie } from "@remix-run/node";
 import { Navbar } from "app/components/navbar";
 import { useLoaderData, NavLink, useSearchParams } from "@remix-run/react";
 import { jwtDecode } from "jwt-decode";
-import { userState } from "~/state";
+import { UserState } from "~/state";
 
 export async function loader({ request }) {
-  let setUserID = userState((state) => state.setUserID);
-  let setLoggedIn = userState((state) => state.setLoggedIn);
+  // let setUserID = UserState((state) => state.setUserID);
+  // let setLoggedIn = UserState((state) => state.setLoggedIn);
 
   const searchParams = new URL(request.url).searchParams;
   const utf8Encode = new TextEncoder();
@@ -24,13 +24,21 @@ export async function loader({ request }) {
       : "none"
   ) as unknown as string;
   const categoryEncoded = utf8Encode.encode("undefined") as unknown as string;
-  const cookie = createCookie("jwt", {});
-  const cookieExists =
-    (await cookie.parse(request.headers.get("Cookie"))) !== null;
-  const uid = jwtDecode(await cookie.parse(request.headers.get("Cookie"))).uid;
-  console.log(uid);
-  setLoggedIn(cookieExists);
-  setUserID(uid);
+  const cookie = createCookie("jwt");
+  const cook = await cookie.parse(request.headers.get("Cookie"));
+  // let jwt = request.headers
+  //   .get("Cookie")
+  //   .split(" ")
+  //   .filter((x) => x.startsWith("jwt="))
+  //   .map((x) => x.slice(4));
+  const cookieExists = cook !== null;
+
+  // let jwtParsed = jwtDecode(
+  //   cook.protected + "." + cook.payload + "." + cook.signature
+  // );
+
+  // setLoggedIn(cookieExists);
+  // setUserID(jwtParsed["uid"]);
 
   let api = useApi();
   let videoData = await api.videos(

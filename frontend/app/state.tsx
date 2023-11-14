@@ -1,20 +1,26 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
-export const userState = create(
+type State = {
+  UID: string;
+  loggedIn: boolean;
+};
+
+type Action = {
+  setLoggedIn: (loggedIn: State["loggedIn"]) => void;
+  setUID: (lastName: State["UID"]) => void;
+};
+
+export const UserState = create<State & Action>(
   persist(
     (set, get) => ({
+      UID: "",
       loggedIn: false,
-      setLoggedIn: set({ loggedIn: true }),
-      uid: 0,
-      setUserID: (uid) =>
-        set(() => ({
-          uid: uid,
-        })),
+      setUID: (id) => set(() => ({ UID: id })),
+      setLoggedIn: (loggedIn) => set(() => ({ loggedIn: loggedIn })),
     }),
     {
-      name: "auth", // name of the item in the storage (must be unique)
-      storage: createJSONStorage(() => sessionStorage), // (optional) by default, 'localStorage' is used
+      name: "auth",
     }
   )
 );

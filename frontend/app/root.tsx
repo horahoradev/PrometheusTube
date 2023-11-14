@@ -39,24 +39,6 @@ export const action = async () => {
 };
 
 export default function App() {
-  export const useBearStore = create(
-    persist(
-      (set, get) => ({
-        loggedIn: false,
-        setLoggedIn: set({ loggedIn: true }),
-        uid: 0,
-        setUserID: (uid) =>
-          set(() => ({
-            uid: uid;
-          })),
-      }),
-      {
-        name: "auth", // name of the item in the storage (must be unique)
-        storage: createJSONStorage(() => sessionStorage), // (optional) by default, 'localStorage' is used
-      }
-    )
-  );
-
   const { contacts } = useLoaderData<typeof loader>();
   const navigation = useNavigation();
   const theme = createTheme({
