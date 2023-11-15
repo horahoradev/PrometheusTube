@@ -30,6 +30,8 @@ export function Navbar({ displayAvatar }) {
   let [searchParams, setSearchParams] = useSearchParams();
   let loggedIn = UserState((state) => state.loggedIn);
   let uid = UserState((state) => state.UID);
+  let admin = UserState((state) => state.admin);
+
 
   // menu nav stuff
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -117,6 +119,11 @@ export function Navbar({ displayAvatar }) {
               <NavLink to={"/profile/" + uid}>
                 <MenuItem>Profile</MenuItem>
               </NavLink>
+              {admin ? <NavLink to={"/archive-requests/"}>
+                <MenuItem>Archive requests</MenuItem>
+              </NavLink>
+              : null
+              }
               <MenuItem onClick={handleLogout}>Logout</MenuItem>
             </Menu>
           </span>

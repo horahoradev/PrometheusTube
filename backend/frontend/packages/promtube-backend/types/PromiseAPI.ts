@@ -1,6 +1,8 @@
 import { ResponseContext, RequestContext, HttpFile } from '../http/http';
 import { Configuration} from '../configuration'
 
+import { ArchiveEvents200ResponseInner } from '../models/ArchiveEvents200ResponseInner';
+import { ArchiveRequests200ResponseInner } from '../models/ArchiveRequests200ResponseInner';
 import { Comments200ResponseInner } from '../models/Comments200ResponseInner';
 import { GetDanmaku200ResponseInner } from '../models/GetDanmaku200ResponseInner';
 import { Users200Response } from '../models/Users200Response';
@@ -21,6 +23,35 @@ export class PromiseDefaultApi {
         responseProcessor?: DefaultApiResponseProcessor
     ) {
         this.api = new ObservableDefaultApi(configuration, requestFactory, responseProcessor);
+    }
+
+    /**
+     * Get archive events
+     * @param downloadID download id to filter on
+     */
+    public archiveEvents(downloadID: string, _options?: Configuration): Promise<Array<ArchiveEvents200ResponseInner>> {
+        const result = this.api.archiveEvents(downloadID, _options);
+        return result.toPromise();
+    }
+
+    /**
+     * Get archive requests
+     * @param cookie auth cookies etc
+     */
+    public archiveRequests(cookie: string, _options?: Configuration): Promise<Array<ArchiveRequests200ResponseInner>> {
+        const result = this.api.archiveRequests(cookie, _options);
+        return result.toPromise();
+    }
+
+    /**
+     * Get archive requests
+     * @param pageNumber content page number
+     * @param id user id to filter on
+     * @param cookie auth cookies etc
+     */
+    public auditEvents(pageNumber: number, id: number, cookie: string, _options?: Configuration): Promise<Array<ArchiveRequests200ResponseInner>> {
+        const result = this.api.auditEvents(pageNumber, id, cookie, _options);
+        return result.toPromise();
     }
 
     /**
@@ -54,6 +85,16 @@ export class PromiseDefaultApi {
      */
     public createDanmaku(videoID: number, timestamp: string, message: string, type: string, color: string, fontSize: string, _options?: Configuration): Promise<void> {
         const result = this.api.createDanmaku(videoID, timestamp, message, type, color, fontSize, _options);
+        return result.toPromise();
+    }
+
+    /**
+     * Retry archive request
+     * @param downloadID download ID of the request to retry
+     * @param cookie auth cookies etc
+     */
+    public deleteArchiveRequest(downloadID: number, cookie: string, _options?: Configuration): Promise<void> {
+        const result = this.api.deleteArchiveRequest(downloadID, cookie, _options);
         return result.toPromise();
     }
 
@@ -120,6 +161,16 @@ export class PromiseDefaultApi {
     }
 
     /**
+     * Create new archive request
+     * @param url url to archive
+     * @param cookie auth cookies etc
+     */
+    public newArchiveRequest(url: string, cookie: string, _options?: Configuration): Promise<void> {
+        const result = this.api.newArchiveRequest(url, cookie, _options);
+        return result.toPromise();
+    }
+
+    /**
      * Get list of videos
      * @param id video ID
      */
@@ -147,6 +198,16 @@ export class PromiseDefaultApi {
      */
     public resetPassword(oldpassword: string, newpassword: string, _options?: Configuration): Promise<void> {
         const result = this.api.resetPassword(oldpassword, newpassword, _options);
+        return result.toPromise();
+    }
+
+    /**
+     * Retry archive request
+     * @param downloadID download ID of the request to retry
+     * @param cookie auth cookies etc
+     */
+    public retryArchiveRequest(downloadID: number, cookie: string, _options?: Configuration): Promise<void> {
+        const result = this.api.retryArchiveRequest(downloadID, cookie, _options);
         return result.toPromise();
     }
 

@@ -12,70 +12,70 @@
 
 import { HttpFile } from '../http/http';
 
-export class Videos200ResponseVideosInner {
-    'title'?: string;
-    'videoID'?: number;
-    'views'?: number;
-    'authorID'?: number;
-    'authorName'?: string;
-    'thumbnailLoc'?: string;
-    'rating'?: number;
-    'videoDuration'?: number;
+export class ArchiveRequests200ResponseInner {
+    'userID'?: number;
+    'url'?: string;
+    'archivedVideos'?: number;
+    'currentTotalVideos'?: number;
+    'lastSynced'?: string;
+    'backoffFactor'?: number;
+    'downloadID'?: number;
+    'undownloadableVideos'?: number;
 
     static readonly discriminator: string | undefined = undefined;
 
     static readonly attributeTypeMap: Array<{name: string, baseName: string, type: string, format: string}> = [
         {
-            "name": "title",
-            "baseName": "Title",
+            "name": "userID",
+            "baseName": "UserID",
+            "type": "number",
+            "format": ""
+        },
+        {
+            "name": "url",
+            "baseName": "Url",
             "type": "string",
             "format": ""
         },
         {
-            "name": "videoID",
-            "baseName": "VideoID",
+            "name": "archivedVideos",
+            "baseName": "ArchivedVideos",
             "type": "number",
             "format": ""
         },
         {
-            "name": "views",
-            "baseName": "Views",
+            "name": "currentTotalVideos",
+            "baseName": "CurrentTotalVideos",
             "type": "number",
             "format": ""
         },
         {
-            "name": "authorID",
-            "baseName": "AuthorID",
-            "type": "number",
-            "format": ""
-        },
-        {
-            "name": "authorName",
-            "baseName": "AuthorName",
+            "name": "lastSynced",
+            "baseName": "LastSynced",
             "type": "string",
             "format": ""
         },
         {
-            "name": "thumbnailLoc",
-            "baseName": "ThumbnailLoc",
-            "type": "string",
-            "format": ""
-        },
-        {
-            "name": "rating",
-            "baseName": "Rating",
+            "name": "backoffFactor",
+            "baseName": "BackoffFactor",
             "type": "number",
             "format": ""
         },
         {
-            "name": "videoDuration",
-            "baseName": "VideoDuration",
+            "name": "downloadID",
+            "baseName": "DownloadID",
+            "type": "number",
+            "format": ""
+        },
+        {
+            "name": "undownloadableVideos",
+            "baseName": "UndownloadableVideos",
             "type": "number",
             "format": ""
         }    ];
 
     static getAttributeTypeMap() {
-        return Videos200ResponseVideosInner.attributeTypeMap;
+        return ArchiveRequests200ResponseInner.attributeTypeMap;
     }
 
     public constructor() {

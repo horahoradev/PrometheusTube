@@ -28,22 +28,10 @@ type ArchiveEventsParams struct {
 	DownloadID string `json:"downloadID"`
 }
 
-// DeleteArchiveRequestParams defines parameters for DeleteArchiveRequest.
-type DeleteArchiveRequestParams struct {
-	// DownloadID download ID of the request to retry
-	DownloadID int `json:"downloadID"`
-}
-
-// NewArchiveRequestParams defines parameters for NewArchiveRequest.
-type NewArchiveRequestParams struct {
-	// Url url to archive
-	Url string `json:"url"`
-}
-
-// RetryArchiveRequestParams defines parameters for RetryArchiveRequest.
-type RetryArchiveRequestParams struct {
-	// DownloadID download ID of the request to retry
-	DownloadID int `json:"downloadID"`
+// ArchiveRequestsParams defines parameters for ArchiveRequests.
+type ArchiveRequestsParams struct {
+	// Cookie auth cookies etc
+	Cookie string `json:"Cookie"`
 }
 
 // AuditEventsParams defines parameters for AuditEvents.
@@ -53,6 +41,9 @@ type AuditEventsParams struct {
 
 	// Id user id to filter on
 	Id int `json:"id"`
+
+	// Cookie auth cookies etc
+	Cookie string `json:"Cookie"`
 }
 
 // CommentParams defines parameters for Comment.
@@ -88,6 +79,15 @@ type CreateDanmakuParams struct {
 	FontSize string `json:"FontSize"`
 }
 
+// DeleteArchiveRequestParams defines parameters for DeleteArchiveRequest.
+type DeleteArchiveRequestParams struct {
+	// DownloadID download ID of the request to retry
+	DownloadID int `json:"downloadID"`
+
+	// Cookie auth cookies etc
+	Cookie string `json:"Cookie"`
+}
+
 // DeleteCommentParams defines parameters for DeleteComment.
 type DeleteCommentParams struct {
 	// Id comment ID
@@ -107,6 +107,15 @@ type LoginParams struct {
 
 	// Password sort category
 	Password string `form:"password" json:"password"`
+}
+
+// NewArchiveRequestParams defines parameters for NewArchiveRequest.
+type NewArchiveRequestParams struct {
+	// Url url to archive
+	Url string `json:"url"`
+
+	// Cookie auth cookies etc
+	Cookie string `json:"Cookie"`
 }
 
 // RegisterParams defines parameters for Register.
@@ -131,6 +140,15 @@ type ResetPasswordParams struct {
 
 	// Newpassword new password
 	Newpassword string `json:"newpassword"`
+}
+
+// RetryArchiveRequestParams defines parameters for RetryArchiveRequest.
+type RetryArchiveRequestParams struct {
+	// DownloadID download ID of the request to retry
+	DownloadID int `json:"downloadID"`
+
+	// Cookie auth cookies etc
+	Cookie string `json:"Cookie"`
 }
 
 // UpdateProfileParams defines parameters for UpdateProfile.
@@ -280,17 +298,8 @@ type ClientInterface interface {
 	// ArchiveEvents request
 	ArchiveEvents(ctx context.Context, params *ArchiveEventsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// DeleteArchiveRequest request
-	DeleteArchiveRequest(ctx context.Context, params *DeleteArchiveRequestParams, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// NewArchiveRequest request
-	NewArchiveRequest(ctx context.Context, params *NewArchiveRequestParams, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// RetryArchiveRequest request
-	RetryArchiveRequest(ctx context.Context, params *RetryArchiveRequestParams, reqEditors ...RequestEditorFn) (*http.Response, error)
-
 	// ArchiveRequests request
-	ArchiveRequests(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+	ArchiveRequests(ctx context.Context, params *ArchiveRequestsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// AuditEvents request
 	AuditEvents(ctx context.Context, params *AuditEventsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -306,6 +315,9 @@ type ClientInterface interface {
 
 	// GetDanmaku request
 	GetDanmaku(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteArchiveRequest request
+	DeleteArchiveRequest(ctx context.Context, params *DeleteArchiveRequestParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// DeleteComment request
 	DeleteComment(ctx context.Context, params *DeleteCommentParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -325,6 +337,9 @@ type ClientInterface interface {
 	// Logout request
 	Logout(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// NewArchiveRequest request
+	NewArchiveRequest(ctx context.Context, params *NewArchiveRequestParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// Recommendations request
 	Recommendations(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -333,6 +348,9 @@ type ClientInterface interface {
 
 	// ResetPassword request
 	ResetPassword(ctx context.Context, params *ResetPasswordParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// RetryArchiveRequest request
+	RetryArchiveRequest(ctx context.Context, params *RetryArchiveRequestParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// UpdateProfile request
 	UpdateProfile(ctx context.Context, params *UpdateProfileParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -368,44 +386,8 @@ func (c *Client) ArchiveEvents(ctx context.Context, params *ArchiveEventsParams,
 	return c.Client.Do(req)
 }
 
-func (c *Client) DeleteArchiveRequest(ctx context.Context, params *DeleteArchiveRequestParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewDeleteArchiveRequestRequest(c.Server, params)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) NewArchiveRequest(ctx context.Context, params *NewArchiveRequestParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewNewArchiveRequestRequest(c.Server, params)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) RetryArchiveRequest(ctx context.Context, params *RetryArchiveRequestParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewRetryArchiveRequestRequest(c.Server, params)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) ArchiveRequests(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewArchiveRequestsRequest(c.Server)
+func (c *Client) ArchiveRequests(ctx context.Context, params *ArchiveRequestsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewArchiveRequestsRequest(c.Server, params)
 	if err != nil {
 		return nil, err
 	}
@@ -466,6 +448,18 @@ func (c *Client) CreateDanmaku(ctx context.Context, params *CreateDanmakuParams,
 
 func (c *Client) GetDanmaku(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetDanmakuRequest(c.Server, id)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteArchiveRequest(ctx context.Context, params *DeleteArchiveRequestParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteArchiveRequestRequest(c.Server, params)
 	if err != nil {
 		return nil, err
 	}
@@ -548,6 +542,18 @@ func (c *Client) Logout(ctx context.Context, reqEditors ...RequestEditorFn) (*ht
 	return c.Client.Do(req)
 }
 
+func (c *Client) NewArchiveRequest(ctx context.Context, params *NewArchiveRequestParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewNewArchiveRequestRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) Recommendations(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewRecommendationsRequest(c.Server, id)
 	if err != nil {
@@ -574,6 +580,18 @@ func (c *Client) Register(ctx context.Context, params *RegisterParams, reqEditor
 
 func (c *Client) ResetPassword(ctx context.Context, params *ResetPasswordParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewResetPasswordRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) RetryArchiveRequest(ctx context.Context, params *RetryArchiveRequestParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewRetryArchiveRequestRequest(c.Server, params)
 	if err != nil {
 		return nil, err
 	}
@@ -704,116 +722,8 @@ func NewArchiveEventsRequest(server string, params *ArchiveEventsParams) (*http.
 	return req, nil
 }
 
-// NewDeleteArchiveRequestRequest generates requests for DeleteArchiveRequest
-func NewDeleteArchiveRequestRequest(server string, params *DeleteArchiveRequestParams) (*http.Request, error) {
-	var err error
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/archive-request")
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	var headerParam0 string
-
-	headerParam0, err = runtime.StyleParamWithLocation("simple", false, "downloadID", runtime.ParamLocationHeader, params.DownloadID)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Set("downloadID", headerParam0)
-
-	return req, nil
-}
-
-// NewNewArchiveRequestRequest generates requests for NewArchiveRequest
-func NewNewArchiveRequestRequest(server string, params *NewArchiveRequestParams) (*http.Request, error) {
-	var err error
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/archive-request")
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	var headerParam0 string
-
-	headerParam0, err = runtime.StyleParamWithLocation("simple", false, "url", runtime.ParamLocationHeader, params.Url)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Set("url", headerParam0)
-
-	return req, nil
-}
-
-// NewRetryArchiveRequestRequest generates requests for RetryArchiveRequest
-func NewRetryArchiveRequestRequest(server string, params *RetryArchiveRequestParams) (*http.Request, error) {
-	var err error
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/archive-request")
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("PUT", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	var headerParam0 string
-
-	headerParam0, err = runtime.StyleParamWithLocation("simple", false, "downloadID", runtime.ParamLocationHeader, params.DownloadID)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Set("downloadID", headerParam0)
-
-	return req, nil
-}
-
 // NewArchiveRequestsRequest generates requests for ArchiveRequests
-func NewArchiveRequestsRequest(server string) (*http.Request, error) {
+func NewArchiveRequestsRequest(server string, params *ArchiveRequestsParams) (*http.Request, error) {
 	var err error
 
 	serverURL, err := url.Parse(server)
@@ -835,6 +745,15 @@ func NewArchiveRequestsRequest(server string) (*http.Request, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	var headerParam0 string
+
+	headerParam0, err = runtime.StyleParamWithLocation("simple", false, "Cookie", runtime.ParamLocationHeader, params.Cookie)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set("Cookie", headerParam0)
 
 	return req, nil
 }
@@ -880,6 +799,15 @@ func NewAuditEventsRequest(server string, params *AuditEventsParams) (*http.Requ
 	}
 
 	req.Header.Set("id", headerParam1)
+
+	var headerParam2 string
+
+	headerParam2, err = runtime.StyleParamWithLocation("simple", false, "Cookie", runtime.ParamLocationHeader, params.Cookie)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set("Cookie", headerParam2)
 
 	return req, nil
 }
@@ -1083,6 +1011,51 @@ func NewGetDanmakuRequest(server string, id int) (*http.Request, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	return req, nil
+}
+
+// NewDeleteArchiveRequestRequest generates requests for DeleteArchiveRequest
+func NewDeleteArchiveRequestRequest(server string, params *DeleteArchiveRequestParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/delete-archive-request")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var headerParam0 string
+
+	headerParam0, err = runtime.StyleParamWithLocation("simple", false, "downloadID", runtime.ParamLocationHeader, params.DownloadID)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set("downloadID", headerParam0)
+
+	var headerParam1 string
+
+	headerParam1, err = runtime.StyleParamWithLocation("simple", false, "Cookie", runtime.ParamLocationHeader, params.Cookie)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set("Cookie", headerParam1)
 
 	return req, nil
 }
@@ -1292,6 +1265,51 @@ func NewLogoutRequest(server string) (*http.Request, error) {
 	return req, nil
 }
 
+// NewNewArchiveRequestRequest generates requests for NewArchiveRequest
+func NewNewArchiveRequestRequest(server string, params *NewArchiveRequestParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/new-archive-request")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var headerParam0 string
+
+	headerParam0, err = runtime.StyleParamWithLocation("simple", false, "url", runtime.ParamLocationHeader, params.Url)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set("url", headerParam0)
+
+	var headerParam1 string
+
+	headerParam1, err = runtime.StyleParamWithLocation("simple", false, "Cookie", runtime.ParamLocationHeader, params.Cookie)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set("Cookie", headerParam1)
+
+	return req, nil
+}
+
 // NewRecommendationsRequest generates requests for Recommendations
 func NewRecommendationsRequest(server string, id int) (*http.Request, error) {
 	var err error
@@ -1439,6 +1457,51 @@ func NewResetPasswordRequest(server string, params *ResetPasswordParams) (*http.
 	}
 
 	req.Header.Set("newpassword", headerParam1)
+
+	return req, nil
+}
+
+// NewRetryArchiveRequestRequest generates requests for RetryArchiveRequest
+func NewRetryArchiveRequestRequest(server string, params *RetryArchiveRequestParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/retry-archive-request")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var headerParam0 string
+
+	headerParam0, err = runtime.StyleParamWithLocation("simple", false, "downloadID", runtime.ParamLocationHeader, params.DownloadID)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set("downloadID", headerParam0)
+
+	var headerParam1 string
+
+	headerParam1, err = runtime.StyleParamWithLocation("simple", false, "Cookie", runtime.ParamLocationHeader, params.Cookie)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set("Cookie", headerParam1)
 
 	return req, nil
 }
@@ -1864,17 +1927,8 @@ type ClientWithResponsesInterface interface {
 	// ArchiveEvents request
 	ArchiveEventsWithResponse(ctx context.Context, params *ArchiveEventsParams, reqEditors ...RequestEditorFn) (*ArchiveEventsResponse, error)
 
-	// DeleteArchiveRequest request
-	DeleteArchiveRequestWithResponse(ctx context.Context, params *DeleteArchiveRequestParams, reqEditors ...RequestEditorFn) (*DeleteArchiveRequestResponse, error)
-
-	// NewArchiveRequest request
-	NewArchiveRequestWithResponse(ctx context.Context, params *NewArchiveRequestParams, reqEditors ...RequestEditorFn) (*NewArchiveRequestResponse, error)
-
-	// RetryArchiveRequest request
-	RetryArchiveRequestWithResponse(ctx context.Context, params *RetryArchiveRequestParams, reqEditors ...RequestEditorFn) (*RetryArchiveRequestResponse, error)
-
 	// ArchiveRequests request
-	ArchiveRequestsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ArchiveRequestsResponse, error)
+	ArchiveRequestsWithResponse(ctx context.Context, params *ArchiveRequestsParams, reqEditors ...RequestEditorFn) (*ArchiveRequestsResponse, error)
 
 	// AuditEvents request
 	AuditEventsWithResponse(ctx context.Context, params *AuditEventsParams, reqEditors ...RequestEditorFn) (*AuditEventsResponse, error)
@@ -1890,6 +1944,9 @@ type ClientWithResponsesInterface interface {
 
 	// GetDanmaku request
 	GetDanmakuWithResponse(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*GetDanmakuResponse, error)
+
+	// DeleteArchiveRequest request
+	DeleteArchiveRequestWithResponse(ctx context.Context, params *DeleteArchiveRequestParams, reqEditors ...RequestEditorFn) (*DeleteArchiveRequestResponse, error)
 
 	// DeleteComment request
 	DeleteCommentWithResponse(ctx context.Context, params *DeleteCommentParams, reqEditors ...RequestEditorFn) (*DeleteCommentResponse, error)
@@ -1909,6 +1966,9 @@ type ClientWithResponsesInterface interface {
 	// Logout request
 	LogoutWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*LogoutResponse, error)
 
+	// NewArchiveRequest request
+	NewArchiveRequestWithResponse(ctx context.Context, params *NewArchiveRequestParams, reqEditors ...RequestEditorFn) (*NewArchiveRequestResponse, error)
+
 	// Recommendations request
 	RecommendationsWithResponse(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*RecommendationsResponse, error)
 
@@ -1917,6 +1977,9 @@ type ClientWithResponsesInterface interface {
 
 	// ResetPassword request
 	ResetPasswordWithResponse(ctx context.Context, params *ResetPasswordParams, reqEditors ...RequestEditorFn) (*ResetPasswordResponse, error)
+
+	// RetryArchiveRequest request
+	RetryArchiveRequestWithResponse(ctx context.Context, params *RetryArchiveRequestParams, reqEditors ...RequestEditorFn) (*RetryArchiveRequestResponse, error)
 
 	// UpdateProfile request
 	UpdateProfileWithResponse(ctx context.Context, params *UpdateProfileParams, reqEditors ...RequestEditorFn) (*UpdateProfileResponse, error)
@@ -1961,69 +2024,6 @@ func (r ArchiveEventsResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r ArchiveEventsResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type DeleteArchiveRequestResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-}
-
-// Status returns HTTPResponse.Status
-func (r DeleteArchiveRequestResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r DeleteArchiveRequestResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type NewArchiveRequestResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-}
-
-// Status returns HTTPResponse.Status
-func (r NewArchiveRequestResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r NewArchiveRequestResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type RetryArchiveRequestResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-}
-
-// Status returns HTTPResponse.Status
-func (r RetryArchiveRequestResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r RetryArchiveRequestResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -2197,6 +2197,27 @@ func (r GetDanmakuResponse) StatusCode() int {
 	return 0
 }
 
+type DeleteArchiveRequestResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteArchiveRequestResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteArchiveRequestResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type DeleteCommentResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -2333,6 +2354,27 @@ func (r LogoutResponse) StatusCode() int {
 	return 0
 }
 
+type NewArchiveRequestResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r NewArchiveRequestResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r NewArchiveRequestResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type RecommendationsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -2400,6 +2442,27 @@ func (r ResetPasswordResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r ResetPasswordResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type RetryArchiveRequestResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r RetryArchiveRequestResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r RetryArchiveRequestResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -2626,36 +2689,9 @@ func (c *ClientWithResponses) ArchiveEventsWithResponse(ctx context.Context, par
 	return ParseArchiveEventsResponse(rsp)
 }
 
-// DeleteArchiveRequestWithResponse request returning *DeleteArchiveRequestResponse
-func (c *ClientWithResponses) DeleteArchiveRequestWithResponse(ctx context.Context, params *DeleteArchiveRequestParams, reqEditors ...RequestEditorFn) (*DeleteArchiveRequestResponse, error) {
-	rsp, err := c.DeleteArchiveRequest(ctx, params, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseDeleteArchiveRequestResponse(rsp)
-}
-
-// NewArchiveRequestWithResponse request returning *NewArchiveRequestResponse
-func (c *ClientWithResponses) NewArchiveRequestWithResponse(ctx context.Context, params *NewArchiveRequestParams, reqEditors ...RequestEditorFn) (*NewArchiveRequestResponse, error) {
-	rsp, err := c.NewArchiveRequest(ctx, params, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseNewArchiveRequestResponse(rsp)
-}
-
-// RetryArchiveRequestWithResponse request returning *RetryArchiveRequestResponse
-func (c *ClientWithResponses) RetryArchiveRequestWithResponse(ctx context.Context, params *RetryArchiveRequestParams, reqEditors ...RequestEditorFn) (*RetryArchiveRequestResponse, error) {
-	rsp, err := c.RetryArchiveRequest(ctx, params, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseRetryArchiveRequestResponse(rsp)
-}
-
 // ArchiveRequestsWithResponse request returning *ArchiveRequestsResponse
-func (c *ClientWithResponses) ArchiveRequestsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ArchiveRequestsResponse, error) {
-	rsp, err := c.ArchiveRequests(ctx, reqEditors...)
+func (c *ClientWithResponses) ArchiveRequestsWithResponse(ctx context.Context, params *ArchiveRequestsParams, reqEditors ...RequestEditorFn) (*ArchiveRequestsResponse, error) {
+	rsp, err := c.ArchiveRequests(ctx, params, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -2705,6 +2741,15 @@ func (c *ClientWithResponses) GetDanmakuWithResponse(ctx context.Context, id int
 		return nil, err
 	}
 	return ParseGetDanmakuResponse(rsp)
+}
+
+// DeleteArchiveRequestWithResponse request returning *DeleteArchiveRequestResponse
+func (c *ClientWithResponses) DeleteArchiveRequestWithResponse(ctx context.Context, params *DeleteArchiveRequestParams, reqEditors ...RequestEditorFn) (*DeleteArchiveRequestResponse, error) {
+	rsp, err := c.DeleteArchiveRequest(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteArchiveRequestResponse(rsp)
 }
 
 // DeleteCommentWithResponse request returning *DeleteCommentResponse
@@ -2761,6 +2806,15 @@ func (c *ClientWithResponses) LogoutWithResponse(ctx context.Context, reqEditors
 	return ParseLogoutResponse(rsp)
 }
 
+// NewArchiveRequestWithResponse request returning *NewArchiveRequestResponse
+func (c *ClientWithResponses) NewArchiveRequestWithResponse(ctx context.Context, params *NewArchiveRequestParams, reqEditors ...RequestEditorFn) (*NewArchiveRequestResponse, error) {
+	rsp, err := c.NewArchiveRequest(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseNewArchiveRequestResponse(rsp)
+}
+
 // RecommendationsWithResponse request returning *RecommendationsResponse
 func (c *ClientWithResponses) RecommendationsWithResponse(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*RecommendationsResponse, error) {
 	rsp, err := c.Recommendations(ctx, id, reqEditors...)
@@ -2786,6 +2840,15 @@ func (c *ClientWithResponses) ResetPasswordWithResponse(ctx context.Context, par
 		return nil, err
 	}
 	return ParseResetPasswordResponse(rsp)
+}
+
+// RetryArchiveRequestWithResponse request returning *RetryArchiveRequestResponse
+func (c *ClientWithResponses) RetryArchiveRequestWithResponse(ctx context.Context, params *RetryArchiveRequestParams, reqEditors ...RequestEditorFn) (*RetryArchiveRequestResponse, error) {
+	rsp, err := c.RetryArchiveRequest(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseRetryArchiveRequestResponse(rsp)
 }
 
 // UpdateProfileWithResponse request returning *UpdateProfileResponse
@@ -2877,54 +2940,6 @@ func ParseArchiveEventsResponse(rsp *http.Response) (*ArchiveEventsResponse, err
 		}
 		response.JSON200 = &dest
 
-	}
-
-	return response, nil
-}
-
-// ParseDeleteArchiveRequestResponse parses an HTTP response from a DeleteArchiveRequestWithResponse call
-func ParseDeleteArchiveRequestResponse(rsp *http.Response) (*DeleteArchiveRequestResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &DeleteArchiveRequestResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	return response, nil
-}
-
-// ParseNewArchiveRequestResponse parses an HTTP response from a NewArchiveRequestWithResponse call
-func ParseNewArchiveRequestResponse(rsp *http.Response) (*NewArchiveRequestResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &NewArchiveRequestResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	return response, nil
-}
-
-// ParseRetryArchiveRequestResponse parses an HTTP response from a RetryArchiveRequestWithResponse call
-func ParseRetryArchiveRequestResponse(rsp *http.Response) (*RetryArchiveRequestResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &RetryArchiveRequestResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
 	}
 
 	return response, nil
@@ -3103,6 +3118,22 @@ func ParseGetDanmakuResponse(rsp *http.Response) (*GetDanmakuResponse, error) {
 	return response, nil
 }
 
+// ParseDeleteArchiveRequestResponse parses an HTTP response from a DeleteArchiveRequestWithResponse call
+func ParseDeleteArchiveRequestResponse(rsp *http.Response) (*DeleteArchiveRequestResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteArchiveRequestResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
 // ParseDeleteCommentResponse parses an HTTP response from a DeleteCommentWithResponse call
 func ParseDeleteCommentResponse(rsp *http.Response) (*DeleteCommentResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -3218,6 +3249,22 @@ func ParseLogoutResponse(rsp *http.Response) (*LogoutResponse, error) {
 	return response, nil
 }
 
+// ParseNewArchiveRequestResponse parses an HTTP response from a NewArchiveRequestWithResponse call
+func ParseNewArchiveRequestResponse(rsp *http.Response) (*NewArchiveRequestResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &NewArchiveRequestResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
 // ParseRecommendationsResponse parses an HTTP response from a RecommendationsWithResponse call
 func ParseRecommendationsResponse(rsp *http.Response) (*RecommendationsResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -3278,6 +3325,22 @@ func ParseResetPasswordResponse(rsp *http.Response) (*ResetPasswordResponse, err
 	}
 
 	response := &ResetPasswordResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseRetryArchiveRequestResponse parses an HTTP response from a RetryArchiveRequestWithResponse call
+func ParseRetryArchiveRequestResponse(rsp *http.Response) (*RetryArchiveRequestResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &RetryArchiveRequestResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -3493,18 +3556,9 @@ type ServerInterface interface {
 	// Get archive events
 	// (GET /archive-events)
 	ArchiveEvents(ctx echo.Context, params ArchiveEventsParams) error
-	// Retry archive request
-	// (DELETE /archive-request)
-	DeleteArchiveRequest(ctx echo.Context, params DeleteArchiveRequestParams) error
-	// Create new archive request
-	// (POST /archive-request)
-	NewArchiveRequest(ctx echo.Context, params NewArchiveRequestParams) error
-	// Retry archive request
-	// (PUT /archive-request)
-	RetryArchiveRequest(ctx echo.Context, params RetryArchiveRequestParams) error
 	// Get archive requests
 	// (GET /archive-requests)
-	ArchiveRequests(ctx echo.Context) error
+	ArchiveRequests(ctx echo.Context, params ArchiveRequestsParams) error
 	// Get archive requests
 	// (GET /audit-events)
 	AuditEvents(ctx echo.Context, params AuditEventsParams) error
@@ -3520,6 +3574,9 @@ type ServerInterface interface {
 	// Get danmaku for video
 	// (GET /danmaku/{id})
 	GetDanmaku(ctx echo.Context, id int) error
+	// Retry archive request
+	// (POST /delete-archive-request)
+	DeleteArchiveRequest(ctx echo.Context, params DeleteArchiveRequestParams) error
 	// Delete a comment
 	// (POST /delete_comment)
 	DeleteComment(ctx echo.Context, params DeleteCommentParams) error
@@ -3538,6 +3595,9 @@ type ServerInterface interface {
 	// Log user out
 	// (GET /logout)
 	Logout(ctx echo.Context) error
+	// Create new archive request
+	// (POST /new-archive-request)
+	NewArchiveRequest(ctx echo.Context, params NewArchiveRequestParams) error
 	// Get list of videos
 	// (GET /recommendations/{id})
 	Recommendations(ctx echo.Context, id int) error
@@ -3547,6 +3607,9 @@ type ServerInterface interface {
 	// Reset password
 	// (POST /reset_password)
 	ResetPassword(ctx echo.Context, params ResetPasswordParams) error
+	// Retry archive request
+	// (POST /retry-archive-request)
+	RetryArchiveRequest(ctx echo.Context, params RetryArchiveRequestParams) error
 	// Update user's profile
 	// (POST /update-profile)
 	UpdateProfile(ctx echo.Context, params UpdateProfileParams) error
@@ -3606,105 +3669,34 @@ func (w *ServerInterfaceWrapper) ArchiveEvents(ctx echo.Context) error {
 	return err
 }
 
-// DeleteArchiveRequest converts echo context to params.
-func (w *ServerInterfaceWrapper) DeleteArchiveRequest(ctx echo.Context) error {
-	var err error
-
-	// Parameter object where we will unmarshal all parameters from the context
-	var params DeleteArchiveRequestParams
-
-	headers := ctx.Request().Header
-	// ------------- Required header parameter "downloadID" -------------
-	if valueList, found := headers[http.CanonicalHeaderKey("downloadID")]; found {
-		var DownloadID int
-		n := len(valueList)
-		if n != 1 {
-			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Expected one value for downloadID, got %d", n))
-		}
-
-		err = runtime.BindStyledParameterWithLocation("simple", false, "downloadID", runtime.ParamLocationHeader, valueList[0], &DownloadID)
-		if err != nil {
-			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter downloadID: %s", err))
-		}
-
-		params.DownloadID = DownloadID
-	} else {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Header parameter downloadID is required, but not found"))
-	}
-
-	// Invoke the callback with all the unmarshalled arguments
-	err = w.Handler.DeleteArchiveRequest(ctx, params)
-	return err
-}
-
-// NewArchiveRequest converts echo context to params.
-func (w *ServerInterfaceWrapper) NewArchiveRequest(ctx echo.Context) error {
-	var err error
-
-	// Parameter object where we will unmarshal all parameters from the context
-	var params NewArchiveRequestParams
-
-	headers := ctx.Request().Header
-	// ------------- Required header parameter "url" -------------
-	if valueList, found := headers[http.CanonicalHeaderKey("url")]; found {
-		var Url string
-		n := len(valueList)
-		if n != 1 {
-			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Expected one value for url, got %d", n))
-		}
-
-		err = runtime.BindStyledParameterWithLocation("simple", false, "url", runtime.ParamLocationHeader, valueList[0], &Url)
-		if err != nil {
-			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter url: %s", err))
-		}
-
-		params.Url = Url
-	} else {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Header parameter url is required, but not found"))
-	}
-
-	// Invoke the callback with all the unmarshalled arguments
-	err = w.Handler.NewArchiveRequest(ctx, params)
-	return err
-}
-
-// RetryArchiveRequest converts echo context to params.
-func (w *ServerInterfaceWrapper) RetryArchiveRequest(ctx echo.Context) error {
-	var err error
-
-	// Parameter object where we will unmarshal all parameters from the context
-	var params RetryArchiveRequestParams
-
-	headers := ctx.Request().Header
-	// ------------- Required header parameter "downloadID" -------------
-	if valueList, found := headers[http.CanonicalHeaderKey("downloadID")]; found {
-		var DownloadID int
-		n := len(valueList)
-		if n != 1 {
-			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Expected one value for downloadID, got %d", n))
-		}
-
-		err = runtime.BindStyledParameterWithLocation("simple", false, "downloadID", runtime.ParamLocationHeader, valueList[0], &DownloadID)
-		if err != nil {
-			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter downloadID: %s", err))
-		}
-
-		params.DownloadID = DownloadID
-	} else {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Header parameter downloadID is required, but not found"))
-	}
-
-	// Invoke the callback with all the unmarshalled arguments
-	err = w.Handler.RetryArchiveRequest(ctx, params)
-	return err
-}
-
 // ArchiveRequests converts echo context to params.
 func (w *ServerInterfaceWrapper) ArchiveRequests(ctx echo.Context) error {
 	var err error
 
+	// Parameter object where we will unmarshal all parameters from the context
+	var params ArchiveRequestsParams
+
+	headers := ctx.Request().Header
+	// ------------- Required header parameter "Cookie" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Cookie")]; found {
+		var Cookie string
+		n := len(valueList)
+		if n != 1 {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Expected one value for Cookie, got %d", n))
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "Cookie", runtime.ParamLocationHeader, valueList[0], &Cookie)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter Cookie: %s", err))
+		}
+
+		params.Cookie = Cookie
+	} else {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Header parameter Cookie is required, but not found"))
+	}
+
 	// Invoke the callback with all the unmarshalled arguments
-	err = w.Handler.ArchiveRequests(ctx)
+	err = w.Handler.ArchiveRequests(ctx, params)
 	return err
 }
 
@@ -3749,6 +3741,23 @@ func (w *ServerInterfaceWrapper) AuditEvents(ctx echo.Context) error {
 		params.Id = Id
 	} else {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Header parameter id is required, but not found"))
+	}
+	// ------------- Required header parameter "Cookie" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Cookie")]; found {
+		var Cookie string
+		n := len(valueList)
+		if n != 1 {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Expected one value for Cookie, got %d", n))
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "Cookie", runtime.ParamLocationHeader, valueList[0], &Cookie)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter Cookie: %s", err))
+		}
+
+		params.Cookie = Cookie
+	} else {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Header parameter Cookie is required, but not found"))
 	}
 
 	// Invoke the callback with all the unmarshalled arguments
@@ -3969,6 +3978,54 @@ func (w *ServerInterfaceWrapper) GetDanmaku(ctx echo.Context) error {
 	return err
 }
 
+// DeleteArchiveRequest converts echo context to params.
+func (w *ServerInterfaceWrapper) DeleteArchiveRequest(ctx echo.Context) error {
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params DeleteArchiveRequestParams
+
+	headers := ctx.Request().Header
+	// ------------- Required header parameter "downloadID" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("downloadID")]; found {
+		var DownloadID int
+		n := len(valueList)
+		if n != 1 {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Expected one value for downloadID, got %d", n))
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "downloadID", runtime.ParamLocationHeader, valueList[0], &DownloadID)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter downloadID: %s", err))
+		}
+
+		params.DownloadID = DownloadID
+	} else {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Header parameter downloadID is required, but not found"))
+	}
+	// ------------- Required header parameter "Cookie" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Cookie")]; found {
+		var Cookie string
+		n := len(valueList)
+		if n != 1 {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Expected one value for Cookie, got %d", n))
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "Cookie", runtime.ParamLocationHeader, valueList[0], &Cookie)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter Cookie: %s", err))
+		}
+
+		params.Cookie = Cookie
+	} else {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Header parameter Cookie is required, but not found"))
+	}
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.DeleteArchiveRequest(ctx, params)
+	return err
+}
+
 // DeleteComment converts echo context to params.
 func (w *ServerInterfaceWrapper) DeleteComment(ctx echo.Context) error {
 	var err error
@@ -4113,6 +4170,54 @@ func (w *ServerInterfaceWrapper) Logout(ctx echo.Context) error {
 	return err
 }
 
+// NewArchiveRequest converts echo context to params.
+func (w *ServerInterfaceWrapper) NewArchiveRequest(ctx echo.Context) error {
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params NewArchiveRequestParams
+
+	headers := ctx.Request().Header
+	// ------------- Required header parameter "url" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("url")]; found {
+		var Url string
+		n := len(valueList)
+		if n != 1 {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Expected one value for url, got %d", n))
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "url", runtime.ParamLocationHeader, valueList[0], &Url)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter url: %s", err))
+		}
+
+		params.Url = Url
+	} else {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Header parameter url is required, but not found"))
+	}
+	// ------------- Required header parameter "Cookie" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Cookie")]; found {
+		var Cookie string
+		n := len(valueList)
+		if n != 1 {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Expected one value for Cookie, got %d", n))
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "Cookie", runtime.ParamLocationHeader, valueList[0], &Cookie)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter Cookie: %s", err))
+		}
+
+		params.Cookie = Cookie
+	} else {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Header parameter Cookie is required, but not found"))
+	}
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.NewArchiveRequest(ctx, params)
+	return err
+}
+
 // Recommendations converts echo context to params.
 func (w *ServerInterfaceWrapper) Recommendations(ctx echo.Context) error {
 	var err error
@@ -4245,6 +4350,54 @@ func (w *ServerInterfaceWrapper) ResetPassword(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshalled arguments
 	err = w.Handler.ResetPassword(ctx, params)
+	return err
+}
+
+// RetryArchiveRequest converts echo context to params.
+func (w *ServerInterfaceWrapper) RetryArchiveRequest(ctx echo.Context) error {
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params RetryArchiveRequestParams
+
+	headers := ctx.Request().Header
+	// ------------- Required header parameter "downloadID" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("downloadID")]; found {
+		var DownloadID int
+		n := len(valueList)
+		if n != 1 {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Expected one value for downloadID, got %d", n))
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "downloadID", runtime.ParamLocationHeader, valueList[0], &DownloadID)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter downloadID: %s", err))
+		}
+
+		params.DownloadID = DownloadID
+	} else {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Header parameter downloadID is required, but not found"))
+	}
+	// ------------- Required header parameter "Cookie" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Cookie")]; found {
+		var Cookie string
+		n := len(valueList)
+		if n != 1 {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Expected one value for Cookie, got %d", n))
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "Cookie", runtime.ParamLocationHeader, valueList[0], &Cookie)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter Cookie: %s", err))
+		}
+
+		params.Cookie = Cookie
+	} else {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Header parameter Cookie is required, but not found"))
+	}
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.RetryArchiveRequest(ctx, params)
 	return err
 }
 
@@ -4653,24 +4806,24 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	}
 
 	router.GET(baseURL+"/archive-events", wrapper.ArchiveEvents)
-	router.DELETE(baseURL+"/archive-request", wrapper.DeleteArchiveRequest)
-	router.POST(baseURL+"/archive-request", wrapper.NewArchiveRequest)
-	router.PUT(baseURL+"/archive-request", wrapper.RetryArchiveRequest)
 	router.GET(baseURL+"/archive-requests", wrapper.ArchiveRequests)
 	router.GET(baseURL+"/audit-events", wrapper.AuditEvents)
 	router.POST(baseURL+"/comment", wrapper.Comment)
 	router.GET(baseURL+"/comments/:id", wrapper.Comments)
 	router.POST(baseURL+"/danmaku", wrapper.CreateDanmaku)
 	router.GET(baseURL+"/danmaku/:id", wrapper.GetDanmaku)
+	router.POST(baseURL+"/delete-archive-request", wrapper.DeleteArchiveRequest)
 	router.POST(baseURL+"/delete_comment", wrapper.DeleteComment)
 	router.POST(baseURL+"/email-verification", wrapper.EmailValidation)
 	router.GET(baseURL+"/follow-feed", wrapper.FollowFeed)
 	router.POST(baseURL+"/follow/:id", wrapper.Follow)
 	router.POST(baseURL+"/login", wrapper.Login)
 	router.GET(baseURL+"/logout", wrapper.Logout)
+	router.POST(baseURL+"/new-archive-request", wrapper.NewArchiveRequest)
 	router.GET(baseURL+"/recommendations/:id", wrapper.Recommendations)
 	router.POST(baseURL+"/register", wrapper.Register)
 	router.POST(baseURL+"/reset_password", wrapper.ResetPassword)
+	router.POST(baseURL+"/retry-archive-request", wrapper.RetryArchiveRequest)
 	router.POST(baseURL+"/update-profile", wrapper.UpdateProfile)
 	router.POST(baseURL+"/upload", wrapper.Upload)
 	router.GET(baseURL+"/upvote/:id", wrapper.Upvote)
@@ -4684,43 +4837,44 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"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",
-	"hNLjn0ej0ZCkDO9/3f8/AAD///OVIA0CPAAA",
+	"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",
+	"AA==",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

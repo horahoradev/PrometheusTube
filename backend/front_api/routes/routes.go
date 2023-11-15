@@ -75,9 +75,9 @@ func SetupRoutes(e *echo.Echo, cfg *config.Config, srv *socketio.Server) {
 	e.GET("/api/downloadsinprogress", r.handleGetDownloadsInProgress)
 	e.GET("/api/archive-requests", wrapper.ArchiveRequests)
 	e.GET("/api/archive-events", wrapper.ArchiveEvents)
-	e.POST("/api/archive-request", wrapper.NewArchiveRequest)
-	e.DELETE("/api/archive-request", wrapper.DeleteArchiveRequest)
-	e.POST("/api/archive-request", wrapper.RetryArchiveRequest)
+	e.POST("/api/new-archive-request", wrapper.NewArchiveRequest)
+	e.POST("/api/retry-archive-request", wrapper.RetryArchiveRequest)
+	e.POST("/api/delete-archive-request", wrapper.DeleteArchiveRequest)
 
 	e.POST("/api/follow/:id", wrapper.Follow)
 	e.GET("/api/follow-feed", wrapper.FollowFeed)

@@ -26,6 +26,8 @@ const style = {
 export default function Login({ setLogin }) {
   let setLoggedIn = UserState((state) => state.setLoggedIn);
   let setUID = UserState((state) => state.setUID);
+  let setAdmin = UserState((state) => state.setAdmin);
+
 
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -42,6 +44,7 @@ export default function Login({ setLogin }) {
     );
     setLoggedIn(true);
     setUID(claims["uid"]);
+    setAdmin(claims["admin"]);
   }
 
   return (

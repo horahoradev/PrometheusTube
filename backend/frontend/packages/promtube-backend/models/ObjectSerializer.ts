@@ -1,3 +1,5 @@
+export * from '../models/ArchiveEvents200ResponseInner';
+export * from '../models/ArchiveRequests200ResponseInner';
 export * from '../models/Comments200ResponseInner';
 export * from '../models/GetDanmaku200ResponseInner';
 export * from '../models/Users200Response';
@@ -7,6 +9,8 @@ export * from '../models/Videos200ResponseCategoriesInner';
 export * from '../models/Videos200ResponsePaginationData';
 export * from '../models/Videos200ResponseVideosInner';
 
+import { ArchiveEvents200ResponseInner } from '../models/ArchiveEvents200ResponseInner';
+import { ArchiveRequests200ResponseInner } from '../models/ArchiveRequests200ResponseInner';
 import { Comments200ResponseInner } from '../models/Comments200ResponseInner';
 import { GetDanmaku200ResponseInner } from '../models/GetDanmaku200ResponseInner';
 import { Users200Response } from '../models/Users200Response';
@@ -39,6 +43,8 @@ let enumsMap: Set<string> = new Set<string>([
 ]);
 
 let typeMap: {[index: string]: any} = {
+    "ArchiveEvents200ResponseInner": ArchiveEvents200ResponseInner,
+    "ArchiveRequests200ResponseInner": ArchiveRequests200ResponseInner,
     "Comments200ResponseInner": Comments200ResponseInner,
     "GetDanmaku200ResponseInner": GetDanmaku200ResponseInner,
     "Users200Response": Users200Response,

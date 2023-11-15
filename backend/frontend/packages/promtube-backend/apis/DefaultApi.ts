@@ -8,6 +8,8 @@ import {canConsumeForm, isCodeInRange} from '../util';
 import {SecurityAuthentication} from '../auth/auth';
 
 
+import { ArchiveEvents200ResponseInner } from '../models/ArchiveEvents200ResponseInner';
+import { ArchiveRequests200ResponseInner } from '../models/ArchiveRequests200ResponseInner';
 import { Comments200ResponseInner } from '../models/Comments200ResponseInner';
 import { GetDanmaku200ResponseInner } from '../models/GetDanmaku200ResponseInner';
 import { Users200Response } from '../models/Users200Response';
@@ -19,6 +21,125 @@ import { Videos200ResponseVideosInner } from '../models/Videos200ResponseVideosI
  * no description
  */
 export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
+
+    /**
+     * Get archive events
+     * @param downloadID download id to filter on
+     */
+    public async archiveEvents(downloadID: string, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+        // verify required parameter 'downloadID' is not null or undefined
+        if (downloadID === null || downloadID === undefined) {
+            throw new RequiredError("DefaultApi", "archiveEvents", "downloadID");
+        }
+
+
+        // Path Params
+        const localVarPath = '/archive-events';
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.GET);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("downloadID", ObjectSerializer.serialize(downloadID, "string", ""));
+
+
+        
+        const defaultAuth: SecurityAuthentication | undefined = _options?.authMethods?.default || this.configuration?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        return requestContext;
+    }
+
+    /**
+     * Get archive requests
+     * @param cookie auth cookies etc
+     */
+    public async archiveRequests(cookie: string, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+        // verify required parameter 'cookie' is not null or undefined
+        if (cookie === null || cookie === undefined) {
+            throw new RequiredError("DefaultApi", "archiveRequests", "cookie");
+        }
+
+
+        // Path Params
+        const localVarPath = '/archive-requests';
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.GET);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("Cookie", ObjectSerializer.serialize(cookie, "string", ""));
+
+
+        
+        const defaultAuth: SecurityAuthentication | undefined = _options?.authMethods?.default || this.configuration?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        return requestContext;
+    }
+
+    /**
+     * Get archive requests
+     * @param pageNumber content page number
+     * @param id user id to filter on
+     * @param cookie auth cookies etc
+     */
+    public async auditEvents(pageNumber: number, id: number, cookie: string, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+        // verify required parameter 'pageNumber' is not null or undefined
+        if (pageNumber === null || pageNumber === undefined) {
+            throw new RequiredError("DefaultApi", "auditEvents", "pageNumber");
+        }
+
+
+        // verify required parameter 'id' is not null or undefined
+        if (id === null || id === undefined) {
+            throw new RequiredError("DefaultApi", "auditEvents", "id");
+        }
+
+
+        // verify required parameter 'cookie' is not null or undefined
+        if (cookie === null || cookie === undefined) {
+            throw new RequiredError("DefaultApi", "auditEvents", "cookie");
+        }
+
+
+        // Path Params
+        const localVarPath = '/audit-events';
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.GET);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("pageNumber", ObjectSerializer.serialize(pageNumber, "number", ""));
+
+        // Header Params
+        requestContext.setHeaderParam("id", ObjectSerializer.serialize(id, "number", ""));
+
+        // Header Params
+        requestContext.setHeaderParam("Cookie", ObjectSerializer.serialize(cookie, "string", ""));
+
+
+        
+        const defaultAuth: SecurityAuthentication | undefined = _options?.authMethods?.default || this.configuration?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        return requestContext;
+    }
 
     /**
      * Comment on a video
@@ -176,6 +297,49 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
 
         // Header Params
         requestContext.setHeaderParam("FontSize", ObjectSerializer.serialize(fontSize, "string", ""));
+
+
+        
+        const defaultAuth: SecurityAuthentication | undefined = _options?.authMethods?.default || this.configuration?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        return requestContext;
+    }
+
+    /**
+     * Retry archive request
+     * @param downloadID download ID of the request to retry
+     * @param cookie auth cookies etc
+     */
+    public async deleteArchiveRequest(downloadID: number, cookie: string, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+        // verify required parameter 'downloadID' is not null or undefined
+        if (downloadID === null || downloadID === undefined) {
+            throw new RequiredError("DefaultApi", "deleteArchiveRequest", "downloadID");
+        }
+
+
+        // verify required parameter 'cookie' is not null or undefined
+        if (cookie === null || cookie === undefined) {
+            throw new RequiredError("DefaultApi", "deleteArchiveRequest", "cookie");
+        }
+
+
+        // Path Params
+        const localVarPath = '/delete-archive-request';
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("downloadID", ObjectSerializer.serialize(downloadID, "number", ""));
+
+        // Header Params
+        requestContext.setHeaderParam("Cookie", ObjectSerializer.serialize(cookie, "string", ""));
 
 
         
@@ -405,6 +569,49 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
     }
 
     /**
+     * Create new archive request
+     * @param url url to archive
+     * @param cookie auth cookies etc
+     */
+    public async newArchiveRequest(url: string, cookie: string, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+        // verify required parameter 'url' is not null or undefined
+        if (url === null || url === undefined) {
+            throw new RequiredError("DefaultApi", "newArchiveRequest", "url");
+        }
+
+
+        // verify required parameter 'cookie' is not null or undefined
+        if (cookie === null || cookie === undefined) {
+            throw new RequiredError("DefaultApi", "newArchiveRequest", "cookie");
+        }
+
+
+        // Path Params
+        const localVarPath = '/new-archive-request';
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("url", ObjectSerializer.serialize(url, "string", ""));
+
+        // Header Params
+        requestContext.setHeaderParam("Cookie", ObjectSerializer.serialize(cookie, "string", ""));
+
+
+        
+        const defaultAuth: SecurityAuthentication | undefined = _options?.authMethods?.default || this.configuration?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        return requestContext;
+    }
+
+    /**
      * Get list of videos
      * @param id video ID
      */
@@ -532,6 +739,49 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
 
         // Header Params
         requestContext.setHeaderParam("newpassword", ObjectSerializer.serialize(newpassword, "string", ""));
+
+
+        
+        const defaultAuth: SecurityAuthentication | undefined = _options?.authMethods?.default || this.configuration?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        return requestContext;
+    }
+
+    /**
+     * Retry archive request
+     * @param downloadID download ID of the request to retry
+     * @param cookie auth cookies etc
+     */
+    public async retryArchiveRequest(downloadID: number, cookie: string, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+        // verify required parameter 'downloadID' is not null or undefined
+        if (downloadID === null || downloadID === undefined) {
+            throw new RequiredError("DefaultApi", "retryArchiveRequest", "downloadID");
+        }
+
+
+        // verify required parameter 'cookie' is not null or undefined
+        if (cookie === null || cookie === undefined) {
+            throw new RequiredError("DefaultApi", "retryArchiveRequest", "cookie");
+        }
+
+
+        // Path Params
+        const localVarPath = '/retry-archive-request';
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("downloadID", ObjectSerializer.serialize(downloadID, "number", ""));
+
+        // Header Params
+        requestContext.setHeaderParam("Cookie", ObjectSerializer.serialize(cookie, "string", ""));
 
 
         
@@ -901,6 +1151,102 @@ export class DefaultApiResponseProcessor {
      * Unwraps the actual response sent by the server from the response context and deserializes the response content
      * to the expected objects
      *
+     * @params response Response returned by the server for a request to archiveEvents
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async archiveEvents(response: ResponseContext): Promise<Array<ArchiveEvents200ResponseInner> > {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("200", response.httpStatusCode)) {
+            const body: Array<ArchiveEvents200ResponseInner> = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "Array<ArchiveEvents200ResponseInner>", ""
+            ) as Array<ArchiveEvents200ResponseInner>;
+            return body;
+        }
+        if (isCodeInRange("0", response.httpStatusCode)) {
+            throw new ApiException<undefined>(response.httpStatusCode, "Unexpected error", undefined, response.headers);
+        }
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: Array<ArchiveEvents200ResponseInner> = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "Array<ArchiveEvents200ResponseInner>", ""
+            ) as Array<ArchiveEvents200ResponseInner>;
+            return body;
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
+     * @params response Response returned by the server for a request to archiveRequests
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async archiveRequests(response: ResponseContext): Promise<Array<ArchiveRequests200ResponseInner> > {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("200", response.httpStatusCode)) {
+            const body: Array<ArchiveRequests200ResponseInner> = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "Array<ArchiveRequests200ResponseInner>", ""
+            ) as Array<ArchiveRequests200ResponseInner>;
+            return body;
+        }
+        if (isCodeInRange("0", response.httpStatusCode)) {
+            throw new ApiException<undefined>(response.httpStatusCode, "Unexpected error", undefined, response.headers);
+        }
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: Array<ArchiveRequests200ResponseInner> = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "Array<ArchiveRequests200ResponseInner>", ""
+            ) as Array<ArchiveRequests200ResponseInner>;
+            return body;
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
+     * @params response Response returned by the server for a request to auditEvents
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async auditEvents(response: ResponseContext): Promise<Array<ArchiveRequests200ResponseInner> > {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("200", response.httpStatusCode)) {
+            const body: Array<ArchiveRequests200ResponseInner> = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "Array<ArchiveRequests200ResponseInner>", ""
+            ) as Array<ArchiveRequests200ResponseInner>;
+            return body;
+        }
+        if (isCodeInRange("0", response.httpStatusCode)) {
+            throw new ApiException<undefined>(response.httpStatusCode, "Unexpected error", undefined, response.headers);
+        }
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: Array<ArchiveRequests200ResponseInner> = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "Array<ArchiveRequests200ResponseInner>", ""
+            ) as Array<ArchiveRequests200ResponseInner>;
+            return body;
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
      * @params response Response returned by the server for a request to comment
      * @throws ApiException if the response code was not in [200, 299]
      */
@@ -965,6 +1311,34 @@ export class DefaultApiResponseProcessor {
      * @throws ApiException if the response code was not in [200, 299]
      */
      public async createDanmaku(response: ResponseContext): Promise<void > {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("200", response.httpStatusCode)) {
+            return;
+        }
+        if (isCodeInRange("0", response.httpStatusCode)) {
+            throw new ApiException<undefined>(response.httpStatusCode, "Unexpected error", undefined, response.headers);
+        }
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: void = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "void", ""
+            ) as void;
+            return body;
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
+     * @params response Response returned by the server for a request to deleteArchiveRequest
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async deleteArchiveRequest(response: ResponseContext): Promise<void > {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
             return;
@@ -1190,6 +1564,34 @@ export class DefaultApiResponseProcessor {
      * Unwraps the actual response sent by the server from the response context and deserializes the response content
      * to the expected objects
      *
+     * @params response Response returned by the server for a request to newArchiveRequest
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async newArchiveRequest(response: ResponseContext): Promise<void > {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("200", response.httpStatusCode)) {
+            return;
+        }
+        if (isCodeInRange("0", response.httpStatusCode)) {
+            throw new ApiException<undefined>(response.httpStatusCode, "Unexpected error", undefined, response.headers);
+        }
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: void = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "void", ""
+            ) as void;
+            return body;
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
      * @params response Response returned by the server for a request to recommendations
      * @throws ApiException if the response code was not in [200, 299]
      */
@@ -1254,6 +1656,34 @@ export class DefaultApiResponseProcessor {
      * @throws ApiException if the response code was not in [200, 299]
      */
      public async resetPassword(response: ResponseContext): Promise<void > {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("200", response.httpStatusCode)) {
+            return;
+        }
+        if (isCodeInRange("0", response.httpStatusCode)) {
+            throw new ApiException<undefined>(response.httpStatusCode, "Unexpected error", undefined, response.headers);
+        }
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: void = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "void", ""
+            ) as void;
+            return body;
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
+     * @params response Response returned by the server for a request to retryArchiveRequest
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async retryArchiveRequest(response: ResponseContext): Promise<void > {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
             return;

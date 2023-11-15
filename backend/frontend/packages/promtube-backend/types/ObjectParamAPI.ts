@@ -1,6 +1,8 @@
 import { ResponseContext, RequestContext, HttpFile } from '../http/http';
 import { Configuration} from '../configuration'
 
+import { ArchiveEvents200ResponseInner } from '../models/ArchiveEvents200ResponseInner';
+import { ArchiveRequests200ResponseInner } from '../models/ArchiveRequests200ResponseInner';
 import { Comments200ResponseInner } from '../models/Comments200ResponseInner';
 import { GetDanmaku200ResponseInner } from '../models/GetDanmaku200ResponseInner';
 import { Users200Response } from '../models/Users200Response';
@@ -12,6 +14,45 @@ import { Videos200ResponseVideosInner } from '../models/Videos200ResponseVideosI
 
 import { ObservableDefaultApi } from "./ObservableAPI";
 import { DefaultApiRequestFactory, DefaultApiResponseProcessor} from "../apis/DefaultApi";
+
+export interface DefaultApiArchiveEventsRequest {
+    /**
+     * download id to filter on
+     * @type string
+     * @memberof DefaultApiarchiveEvents
+     */
+    downloadID: string
+}
+
+export interface DefaultApiArchiveRequestsRequest {
+    /**
+     * auth cookies etc
+     * @type string
+     * @memberof DefaultApiarchiveRequests
+     */
+    cookie: string
+}
+
+export interface DefaultApiAuditEventsRequest {
+    /**
+     * content page number
+     * @type number
+     * @memberof DefaultApiauditEvents
+     */
+    pageNumber: number
+    /**
+     * user id to filter on
+     * @type number
+     * @memberof DefaultApiauditEvents
+     */
+    id: number
+    /**
+     * auth cookies etc
+     * @type string
+     * @memberof DefaultApiauditEvents
+     */
+    cookie: string
+}
 
 export interface DefaultApiCommentRequest {
     /**
@@ -82,6 +123,21 @@ export interface DefaultApiCreateDanmakuRequest {
     fontSize: string
 }
 
+export interface DefaultApiDeleteArchiveRequestRequest {
+    /**
+     * download ID of the request to retry
+     * @type number
+     * @memberof DefaultApideleteArchiveRequest
+     */
+    downloadID: number
+    /**
+     * auth cookies etc
+     * @type string
+     * @memberof DefaultApideleteArchiveRequest
+     */
+    cookie: string
+}
+
 export interface DefaultApiDeleteCommentRequest {
     /**
      * comment ID
@@ -139,6 +195,21 @@ export interface DefaultApiLoginRequest {
 export interface DefaultApiLogoutRequest {
 }
 
+export interface DefaultApiNewArchiveRequestRequest {
+    /**
+     * url to archive
+     * @type string
+     * @memberof DefaultApinewArchiveRequest
+     */
+    url: string
+    /**
+     * auth cookies etc
+     * @type string
+     * @memberof DefaultApinewArchiveRequest
+     */
+    cookie: string
+}
+
 export interface DefaultApiRecommendationsRequest {
     /**
      * video ID
@@ -188,6 +259,21 @@ export interface DefaultApiResetPasswordRequest {
      * @memberof DefaultApiresetPassword
      */
     newpassword: string
+}
+
+export interface DefaultApiRetryArchiveRequestRequest {
+    /**
+     * download ID of the request to retry
+     * @type number
+     * @memberof DefaultApiretryArchiveRequest
+     */
+    downloadID: number
+    /**
+     * auth cookies etc
+     * @type string
+     * @memberof DefaultApiretryArchiveRequest
+     */
+    cookie: string
 }
 
 export interface DefaultApiUpdateProfileRequest {
@@ -345,6 +431,30 @@ export class ObjectDefaultApi {
     }
 
     /**
+     * Get archive events
+     * @param param the request object
+     */
+    public archiveEvents(param: DefaultApiArchiveEventsRequest, options?: Configuration): Promise<Array<ArchiveEvents200ResponseInner>> {
+        return this.api.archiveEvents(param.downloadID,  options).toPromise();
+    }
+
+    /**
+     * Get archive requests
+     * @param param the request object
+     */
+    public archiveRequests(param: DefaultApiArchiveRequestsRequest, options?: Configuration): Promise<Array<ArchiveRequests200ResponseInner>> {
+        return this.api.archiveRequests(param.cookie,  options).toPromise();
+    }
+
+    /**
+     * Get archive requests
+     * @param param the request object
+     */
+    public auditEvents(param: DefaultApiAuditEventsRequest, options?: Configuration): Promise<Array<ArchiveRequests200ResponseInner>> {
+        return this.api.auditEvents(param.pageNumber, param.id, param.cookie,  options).toPromise();
+    }
+
+    /**
      * Comment on a video
      * @param param the request object
      */
@@ -366,6 +476,14 @@ export class ObjectDefaultApi {
      */
     public createDanmaku(param: DefaultApiCreateDanmakuRequest, options?: Configuration): Promise<void> {
         return this.api.createDanmaku(param.videoID, param.timestamp, param.message, param.type, param.color, param.fontSize,  options).toPromise();
+    }
+
+    /**
+     * Retry archive request
+     * @param param the request object
+     */
+    public deleteArchiveRequest(param: DefaultApiDeleteArchiveRequestRequest, options?: Configuration): Promise<void> {
+        return this.api.deleteArchiveRequest(param.downloadID, param.cookie,  options).toPromise();
     }
 
     /**
@@ -425,6 +543,14 @@ export class ObjectDefaultApi {
     }
 
     /**
+     * Create new archive request
+     * @param param the request object
+     */
+    public newArchiveRequest(param: DefaultApiNewArchiveRequestRequest, options?: Configuration): Promise<void> {
+        return this.api.newArchiveRequest(param.url, param.cookie,  options).toPromise();
+    }
+
+    /**
      * Get list of videos
      * @param param the request object
      */
@@ -446,6 +572,14 @@ export class ObjectDefaultApi {
      */
     public resetPassword(param: DefaultApiResetPasswordRequest, options?: Configuration): Promise<void> {
         return this.api.resetPassword(param.oldpassword, param.newpassword,  options).toPromise();
+    }
+
+    /**
+     * Retry archive request
+     * @param param the request object
+     */
+    public retryArchiveRequest(param: DefaultApiRetryArchiveRequestRequest, options?: Configuration): Promise<void> {
+        return this.api.retryArchiveRequest(param.downloadID, param.cookie,  options).toPromise();
     }
 
     /**

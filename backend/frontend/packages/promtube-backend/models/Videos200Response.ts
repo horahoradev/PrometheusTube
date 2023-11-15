@@ -1,6 +1,6 @@
 /**
- * Kirakira Backend API
- * The API for Kirakira
+ * Promtube Backend API
+ * The API for Promtube
  *
  * OpenAPI spec version: 0.0.1
  * Contact: horahora1567@gmail.com

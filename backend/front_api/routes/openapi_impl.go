@@ -815,8 +815,8 @@ func (s Server) EmailValidation(ctx echo.Context, params EmailValidationParams) 
 	return nil
 }
 
-func (s Server) ArchiveRequests(c echo.Context) error {
-	data := ArchiveRequestsPageData{}
+func (s Server) ArchiveRequests(c echo.Context, params ArchiveRequestsParams) error {
+	data := []ArchivalRequest{}
 
 	profileInfo, err := s.r.getUserProfileInfo(c)
 	if err != nil {
@@ -842,7 +842,7 @@ func (s Server) ArchiveRequests(c echo.Context) error {
 		}
 		requests = append(requests, req)
 	}
-	data.ArchivalRequests = requests
+	data = requests
 
 	return c.JSON(http.StatusOK, data)
 }
@@ -879,7 +879,7 @@ func (s Server) ArchiveEvents(ctx echo.Context, params ArchiveEventsParams) erro
 }
 
 func (s Server) NewArchiveRequest(c echo.Context, params NewArchiveRequestParams) error {
-	urlVal := strings.TrimSpace(c.FormValue("url"))
+	urlVal := params.Url
 
 	profile, err := s.r.getUserProfileInfo(c)
 	if err != nil {
@@ -976,11 +976,7 @@ func (s Server) DeleteArchiveRequest(c echo.Context, params DeleteArchiveRequest
 		return c.String(http.StatusForbidden, "Insufficient user status")
 	}
 
-	downloadID := c.FormValue("download_id")
-	downloadIDInt, err := strconv.ParseInt(downloadID, 10, 64) // just make sure we can parse it
-	if err != nil {
-		return err
-	}
+	downloadIDInt := params.DownloadID
 
 	_, err = s.r.s.DeleteArchivalRequest(context.TODO(), &schedulerproto.DeletionRequest{UserID: uint64(profile.UserID), DownloadID: uint64(downloadIDInt)})
 

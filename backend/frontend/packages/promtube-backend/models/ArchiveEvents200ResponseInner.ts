@@ -12,28 +12,42 @@
 
 import { HttpFile } from '../http/http';
 
-export class Videos200ResponseCategoriesInner {
-    'name'?: string;
-    'cardinality'?: number;
+export class ArchiveEvents200ResponseInner {
+    'videoUrl'?: string;
+    'parnetUrl'?: string;
+    'message'?: string;
+    'timestamp'?: string;
 
     static readonly discriminator: string | undefined = undefined;
 
     static readonly attributeTypeMap: Array<{name: string, baseName: string, type: string, format: string}> = [
         {
-            "name": "name",
-            "baseName": "Name",
+            "name": "videoUrl",
+            "baseName": "VideoUrl",
             "type": "string",
             "format": ""
         },
         {
-            "name": "cardinality",
-            "baseName": "Cardinality",
-            "type": "number",
+            "name": "parnetUrl",
+            "baseName": "ParnetUrl",
+            "type": "string",
+            "format": ""
+        },
+        {
+            "name": "message",
+            "baseName": "Message",
+            "type": "string",
+            "format": ""
+        },
+        {
+            "name": "timestamp",
+            "baseName": "Timestamp",
+            "type": "string",
             "format": ""
         }    ];
 
     static getAttributeTypeMap() {
-        return Videos200ResponseCategoriesInner.attributeTypeMap;
+        return ArchiveEvents200ResponseInner.attributeTypeMap;
     }
 
     public constructor() {

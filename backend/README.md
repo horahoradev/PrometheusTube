@@ -34,6 +34,6 @@ That's it for basic usage, and should work. If that doesn't work, bug me on Disc
 
 ## Useful Commands\
 
-`sudo docker run --rm -v $(pwd):/local openapitools/openapi-generator-cli generate -i /local/backend/front_api/openapi/api.yaml --additional-properties=npmName=kirakirabackend,supportsES6=true    -g typescript     -o /local/backend/frontend/packages/promtube-backend && sudo chown -R $USER: backend/frontend/packages/promtube-backend && rm -r backend/frontend/node_modules && cd frontend && npm install`
+`sudo docker run --rm -v $(pwd):/local openapitools/openapi-generator-cli generate -i /local/backend/front_api/openapi/api.yaml --additional-properties=npmName=kirakirabackend,supportsES6=true    -g typescript     -o /local/backend/frontend/packages/promtube-backend && sudo chown -R $USER: backend/frontend/packages/promtube-backend && rm -r backend/frontend/node_modules && cd backend/frontend && npm install`
 
 `git checkout HEAD -- packages/kirakira-backend/tsconfig.json packages/kirakira-backend/configuration.ts packages/kirakira-backend/servers.ts packages/kirakira-backend/http/isomorphic-fetch.ts`

@@ -4,9 +4,13 @@ All URIs are relative to *http://localhost:3000/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**archiveEvents**](DefaultApi.md#archiveEvents) | **GET** /archive-events | Get archive events
+[**archiveRequests**](DefaultApi.md#archiveRequests) | **GET** /archive-requests | Get archive requests
+[**auditEvents**](DefaultApi.md#auditEvents) | **GET** /audit-events | Get archive requests
 [**comment**](DefaultApi.md#comment) | **POST** /comment | Comment on a video
 [**comments**](DefaultApi.md#comments) | **GET** /comments/{id} | Get comments for video ID
 [**createDanmaku**](DefaultApi.md#createDanmaku) | **POST** /danmaku | Create new danmaku
+[**deleteArchiveRequest**](DefaultApi.md#deleteArchiveRequest) | **POST** /delete-archive-request | Retry archive request
 [**deleteComment**](DefaultApi.md#deleteComment) | **POST** /delete_comment | Delete a comment
 [**emailValidation**](DefaultApi.md#emailValidation) | **POST** /email-verification | Create new email validation
 [**follow**](DefaultApi.md#follow) | **POST** /follow/{id} | Upvote a video
@@ -14,9 +18,11 @@ Method | HTTP request | Description
 [**getDanmaku**](DefaultApi.md#getDanmaku) | **GET** /danmaku/{id} | Get danmaku for video
 [**login**](DefaultApi.md#login) | **POST** /login | Log the user in
 [**logout**](DefaultApi.md#logout) | **GET** /logout | Log user out
+[**newArchiveRequest**](DefaultApi.md#newArchiveRequest) | **POST** /new-archive-request | Create new archive request
 [**recommendations**](DefaultApi.md#recommendations) | **GET** /recommendations/{id} | Get list of videos
 [**register**](DefaultApi.md#register) | **POST** /register | Register user
 [**resetPassword**](DefaultApi.md#resetPassword) | **POST** /reset_password | Reset password
+[**retryArchiveRequest**](DefaultApi.md#retryArchiveRequest) | **POST** /retry-archive-request | Retry archive request
 [**updateProfile**](DefaultApi.md#updateProfile) | **POST** /update-profile | Update user\&#39;s profile
 [**upload**](DefaultApi.md#upload) | **POST** /upload | Upload a new video
 [**upvote**](DefaultApi.md#upvote) | **GET** /upvote/{id} | Get user video data
@@ -25,6 +31,174 @@ Method | HTTP request | Description
 [**videoDetail**](DefaultApi.md#videoDetail) | **GET** /videos/{id} | Get list of videos
 [**videos**](DefaultApi.md#videos) | **GET** /videos | Get list of videos
 
+
+# **archiveEvents**
+> Array<ArchiveEvents200ResponseInner> archiveEvents()
+
+
+### Example
+
+
+```typescript
+import {  } from '';
+import * as fs from 'fs';
+
+const configuration = .createConfiguration();
+const apiInstance = new .DefaultApi(configuration);
+
+let body:.DefaultApiArchiveEventsRequest = {
+  // string | download id to filter on
+  downloadID: "downloadID_example",
+};
+
+apiInstance.archiveEvents(body).then((data:any) => {
+  console.log('API called successfully. Returned data: ' + data);
+}).catch((error:any) => console.error(error));
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **downloadID** | [**string**] | download id to filter on | defaults to undefined
+
+
+### Return type
+
+**Array<ArchiveEvents200ResponseInner>**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | list of follow feed videos |  -  |
+**0** | Unexpected error |  -  |
+
+[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+
+# **archiveRequests**
+> Array<ArchiveRequests200ResponseInner> archiveRequests()
+
+
+### Example
+
+
+```typescript
+import {  } from '';
+import * as fs from 'fs';
+
+const configuration = .createConfiguration();
+const apiInstance = new .DefaultApi(configuration);
+
+let body:.DefaultApiArchiveRequestsRequest = {
+  // string | auth cookies etc
+  cookie: "Cookie_example",
+};
+
+apiInstance.archiveRequests(body).then((data:any) => {
+  console.log('API called successfully. Returned data: ' + data);
+}).catch((error:any) => console.error(error));
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **cookie** | [**string**] | auth cookies etc | defaults to undefined
+
+
+### Return type
+
+**Array<ArchiveRequests200ResponseInner>**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | list of archive requests |  -  |
+**0** | Unexpected error |  -  |
+
+[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+
+# **auditEvents**
+> Array<ArchiveRequests200ResponseInner> auditEvents()
+
+
+### Example
+
+
+```typescript
+import {  } from '';
+import * as fs from 'fs';
+
+const configuration = .createConfiguration();
+const apiInstance = new .DefaultApi(configuration);
+
+let body:.DefaultApiAuditEventsRequest = {
+  // number | content page number
+  pageNumber: 1,
+  // number | user id to filter on
+  id: 1,
+  // string | auth cookies etc
+  cookie: "Cookie_example",
+};
+
+apiInstance.auditEvents(body).then((data:any) => {
+  console.log('API called successfully. Returned data: ' + data);
+}).catch((error:any) => console.error(error));
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **pageNumber** | [**number**] | content page number | defaults to undefined
+ **id** | [**number**] | user id to filter on | defaults to undefined
+ **cookie** | [**string**] | auth cookies etc | defaults to undefined
+
+
+### Return type
+
+**Array<ArchiveRequests200ResponseInner>**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | list of archive requests |  -  |
+**0** | Unexpected error |  -  |
+
+[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
 
 # **comment**
 > void comment()
@@ -205,6 +379,63 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Danmaku creation success |  -  |
+**0** | Unexpected error |  -  |
+
+[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+
+# **deleteArchiveRequest**
+> void deleteArchiveRequest()
+
+
+### Example
+
+
+```typescript
+import {  } from '';
+import * as fs from 'fs';
+
+const configuration = .createConfiguration();
+const apiInstance = new .DefaultApi(configuration);
+
+let body:.DefaultApiDeleteArchiveRequestRequest = {
+  // number | download ID of the request to retry
+  downloadID: 1,
+  // string | auth cookies etc
+  cookie: "Cookie_example",
+};
+
+apiInstance.deleteArchiveRequest(body).then((data:any) => {
+  console.log('API called successfully. Returned data: ' + data);
+}).catch((error:any) => console.error(error));
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **downloadID** | [**number**] | download ID of the request to retry | defaults to undefined
+ **cookie** | [**string**] | auth cookies etc | defaults to undefined
+
+
+### Return type
+
+**void**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: Not defined
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | delete success |  -  |
 **0** | Unexpected error |  -  |
 
 [[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
@@ -577,6 +808,63 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
 
+# **newArchiveRequest**
+> void newArchiveRequest()
+
+
+### Example
+
+
+```typescript
+import {  } from '';
+import * as fs from 'fs';
+
+const configuration = .createConfiguration();
+const apiInstance = new .DefaultApi(configuration);
+
+let body:.DefaultApiNewArchiveRequestRequest = {
+  // string | url to archive
+  url: "url_example",
+  // string | auth cookies etc
+  cookie: "Cookie_example",
+};
+
+apiInstance.newArchiveRequest(body).then((data:any) => {
+  console.log('API called successfully. Returned data: ' + data);
+}).catch((error:any) => console.error(error));
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **url** | [**string**] | url to archive | defaults to undefined
+ **cookie** | [**string**] | auth cookies etc | defaults to undefined
+
+
+### Return type
+
+**void**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: Not defined
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | archival success |  -  |
+**0** | Unexpected error |  -  |
+
+[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+
 # **recommendations**
 > Array<Videos200ResponseVideosInner> recommendations()
 
@@ -747,6 +1035,63 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Password changed |  -  |
+**0** | Unexpected error |  -  |
+
+[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+
+# **retryArchiveRequest**
+> void retryArchiveRequest()
+
+
+### Example
+
+
+```typescript
+import {  } from '';
+import * as fs from 'fs';
+
+const configuration = .createConfiguration();
+const apiInstance = new .DefaultApi(configuration);
+
+let body:.DefaultApiRetryArchiveRequestRequest = {
+  // number | download ID of the request to retry
+  downloadID: 1,
+  // string | auth cookies etc
+  cookie: "Cookie_example",
+};
+
+apiInstance.retryArchiveRequest(body).then((data:any) => {
+  console.log('API called successfully. Returned data: ' + data);
+}).catch((error:any) => console.error(error));
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **downloadID** | [**number**] | download ID of the request to retry | defaults to undefined
+ **cookie** | [**string**] | auth cookies etc | defaults to undefined
+
+
+### Return type
+
+**void**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: Not defined
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | retry success |  -  |
 **0** | Unexpected error |  -  |
 
 [[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)

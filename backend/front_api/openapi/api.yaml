@@ -751,6 +751,13 @@ paths:
     get:
       summary: Get archive requests
       operationId: archiveRequests
+      parameters:
+        - name: Cookie
+          in: header
+          required: true
+          description: auth cookies etc
+          schema:
+            type: string
       responses:
         "200":
           description: list of archive requests
@@ -796,6 +803,12 @@ paths:
           description: user id to filter on
           schema:
             type: integer
+        - name: Cookie
+          in: header
+          required: true
+          description: auth cookies etc
+          schema:
+            type: string
       responses:
         "200":
           description: list of archive requests
@@ -824,7 +837,7 @@ paths:
                       type: integer
         default:
           description: Unexpected error
-  /archive-request:
+  /new-archive-request:
     post:
       summary: Create new archive request
       operationId: newArchiveRequest
@@ -835,12 +848,20 @@ paths:
           description: url to archive
           schema:
             type: string
+        - name: Cookie
+          in: header
+          required: true
+          description: auth cookies etc
+          schema:
+            type: string
       responses:
         "200":
           description: archival success
         default:
           description: Unexpected error
-    put:
+
+  /retry-archive-request:
+    post:
       summary: Retry archive request
       operationId: retryArchiveRequest
       parameters:
@@ -850,12 +871,20 @@ paths:
           description: download ID of the request to retry
           schema:
             type: integer
+        - name: Cookie
+          in: header
+          required: true
+          description: auth cookies etc
+          schema:
+            type: string
       responses:
         "200":
           description: retry success
         default:
           description: Unexpected error
-    delete:
+          
+  /delete-archive-request:
+    post:
       summary: Retry archive request
       operationId: deleteArchiveRequest
       parameters:
@@ -865,6 +894,12 @@ paths:
           description: download ID of the request to retry
           schema:
             type: integer
+        - name: Cookie
+          in: header
+          required: true
+          description: auth cookies etc
+          schema:
+            type: string
       responses:
         "200":
           description: delete success

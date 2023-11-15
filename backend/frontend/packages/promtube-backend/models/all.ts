@@ -1,3 +1,5 @@
+export * from '../models/ArchiveEvents200ResponseInner'
+export * from '../models/ArchiveRequests200ResponseInner'
 export * from '../models/Comments200ResponseInner'
 export * from '../models/GetDanmaku200ResponseInner'
 export * from '../models/Users200Response'
