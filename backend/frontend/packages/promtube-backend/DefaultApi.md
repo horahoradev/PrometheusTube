@@ -221,6 +221,8 @@ let body:.DefaultApiCommentRequest = {
   content: 'YQ==',
   // number | comment\'s video ID
   videoID: 1,
+  // string | auth cookies etc
+  cookie: "Cookie_example",
 };
 
 apiInstance.comment(body).then((data:any) => {
@@ -236,6 +238,7 @@ Name | Type | Description  | Notes
  **parent** | [**number**] | parent comment ID | defaults to undefined
  **content** | [**string**] | comment message | defaults to undefined
  **videoID** | [**number**] | comment\&#39;s video ID | defaults to undefined
+ **cookie** | [**string**] | auth cookies etc | defaults to undefined
 
 
 ### Return type
@@ -457,6 +460,8 @@ const apiInstance = new .DefaultApi(configuration);
 let body:.DefaultApiDeleteCommentRequest = {
   // number | comment ID
   id: 1,
+  // string | auth cookies etc
+  cookie: "Cookie_example",
 };
 
 apiInstance.deleteComment(body).then((data:any) => {
@@ -470,6 +475,7 @@ apiInstance.deleteComment(body).then((data:any) => {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | [**number**] | comment ID | defaults to undefined
+ **cookie** | [**string**] | auth cookies etc | defaults to undefined
 
 
 ### Return type
@@ -882,6 +888,8 @@ const apiInstance = new .DefaultApi(configuration);
 let body:.DefaultApiRecommendationsRequest = {
   // number | video ID
   id: 1,
+  // string | auth cookies etc
+  cookie: "Cookie_example",
 };
 
 apiInstance.recommendations(body).then((data:any) => {
@@ -895,6 +903,7 @@ apiInstance.recommendations(body).then((data:any) => {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | [**number**] | video ID | defaults to undefined
+ **cookie** | [**string**] | auth cookies etc | defaults to undefined
 
 
 ### Return type
@@ -1248,6 +1257,8 @@ let body:.DefaultApiUpvoteRequest = {
   id: 1,
   // number | upvote score
   score: 3.14,
+  // string | auth cookies etc
+  cookie: "Cookie_example",
 };
 
 apiInstance.upvote(body).then((data:any) => {
@@ -1262,6 +1273,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | [**number**] | comment ID | defaults to undefined
  **score** | [**number**] | upvote score | defaults to undefined
+ **cookie** | [**string**] | auth cookies etc | defaults to undefined
 
 
 ### Return type
@@ -1305,6 +1317,8 @@ let body:.DefaultApiUpvoteVideoRequest = {
   id: 1,
   // number | upvote score
   score: 1,
+  // string | auth cookies etc
+  cookie: "Cookie_example",
 };
 
 apiInstance.upvoteVideo(body).then((data:any) => {
@@ -1319,6 +1333,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | [**number**] | video ID | defaults to undefined
  **score** | [**number**] | upvote score | defaults to undefined
+ **cookie** | [**string**] | auth cookies etc | defaults to undefined
 
 
 ### Return type

@@ -342,6 +342,12 @@ paths:
           description: comment's video ID
           schema:
             type: integer
+        - name: Cookie
+          in: header
+          required: true
+          description: auth cookies etc
+          schema:
+            type: string
       responses:
         "200":
           description: Comment success
@@ -358,6 +364,12 @@ paths:
           description: comment ID
           schema:
             type: integer
+        - name: Cookie
+          in: header
+          required: true
+          description: auth cookies etc
+          schema:
+            type: string
       responses:
         "200":
           description: Comment deleted
@@ -465,6 +477,12 @@ paths:
           description: upvote score
           schema:
             type: number
+        - name: Cookie
+          in: header
+          required: true
+          description: auth cookies etc
+          schema:
+            type: string
       responses:
         "200":
           description: Upvote success
@@ -487,6 +505,12 @@ paths:
           description: upvote score
           schema:
             type: integer
+        - name: Cookie
+          in: header
+          required: true
+          description: auth cookies etc
+          schema:
+            type: string
       responses:
         "200":
           description: Upvote success
@@ -503,6 +527,12 @@ paths:
           description: video ID
           schema:
             type: integer
+        - name: Cookie
+          in: header
+          required: true
+          description: auth cookies etc
+          schema:
+            type: string
       responses:
         "200":
           description: list of video recommendations

@@ -59,9 +59,10 @@ export class PromiseDefaultApi {
      * @param parent parent comment ID
      * @param content comment message
      * @param videoID comment\&#39;s video ID
+     * @param cookie auth cookies etc
      */
-    public comment(parent: number, content: string, videoID: number, _options?: Configuration): Promise<void> {
-        const result = this.api.comment(parent, content, videoID, _options);
+    public comment(parent: number, content: string, videoID: number, cookie: string, _options?: Configuration): Promise<void> {
+        const result = this.api.comment(parent, content, videoID, cookie, _options);
         return result.toPromise();
     }
 
@@ -101,9 +102,10 @@ export class PromiseDefaultApi {
     /**
      * Delete a comment
      * @param id comment ID
+     * @param cookie auth cookies etc
      */
-    public deleteComment(id: number, _options?: Configuration): Promise<void> {
-        const result = this.api.deleteComment(id, _options);
+    public deleteComment(id: number, cookie: string, _options?: Configuration): Promise<void> {
+        const result = this.api.deleteComment(id, cookie, _options);
         return result.toPromise();
     }
 
@@ -173,9 +175,10 @@ export class PromiseDefaultApi {
     /**
      * Get list of videos
      * @param id video ID
+     * @param cookie auth cookies etc
      */
-    public recommendations(id: number, _options?: Configuration): Promise<Array<Videos200ResponseVideosInner>> {
-        const result = this.api.recommendations(id, _options);
+    public recommendations(id: number, cookie: string, _options?: Configuration): Promise<Array<Videos200ResponseVideosInner>> {
+        const result = this.api.recommendations(id, cookie, _options);
         return result.toPromise();
     }
 
@@ -240,9 +243,10 @@ export class PromiseDefaultApi {
      * Get user video data
      * @param id comment ID
      * @param score upvote score
+     * @param cookie auth cookies etc
      */
-    public upvote(id: number, score: number, _options?: Configuration): Promise<void> {
-        const result = this.api.upvote(id, score, _options);
+    public upvote(id: number, score: number, cookie: string, _options?: Configuration): Promise<void> {
+        const result = this.api.upvote(id, score, cookie, _options);
         return result.toPromise();
     }
 
@@ -250,9 +254,10 @@ export class PromiseDefaultApi {
      * Upvote a video
      * @param id video ID
      * @param score upvote score
+     * @param cookie auth cookies etc
      */
-    public upvoteVideo(id: number, score: number, _options?: Configuration): Promise<void> {
-        const result = this.api.upvoteVideo(id, score, _options);
+    public upvoteVideo(id: number, score: number, cookie: string, _options?: Configuration): Promise<void> {
+        const result = this.api.upvoteVideo(id, score, cookie, _options);
         return result.toPromise();
     }
 

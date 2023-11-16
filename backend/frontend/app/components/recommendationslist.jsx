@@ -12,7 +12,7 @@ import { useTheme } from "@mui/material/styles";
 
 import useMediaQuery from "@mui/material/useMediaQuery";
 
-export default function RecommendationsList() {
+export default function RecommendationsList({videos}) {
   const theme = useTheme();
   return (
     <div className="mt-2">
@@ -20,32 +20,37 @@ export default function RecommendationsList() {
       <b className="text-cherry-red-200 align-bottom ml-1">Recommendations</b>
       <hr className="border-cherry-red-200"></hr>
       <ImageList className="overflow-visible mt-2" cols={1} gap={8}>
-        {itemData.map((item) => (
+        {videos.map((item) => (
+          <NavLink to={"/video/" + item.videoID}>
           <span>
             <div className="inline-block relative float-left w-36">
               <ImageListItem key={item.img}>
                 <img
                   className="rounded-lg"
-                  srcSet={`${item.img}`}
-                  src={`${item.img}`}
+                  srcSet={`${item.thumbnailLoc}`}
+                  src={`${item.thumbnailLoc}`}
                   alt={item.title}
                   loading="lazy"
                 />
               </ImageListItem>
             </div>
-            <div className="inline-block relative ml-2">
-              <div className="font-semibold font-sans">{item.title}</div>
-              <div className="mt-2 text-white-800 font-sans font-medium">
-                {item.author}
-              </div>
-              <div className="mt-2 font-sans text-white-700">
-                <HandThumbUpIcon className="w-4 inline-block relative align-middle" />
-                <span className="align-middle ml-1">0</span>
-                <EyeIcon className="ml-2 w-4 inline-block relative align-middle" />
-                <span className="align-middle ml-1">0</span>
+            <div className="inline-block relative ml-2 w-36 h-full">
+              {/* how many fucking divs do you need? just what do you think you're doing here, bucko? (TODO) */}
+              <div className="flex flex-col justify-around h-full">
+                <div className="font-semibold font-sans line-clamp-2">{item.title}</div>
+                {/* <div className="mt-2 text-white-800 font-sans font-medium">
+                  {item.author}
+                </div> */}
+                <div className="mt-2 font-sans text-white-700">
+                  <HandThumbUpIcon className="w-4 inline-block relative align-middle" />
+                  <span className="align-middle ml-1">{item.rating}</span>
+                  <EyeIcon className="ml-2 w-4 inline-block relative align-middle" />
+                  <span className="align-middle ml-1">{item.views}</span>
+                </div>
               </div>
             </div>
           </span>
+          </NavLink>
         ))}
       </ImageList>
     </div>

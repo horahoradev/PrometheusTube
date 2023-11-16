@@ -105,9 +105,10 @@ export class ObservableDefaultApi {
      * @param parent parent comment ID
      * @param content comment message
      * @param videoID comment\&#39;s video ID
+     * @param cookie auth cookies etc
      */
-    public comment(parent: number, content: string, videoID: number, _options?: Configuration): Observable<void> {
-        const requestContextPromise = this.requestFactory.comment(parent, content, videoID, _options);
+    public comment(parent: number, content: string, videoID: number, cookie: string, _options?: Configuration): Observable<void> {
+        const requestContextPromise = this.requestFactory.comment(parent, content, videoID, cookie, _options);
 
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
@@ -203,9 +204,10 @@ export class ObservableDefaultApi {
     /**
      * Delete a comment
      * @param id comment ID
+     * @param cookie auth cookies etc
      */
-    public deleteComment(id: number, _options?: Configuration): Observable<void> {
-        const requestContextPromise = this.requestFactory.deleteComment(id, _options);
+    public deleteComment(id: number, cookie: string, _options?: Configuration): Observable<void> {
+        const requestContextPromise = this.requestFactory.deleteComment(id, cookie, _options);
 
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
@@ -387,9 +389,10 @@ export class ObservableDefaultApi {
     /**
      * Get list of videos
      * @param id video ID
+     * @param cookie auth cookies etc
      */
-    public recommendations(id: number, _options?: Configuration): Observable<Array<Videos200ResponseVideosInner>> {
-        const requestContextPromise = this.requestFactory.recommendations(id, _options);
+    public recommendations(id: number, cookie: string, _options?: Configuration): Observable<Array<Videos200ResponseVideosInner>> {
+        const requestContextPromise = this.requestFactory.recommendations(id, cookie, _options);
 
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
@@ -538,9 +541,10 @@ export class ObservableDefaultApi {
      * Get user video data
      * @param id comment ID
      * @param score upvote score
+     * @param cookie auth cookies etc
      */
-    public upvote(id: number, score: number, _options?: Configuration): Observable<void> {
-        const requestContextPromise = this.requestFactory.upvote(id, score, _options);
+    public upvote(id: number, score: number, cookie: string, _options?: Configuration): Observable<void> {
+        const requestContextPromise = this.requestFactory.upvote(id, score, cookie, _options);
 
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
@@ -562,9 +566,10 @@ export class ObservableDefaultApi {
      * Upvote a video
      * @param id video ID
      * @param score upvote score
+     * @param cookie auth cookies etc
      */
-    public upvoteVideo(id: number, score: number, _options?: Configuration): Observable<void> {
-        const requestContextPromise = this.requestFactory.upvoteVideo(id, score, _options);
+    public upvoteVideo(id: number, score: number, cookie: string, _options?: Configuration): Observable<void> {
+        const requestContextPromise = this.requestFactory.upvoteVideo(id, score, cookie, _options);
 
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);

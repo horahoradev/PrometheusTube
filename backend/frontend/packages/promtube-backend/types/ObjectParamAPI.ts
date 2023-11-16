@@ -73,6 +73,12 @@ export interface DefaultApiCommentRequest {
      * @memberof DefaultApicomment
      */
     videoID: number
+    /**
+     * auth cookies etc
+     * @type string
+     * @memberof DefaultApicomment
+     */
+    cookie: string
 }
 
 export interface DefaultApiCommentsRequest {
@@ -145,6 +151,12 @@ export interface DefaultApiDeleteCommentRequest {
      * @memberof DefaultApideleteComment
      */
     id: number
+    /**
+     * auth cookies etc
+     * @type string
+     * @memberof DefaultApideleteComment
+     */
+    cookie: string
 }
 
 export interface DefaultApiEmailValidationRequest {
@@ -217,6 +229,12 @@ export interface DefaultApiRecommendationsRequest {
      * @memberof DefaultApirecommendations
      */
     id: number
+    /**
+     * auth cookies etc
+     * @type string
+     * @memberof DefaultApirecommendations
+     */
+    cookie: string
 }
 
 export interface DefaultApiRegisterRequest {
@@ -349,6 +367,12 @@ export interface DefaultApiUpvoteRequest {
      * @memberof DefaultApiupvote
      */
     score: number
+    /**
+     * auth cookies etc
+     * @type string
+     * @memberof DefaultApiupvote
+     */
+    cookie: string
 }
 
 export interface DefaultApiUpvoteVideoRequest {
@@ -364,6 +388,12 @@ export interface DefaultApiUpvoteVideoRequest {
      * @memberof DefaultApiupvoteVideo
      */
     score: number
+    /**
+     * auth cookies etc
+     * @type string
+     * @memberof DefaultApiupvoteVideo
+     */
+    cookie: string
 }
 
 export interface DefaultApiUsersRequest {
@@ -459,7 +489,7 @@ export class ObjectDefaultApi {
      * @param param the request object
      */
     public comment(param: DefaultApiCommentRequest, options?: Configuration): Promise<void> {
-        return this.api.comment(param.parent, param.content, param.videoID,  options).toPromise();
+        return this.api.comment(param.parent, param.content, param.videoID, param.cookie,  options).toPromise();
     }
 
     /**
@@ -491,7 +521,7 @@ export class ObjectDefaultApi {
      * @param param the request object
      */
     public deleteComment(param: DefaultApiDeleteCommentRequest, options?: Configuration): Promise<void> {
-        return this.api.deleteComment(param.id,  options).toPromise();
+        return this.api.deleteComment(param.id, param.cookie,  options).toPromise();
     }
 
     /**
@@ -555,7 +585,7 @@ export class ObjectDefaultApi {
      * @param param the request object
      */
     public recommendations(param: DefaultApiRecommendationsRequest, options?: Configuration): Promise<Array<Videos200ResponseVideosInner>> {
-        return this.api.recommendations(param.id,  options).toPromise();
+        return this.api.recommendations(param.id, param.cookie,  options).toPromise();
     }
 
     /**
@@ -603,7 +633,7 @@ export class ObjectDefaultApi {
      * @param param the request object
      */
     public upvote(param: DefaultApiUpvoteRequest, options?: Configuration): Promise<void> {
-        return this.api.upvote(param.id, param.score,  options).toPromise();
+        return this.api.upvote(param.id, param.score, param.cookie,  options).toPromise();
     }
 
     /**
@@ -611,7 +641,7 @@ export class ObjectDefaultApi {
      * @param param the request object
      */
     public upvoteVideo(param: DefaultApiUpvoteVideoRequest, options?: Configuration): Promise<void> {
-        return this.api.upvoteVideo(param.id, param.score,  options).toPromise();
+        return this.api.upvoteVideo(param.id, param.score, param.cookie,  options).toPromise();
     }
 
     /**

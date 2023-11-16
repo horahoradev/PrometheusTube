@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"math/rand"
 	"net/http"
 	"strconv"
 	"strings"
@@ -101,7 +102,7 @@ func (b *BayesianTagSum) GetRecommendations(uid int64, vid int64) ([]*videoproto
 	var ret []*videoproto.Video
 	switch uid {
 	case 0: // TODO lmaooooo
-		r, err := b.GetNeighbors(vid, 5)
+		r, err := b.GetNeighbors(vid, 10)
 		if err != nil {
 			return nil, err
 		}
@@ -120,27 +121,35 @@ func (b *BayesianTagSum) GetRecommendations(uid int64, vid int64) ([]*videoproto
 			ret = append(ret, val)
 		}
 
-		// TODO
-		// r, err = b.GetPopular(5)
-		// if err != nil {
-		// 	return nil, err
-		// }
-		// for _, v := range *r {
-		// 	i, err := strconv.ParseInt(v.ID, 10, 64)
-		// 	if err != nil {
-		// 		return nil, err
-		// 	}
+		remainingItems := 10 - len(*r)
+		if remainingItems == 0 {
+			return ret, nil
+		}
 
-		// 	val, err := b.getVideoInfoForRecs(i)
-		// 	if err != nil {
-		// 		return nil, err
-		// 	}
+		r, err = b.GetPopular(int64(remainingItems + 1))
+		if err != nil {
+			return nil, err
+		}
+		for _, v := range *r {
+			i, err := strconv.ParseInt(v.ID, 10, 64)
+			if err != nil {
+				return nil, err
+			}
 
-		// 	ret = append(ret, val)
-		// }
+			if i == vid {
+				continue
+			}
+
+			val, err := b.getVideoInfoForRecs(i)
+			if err != nil {
+				return nil, err
+			}
+
+			ret = append(ret, val)
+		}
 
 	default:
-		ids, err := b.GetRecommended(uid, 5)
+		ids, err := b.GetRecommended(uid, 10)
 		if err != nil {
 			return nil, err
 		}
@@ -160,8 +169,13 @@ func (b *BayesianTagSum) GetRecommendations(uid int64, vid int64) ([]*videoproto
 		}
 	}
 
+	// shuffle order
+	for i := range ret {
+		j := rand.Intn(i + 1)
+		ret[i], ret[j] = ret[j], ret[i]
+	}
+
 	return ret, nil
-	// TODO shuffle with popular items?
 }
 
 func (b *BayesianTagSum) getVideoInfoForRecs(videoID int64) (*videoproto.Video, error) {

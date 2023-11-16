@@ -22,17 +22,25 @@ const VideoPlayer = loadable(() => import("app/components/videoplayer"), {
 export async function loader({ request, params }: LoaderFunctionArgs) {
   let api = useApi();
   var detail = await api.videoDetail(params.id);
+  var recommendations = await api.recommendations(
+    params.id,
+    request.headers.get("Cookie")
+  );
+
   const cookie = createCookie("jwt", {});
   const cookieExists =
     (await cookie.parse(request.headers.get("Cookie"))) !== null;
   return {
     video: detail,
     banner: cookieExists,
+    recommendations: recommendations,
+    cookie: request.headers.get("Cookie"),
   };
 }
 
 export default function Video() {
-  const { video, banner } = useLoaderData<typeof loader>();
+  const { video, banner, recommendations, cookie } =
+    useLoaderData<typeof loader>();
 
   const playerRef = React.useRef(null);
 
@@ -62,17 +70,18 @@ export default function Video() {
   return (
     <div>
       <Navbar displayAvatar={banner}></Navbar>
-      <div className="bg-white-200 h-screen">
-        <div className="px-6 w-full h-screen inline-block flex justify-between">
+      <div className=" h-screen">
+        <div className="px-6 w-full h-screen inline-block flex justify-between ">
           <div className="w-[calc(100%-20rem)] mt-3 float-left">
             <VideoPlayer
-              video={video}
+              videoInp={video}
               options={videoJsOptions}
               onReady={handlePlayerReady}
+              Cookie={cookie}
             />
           </div>
           <div className="inline-block relative float-left">
-            <RecommendationsList></RecommendationsList>
+            <RecommendationsList videos={recommendations}></RecommendationsList>
           </div>
         </div>
       </div>

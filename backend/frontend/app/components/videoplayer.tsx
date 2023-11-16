@@ -6,12 +6,22 @@ import { HandThumbUpIcon, EyeIcon } from "@heroicons/react/24/outline";
 import Comments from "app/components/comments";
 import { NavLink } from "@remix-run/react";
 import { VideoDetail200Response } from "node_modules/promtube-backend";
+import { useApi } from "~/lib/oapi";
 
-export const VideoPlayer = (props) => {
+export const VideoPlayer = ({options, onReady, videoInp, Cookie}) => {
   const videoRef = React.useRef(null);
   const playerRef = React.useRef(null);
-  let video: VideoDetail200Response = props.video;
-  const { options, onReady } = props;
+  let video: VideoDetail200Response = videoInp;
+  const [rating, setRating] = React.useState(video.rating);
+
+  async function rateVideo() {
+    // very dumb, FIXME
+    if (rating != video.rating + 1) {
+      let api = useApi();
+      await api.upvoteVideo(video.videoID, 1, Cookie);
+      setRating(video.rating + 1);
+    }
+  }
 
   React.useEffect(() => {
     // Make sure Video.js player is only initialized once
@@ -82,10 +92,12 @@ export const VideoPlayer = (props) => {
         </div>
         <br></br>
         <span className="align-center inline-block mt-3 text-text-single-300">
-          <HandThumbUpIcon className="w-4 inline-block relative align-middle" />
-          <span className="align-middle ml-1">0</span>
+          <span className="cursor-pointer" onClick={rateVideo}>
+            <HandThumbUpIcon className="w-4 inline-block relative align-middle" />
+            <span className="align-middle ml-1">{rating}</span>
+          </span>
           <EyeIcon className="ml-4 w-4 inline-block relative align-middle" />
-          <span className="align-middle ml-1">0</span>
+          <span className="align-middle ml-1">{video.views}</span>
           {/* TODO */}
           <span className="ml-4">{"OtoMAD"}</span>
           <span className="ml-4">Uploaded {video.uploadDate}</span>

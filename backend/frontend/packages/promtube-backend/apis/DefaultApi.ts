@@ -146,8 +146,9 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
      * @param parent parent comment ID
      * @param content comment message
      * @param videoID comment\&#39;s video ID
+     * @param cookie auth cookies etc
      */
-    public async comment(parent: number, content: string, videoID: number, _options?: Configuration): Promise<RequestContext> {
+    public async comment(parent: number, content: string, videoID: number, cookie: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'parent' is not null or undefined
@@ -168,6 +169,12 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
         }
 
 
+        // verify required parameter 'cookie' is not null or undefined
+        if (cookie === null || cookie === undefined) {
+            throw new RequiredError("DefaultApi", "comment", "cookie");
+        }
+
+
         // Path Params
         const localVarPath = '/comment';
 
@@ -183,6 +190,9 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
 
         // Header Params
         requestContext.setHeaderParam("videoID", ObjectSerializer.serialize(videoID, "number", ""));
+
+        // Header Params
+        requestContext.setHeaderParam("Cookie", ObjectSerializer.serialize(cookie, "string", ""));
 
 
         
@@ -354,13 +364,20 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
     /**
      * Delete a comment
      * @param id comment ID
+     * @param cookie auth cookies etc
      */
-    public async deleteComment(id: number, _options?: Configuration): Promise<RequestContext> {
+    public async deleteComment(id: number, cookie: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'id' is not null or undefined
         if (id === null || id === undefined) {
             throw new RequiredError("DefaultApi", "deleteComment", "id");
+        }
+
+
+        // verify required parameter 'cookie' is not null or undefined
+        if (cookie === null || cookie === undefined) {
+            throw new RequiredError("DefaultApi", "deleteComment", "cookie");
         }
 
 
@@ -373,6 +390,9 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
 
         // Header Params
         requestContext.setHeaderParam("id", ObjectSerializer.serialize(id, "number", ""));
+
+        // Header Params
+        requestContext.setHeaderParam("Cookie", ObjectSerializer.serialize(cookie, "string", ""));
 
 
         
@@ -614,13 +634,20 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
     /**
      * Get list of videos
      * @param id video ID
+     * @param cookie auth cookies etc
      */
-    public async recommendations(id: number, _options?: Configuration): Promise<RequestContext> {
+    public async recommendations(id: number, cookie: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'id' is not null or undefined
         if (id === null || id === undefined) {
             throw new RequiredError("DefaultApi", "recommendations", "id");
+        }
+
+
+        // verify required parameter 'cookie' is not null or undefined
+        if (cookie === null || cookie === undefined) {
+            throw new RequiredError("DefaultApi", "recommendations", "cookie");
         }
 
 
@@ -631,6 +658,9 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.GET);
         requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("Cookie", ObjectSerializer.serialize(cookie, "string", ""));
 
 
         
@@ -950,8 +980,9 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
      * Get user video data
      * @param id comment ID
      * @param score upvote score
+     * @param cookie auth cookies etc
      */
-    public async upvote(id: number, score: number, _options?: Configuration): Promise<RequestContext> {
+    public async upvote(id: number, score: number, cookie: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'id' is not null or undefined
@@ -966,6 +997,12 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
         }
 
 
+        // verify required parameter 'cookie' is not null or undefined
+        if (cookie === null || cookie === undefined) {
+            throw new RequiredError("DefaultApi", "upvote", "cookie");
+        }
+
+
         // Path Params
         const localVarPath = '/upvote/{id}'
             .replace('{' + 'id' + '}', encodeURIComponent(String(id)));
@@ -976,6 +1013,9 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
 
         // Header Params
         requestContext.setHeaderParam("score", ObjectSerializer.serialize(score, "number", ""));
+
+        // Header Params
+        requestContext.setHeaderParam("Cookie", ObjectSerializer.serialize(cookie, "string", ""));
 
 
         
@@ -991,8 +1031,9 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
      * Upvote a video
      * @param id video ID
      * @param score upvote score
+     * @param cookie auth cookies etc
      */
-    public async upvoteVideo(id: number, score: number, _options?: Configuration): Promise<RequestContext> {
+    public async upvoteVideo(id: number, score: number, cookie: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'id' is not null or undefined
@@ -1007,6 +1048,12 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
         }
 
 
+        // verify required parameter 'cookie' is not null or undefined
+        if (cookie === null || cookie === undefined) {
+            throw new RequiredError("DefaultApi", "upvoteVideo", "cookie");
+        }
+
+
         // Path Params
         const localVarPath = '/upvotevideo/{id}'
             .replace('{' + 'id' + '}', encodeURIComponent(String(id)));
@@ -1017,6 +1064,9 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
 
         // Header Params
         requestContext.setHeaderParam("score", ObjectSerializer.serialize(score, "number", ""));
+
+        // Header Params
+        requestContext.setHeaderParam("Cookie", ObjectSerializer.serialize(cookie, "string", ""));
 
 
         
