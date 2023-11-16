@@ -198,9 +198,10 @@ export class PromiseDefaultApi {
      * Reset password
      * @param oldpassword old password
      * @param newpassword new password
+     * @param cookie auth cookies etc
      */
-    public resetPassword(oldpassword: string, newpassword: string, _options?: Configuration): Promise<void> {
-        const result = this.api.resetPassword(oldpassword, newpassword, _options);
+    public resetPassword(oldpassword: string, newpassword: string, cookie: string, _options?: Configuration): Promise<void> {
+        const result = this.api.resetPassword(oldpassword, newpassword, cookie, _options);
         return result.toPromise();
     }
 

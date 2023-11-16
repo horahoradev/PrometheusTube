@@ -5,6 +5,7 @@ type State = {
   UID: string;
   loggedIn: boolean;
   admin: boolean;
+  cooke: string;
 };
 
 type Action = {

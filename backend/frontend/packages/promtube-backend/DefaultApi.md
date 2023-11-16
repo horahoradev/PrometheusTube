@@ -1010,6 +1010,8 @@ let body:.DefaultApiResetPasswordRequest = {
   oldpassword: "oldpassword_example",
   // string | new password
   newpassword: "newpassword_example",
+  // string | auth cookies etc
+  cookie: "Cookie_example",
 };
 
 apiInstance.resetPassword(body).then((data:any) => {
@@ -1024,6 +1026,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **oldpassword** | [**string**] | old password | defaults to undefined
  **newpassword** | [**string**] | new password | defaults to undefined
+ **cookie** | [**string**] | auth cookies etc | defaults to undefined
 
 
 ### Return type

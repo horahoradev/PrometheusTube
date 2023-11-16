@@ -741,8 +741,9 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
      * Reset password
      * @param oldpassword old password
      * @param newpassword new password
+     * @param cookie auth cookies etc
      */
-    public async resetPassword(oldpassword: string, newpassword: string, _options?: Configuration): Promise<RequestContext> {
+    public async resetPassword(oldpassword: string, newpassword: string, cookie: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'oldpassword' is not null or undefined
@@ -754,6 +755,12 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
         // verify required parameter 'newpassword' is not null or undefined
         if (newpassword === null || newpassword === undefined) {
             throw new RequiredError("DefaultApi", "resetPassword", "newpassword");
+        }
+
+
+        // verify required parameter 'cookie' is not null or undefined
+        if (cookie === null || cookie === undefined) {
+            throw new RequiredError("DefaultApi", "resetPassword", "cookie");
         }
 
 
@@ -769,6 +776,9 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
 
         // Header Params
         requestContext.setHeaderParam("newpassword", ObjectSerializer.serialize(newpassword, "string", ""));
+
+        // Header Params
+        requestContext.setHeaderParam("Cookie", ObjectSerializer.serialize(cookie, "string", ""));
 
 
         

@@ -277,6 +277,12 @@ export interface DefaultApiResetPasswordRequest {
      * @memberof DefaultApiresetPassword
      */
     newpassword: string
+    /**
+     * auth cookies etc
+     * @type string
+     * @memberof DefaultApiresetPassword
+     */
+    cookie: string
 }
 
 export interface DefaultApiRetryArchiveRequestRequest {
@@ -601,7 +607,7 @@ export class ObjectDefaultApi {
      * @param param the request object
      */
     public resetPassword(param: DefaultApiResetPasswordRequest, options?: Configuration): Promise<void> {
-        return this.api.resetPassword(param.oldpassword, param.newpassword,  options).toPromise();
+        return this.api.resetPassword(param.oldpassword, param.newpassword, param.cookie,  options).toPromise();
     }
 
     /**

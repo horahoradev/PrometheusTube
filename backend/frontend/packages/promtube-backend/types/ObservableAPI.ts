@@ -440,9 +440,10 @@ export class ObservableDefaultApi {
      * Reset password
      * @param oldpassword old password
      * @param newpassword new password
+     * @param cookie auth cookies etc
      */
-    public resetPassword(oldpassword: string, newpassword: string, _options?: Configuration): Observable<void> {
-        const requestContextPromise = this.requestFactory.resetPassword(oldpassword, newpassword, _options);
+    public resetPassword(oldpassword: string, newpassword: string, cookie: string, _options?: Configuration): Observable<void> {
+        const requestContextPromise = this.requestFactory.resetPassword(oldpassword, newpassword, cookie, _options);
 
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);

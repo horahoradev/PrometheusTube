@@ -392,6 +392,12 @@ paths:
           description: new password
           schema:
             type: string
+        - name: Cookie
+          in: header
+          required: true
+          description: auth cookies etc
+          schema:
+            type: string
       responses:
         "200":
           description: Password changed

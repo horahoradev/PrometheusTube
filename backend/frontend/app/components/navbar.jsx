@@ -10,6 +10,7 @@ import { UserState } from "~/state";
 import { useEffect, useState } from "react";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import ChangePassword from "./changepassword";
 
 export function Navbar({ displayAvatar }) {
   const [isHydrated, setIsHydrated] = useState(false);
@@ -26,6 +27,10 @@ export function Navbar({ displayAvatar }) {
   const [openLogin, setOpenLogin] = React.useState(false);
   const handleOpenLogin = () => setOpenLogin(true);
   const handleCloseLogin = () => setOpenLogin(false);
+
+  const [openReset, setOpenReset] = React.useState(false);
+  const handleOpenReset = () => setOpenReset(true);
+  const handleCloseReset = () => setOpenReset(false);
 
   let [searchParams, setSearchParams] = useSearchParams();
   let loggedIn = UserState((state) => state.loggedIn);
@@ -119,6 +124,7 @@ export function Navbar({ displayAvatar }) {
               <NavLink to={"/profile/" + uid}>
                 <MenuItem>Profile</MenuItem>
               </NavLink>
+              <MenuItem onClick={handleOpenReset}>Reset Password</MenuItem>
               {admin ? <NavLink to={"/archive-requests/"}>
                 <MenuItem>Archive requests</MenuItem>
               </NavLink>
@@ -149,6 +155,14 @@ export function Navbar({ displayAvatar }) {
             setShowAvatar(true);
           }}
         ></Login>
+      </Modal>
+      <Modal
+        open={openReset}
+        onClose={handleCloseReset}
+        aria-labelledby="modal-modal-reset"
+        aria-describedby="modal-modal-reset"
+      >
+        <ChangePassword handleClose={handleCloseReset}></ChangePassword>
       </Modal>
     </div>
   );

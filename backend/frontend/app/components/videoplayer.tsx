@@ -7,7 +7,7 @@ import Comments from "app/components/comments";
 import { NavLink } from "@remix-run/react";
 import { VideoDetail200Response } from "node_modules/promtube-backend";
 import { useApi } from "~/lib/oapi";
-
+import moment from "moment";
 export const VideoPlayer = ({options, onReady, videoInp, Cookie, comments}) => {
   const videoRef = React.useRef(null);
   const playerRef = React.useRef(null);
@@ -100,7 +100,7 @@ export const VideoPlayer = ({options, onReady, videoInp, Cookie, comments}) => {
           <span className="align-middle ml-1">{video.views}</span>
           {/* TODO */}
           <span className="ml-4">{"OtoMAD"}</span>
-          <span className="ml-4">Uploaded {video.uploadDate}</span>
+          <span className="ml-4">Uploaded {moment(video.uploadDate, "YYYY-MM-DDTh:mm:ssZ").fromNow()}</span>
         </span>
         <div className="mt-3">
           {video.tags?.map((item) => (

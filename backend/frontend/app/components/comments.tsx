@@ -10,6 +10,7 @@ import * as React from "react";
 import { useApi } from "~/lib/oapi";
 import { Comments200ResponseInner } from "node_modules/promtube-backend";
 import { useState, useEffect } from "react";
+import moment from "moment";
 export default function Comments({videoID, cookie, commentsInp}) {
   const [comment, setComment] = React.useState("");
   const [comments, setComments] = React.useState<Array<Comments200ResponseInner>>(commentsInp);
@@ -62,7 +63,7 @@ export default function Comments({videoID, cookie, commentsInp}) {
             {item.fullname}
           </div>
           <div className="inline-block text-white-800 ml-2 text-text-single-200 text-bottom font-normal">
-            {item.created}
+            {moment(item.created, "YYYY-MM-DDTh:mm:ssZ").fromNow()}
           </div>
           <div className="leading-5 text-text-single-200 font-normal">
             {item.content}
