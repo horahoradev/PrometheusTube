@@ -35,7 +35,7 @@ export default function Comments({videoID, cookie, commentsInp}) {
 
   return (
     <div className="mt-4">
-      <div className="text-text-single-400">37 replies</div>
+      <div className="text-text-single-400">{comments.length} replies</div>
       <div className="mt-4">
         <Avatar className="float-left" sx={{ width: 50, height: 50 }}>
           N

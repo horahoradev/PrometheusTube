@@ -57,7 +57,7 @@ export function Navbar({ displayAvatar }) {
   }
 
   return (
-    <div className="flex justify-between w-screen py-2 px-6">
+    <div className="flex justify-between bg-white-50 w-screen py-2 px-6">
       <div className="col-start-1 pt-1 self-start w-36">
         <NavLink
           className="text-cherry-red-100 font-extrabold text-text-single-400"
