@@ -61,7 +61,7 @@ export default function Home() {
           </div>
 
           <span className="flex justify-center mb-2">
-            <Pages></Pages>
+            <Pages pageNumber={videos.paginationData?.numberOfItems / 50}></Pages>
           </span>
         </div>
       </div>

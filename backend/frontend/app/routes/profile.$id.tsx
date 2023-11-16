@@ -66,7 +66,7 @@ export default function Profile() {
           </div>
 
           <span>
-            <Pages></Pages>
+            <Pages numPages={user.paginationData?.numberOfItems / 50}></Pages>
           </span>
         </div>
       </div>
