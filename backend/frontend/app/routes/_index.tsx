@@ -23,8 +23,8 @@ export async function loader({ request }) {
       ? searchParams.get("search")
       : "none"
   ) as unknown as string;
-  let categoryEncoded = utf8Encode.encode(searchParams.get("category")) as unknown as string;
-  const categoryEncoded =  categoryEncoded != :"" ? categoryEncoded : utf8Encode.encode("undefined") as unknown as string;
+  let encoded = searchParams.get("category") !== null ? searchParams.get("category") : "undefined";
+  const categoryEncoded = utf8Encode.encode(encoded) as unknown as string;
 
   // let jwtParsed = jwtDecode(
   //   cook.protected + "." + cook.payload + "." + cook.signature
