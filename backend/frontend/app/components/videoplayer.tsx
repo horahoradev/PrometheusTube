@@ -8,7 +8,7 @@ import { NavLink } from "@remix-run/react";
 import { VideoDetail200Response } from "node_modules/promtube-backend";
 import { useApi } from "~/lib/oapi";
 
-export const VideoPlayer = ({options, onReady, videoInp, Cookie}) => {
+export const VideoPlayer = ({options, onReady, videoInp, Cookie, comments}) => {
   const videoRef = React.useRef(null);
   const playerRef = React.useRef(null);
   let video: VideoDetail200Response = videoInp;
@@ -113,7 +113,7 @@ export const VideoPlayer = ({options, onReady, videoInp, Cookie}) => {
           ))}
         </div>
       </div>
-      <Comments></Comments>
+      <Comments commentsInp={comments} videoID={video.videoID} cookie={Cookie}></Comments>
     </div>
   );
 };

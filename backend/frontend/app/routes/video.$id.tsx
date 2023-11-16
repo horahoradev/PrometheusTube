@@ -30,16 +30,20 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const cookie = createCookie("jwt", {});
   const cookieExists =
     (await cookie.parse(request.headers.get("Cookie"))) !== null;
+
+  let comments = await api.comments(params.id);
+
   return {
     video: detail,
     banner: cookieExists,
     recommendations: recommendations,
     cookie: request.headers.get("Cookie"),
+    comments: comments,
   };
 }
 
 export default function Video() {
-  const { video, banner, recommendations, cookie } =
+  const { video, banner, recommendations, cookie, comments } =
     useLoaderData<typeof loader>();
 
   const playerRef = React.useRef(null);
@@ -78,6 +82,7 @@ export default function Video() {
               options={videoJsOptions}
               onReady={handlePlayerReady}
               Cookie={cookie}
+              comments={comments}
             />
           </div>
           <div className="inline-block relative float-left">
