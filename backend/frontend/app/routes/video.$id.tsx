@@ -14,7 +14,7 @@ import { useLoaderData, NavLink, useSearchParams } from "@remix-run/react";
 import loadable from "@loadable/component";
 import { VideoDetail200Response } from "node_modules/promtube-backend";
 import { Navbar } from "app/components/navbar";
-
+import { Footer } from "~/components/footer";
 const VideoPlayer = loadable(() => import("app/components/videoplayer"), {
   ssr: false,
 });
@@ -74,8 +74,8 @@ export default function Video() {
   return (
     <div>
       <Navbar displayAvatar={banner}></Navbar>
-      <div className=" h-screen">
-        <div className="px-6 w-full h-screen inline-block flex justify-between ">
+      <div className=" min-h-screen">
+        <div className="px-6 w-full min-h-screen inline-block flex justify-between ">
           <div className="w-[calc(100%-20rem)] mt-3 float-left">
             <VideoPlayer
               videoInp={video}
@@ -90,6 +90,7 @@ export default function Video() {
           </div>
         </div>
       </div>
+      <Footer displayAvatar={true}></Footer>
     </div>
   );
 }

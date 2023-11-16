@@ -11,6 +11,9 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@fortawesome/fontawesome-svg-core": "^6.4.2",
+    "@fortawesome/free-solid-svg-icons": "^6.4.2",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "@heroicons/react": "^2.0.18",
     "@loadable/component": "^5.15.3",
     "@mui/material": "^5.14.16",
@@ -19,6 +22,7 @@
     "@remix-run/node": "^2",
     "@remix-run/react": "^2",
     "express": "^4.18.2",
+    "font-awesome": "^4.7.0",
     "http-proxy-middleware": "^2.0.6",
     "isbot": "^3.6.13",
     "js-cookie": "^3.0.5",

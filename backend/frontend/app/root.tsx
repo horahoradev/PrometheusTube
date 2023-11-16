@@ -62,7 +62,7 @@ export default function App() {
           <Links />
         </head>
         {/* LOL NO!! FIXME w-full */}
-        <body className="overflow-x-hidden">
+        <body className="overflow-x-hidden bg-white-200">
           <Outlet></Outlet>
           <ScrollRestoration />
           <Scripts />

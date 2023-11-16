@@ -9,7 +9,7 @@ import { useApi } from "~/lib/oapi";
 import { Users200Response } from "node_modules/promtube-backend";
 import { useLoaderData, NavLink, useSearchParams } from "@remix-run/react";
 import { json, redirect, createCookie } from "@remix-run/node";
-
+import { Footer } from "~/components/footer";
 const VideocardList = loadable(() => import("app/components/videocard"), {
   ssr: false,
 });
@@ -30,8 +30,8 @@ export default function Profile() {
   return (
     <div>
       <Navbar displayAvatar={banner}></Navbar>
-      <div className="bg-white-200 h-screen">
-        <div className="px-6 w-full h-screen">
+      <div className="bg-white-200 min-h-screen">
+        <div className="px-6 w-full min-h-screen">
           <div className="flex justify-center">
             <div className="mt-4 flex-justify-center">
               <Avatar className="mx-auto" sx={{ width: 240, height: 240 }}>
@@ -70,6 +70,7 @@ export default function Profile() {
           </span>
         </div>
       </div>
+      <Footer></Footer>
     </div>
   );
 }

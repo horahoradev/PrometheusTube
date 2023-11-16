@@ -7,6 +7,8 @@ import { Videos200Response } from "node_modules/promtube-backend";
 import { useApi } from "~/lib/oapi";
 import { json, redirect, createCookie } from "@remix-run/node";
 import { Navbar } from "app/components/navbar";
+import { Footer } from "app/components/footer";
+
 import { useLoaderData, NavLink, useSearchParams } from "@remix-run/react";
 import { jwtDecode } from "jwt-decode";
 import { UserState } from "~/state";
@@ -55,7 +57,7 @@ export default function Home() {
   return (
     <div>
       <Navbar displayAvatar={banner}></Navbar>
-      <div className="bg-white-200 h-screen">
+      <div className="bg-white-200 min-h-screen">
         <div className="px-6 w-full min-h-[calc(100%-53px)] flex flex-col justify-between">
           <div>
             <Categories></Categories>
@@ -69,6 +71,7 @@ export default function Home() {
           </span>
         </div>
       </div>
+      <Footer displayAvatar={true}></Footer>
     </div>
   );
 }

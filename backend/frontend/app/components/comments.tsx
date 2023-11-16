@@ -51,7 +51,7 @@ export default function Comments({videoID, cookie, commentsInp}) {
         </Button>
       </div>
       <br></br>
-      <hr className="border-cherry-red-200 my-3"></hr>
+      {comments.length > 0 ? <hr className="border-cherry-red-200 my-3"></hr> : null}
       {comments.length > 0 ? comments.map((item) => (
     <div className="w-full h-24">
         <Avatar className="float-left" sx={{ width: 50, height: 50 }}>
