@@ -23,7 +23,8 @@ export async function loader({ request }) {
       ? searchParams.get("search")
       : "none"
   ) as unknown as string;
-  const categoryEncoded =  utf8Encode.encode(searchParams.get("category")) as unknown as string ?? utf8Encode.encode("undefined") as unknown as string;
+  let categoryEncoded = utf8Encode.encode(searchParams.get("category")) as unknown as string;
+  const categoryEncoded =  categoryEncoded != :"" ? categoryEncoded : utf8Encode.encode("undefined") as unknown as string;
 
   // let jwtParsed = jwtDecode(
   //   cook.protected + "." + cook.payload + "." + cook.signature
@@ -31,6 +32,9 @@ export async function loader({ request }) {
 
   // setLoggedIn(cookieExists);
   // setUserID(jwtParsed["uid"]);
+  const cookie = createCookie("jwt", {});
+  const cookieExists =
+    (await cookie.parse(request.headers.get("Cookie"))) !== null;
 
   let api = useApi();
   let videoData = await api.videos(
@@ -42,15 +46,15 @@ export async function loader({ request }) {
     categoryEncoded
   );
 
-  return { videos: videoData };
+  return { videos: videoData, banner: cookieExists };
 }
 
 export default function Home() {
-  const { videos } = useLoaderData<typeof loader>();
+  const { videos, banner } = useLoaderData<typeof loader>();
 
   return (
     <div>
-      <Navbar></Navbar>
+      <Navbar displayAvatar={banner}></Navbar>
       <div className="bg-white-200 h-screen">
         <div className="px-6 w-full min-h-[calc(100%-53px)] flex flex-col justify-between">
           <div>
@@ -61,7 +65,7 @@ export default function Home() {
           </div>
 
           <span className="flex justify-center mb-2">
-            <Pages pageNumber={videos.paginationData?.numberOfItems / 50}></Pages>
+            <Pages numPages={videos.paginationData?.numberOfItems / 50}></Pages>
           </span>
         </div>
       </div>
