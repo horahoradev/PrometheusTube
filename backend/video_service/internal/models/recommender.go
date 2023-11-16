@@ -107,6 +107,10 @@ func (b *BayesianTagSum) GetRecommendations(uid int64, vid int64) ([]*videoproto
 			return nil, err
 		}
 
+		idMap := map[int64]bool{
+			vid: true,
+		}
+
 		for _, v := range *r {
 			i, err := strconv.ParseInt(v.ID, 10, 64)
 			if err != nil {
@@ -119,9 +123,10 @@ func (b *BayesianTagSum) GetRecommendations(uid int64, vid int64) ([]*videoproto
 			}
 
 			ret = append(ret, val)
+			idMap[i] = true
 		}
 
-		remainingItems := 10 - len(*r)
+		remainingItems := 15 - len(*r)
 		if remainingItems == 0 {
 			return ret, nil
 		}
@@ -136,7 +141,9 @@ func (b *BayesianTagSum) GetRecommendations(uid int64, vid int64) ([]*videoproto
 				return nil, err
 			}
 
-			if i == vid {
+			_, ok := idMap[i]
+
+			if i == vid || ok {
 				continue
 			}
 

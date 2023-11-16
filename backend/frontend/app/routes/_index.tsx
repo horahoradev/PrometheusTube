@@ -23,15 +23,7 @@ export async function loader({ request }) {
       ? searchParams.get("search")
       : "none"
   ) as unknown as string;
-  const categoryEncoded = utf8Encode.encode("undefined") as unknown as string;
-  const cookie = createCookie("jwt");
-  const cook = await cookie.parse(request.headers.get("Cookie"));
-  // let jwt = request.headers
-  //   .get("Cookie")
-  //   .split(" ")
-  //   .filter((x) => x.startsWith("jwt="))
-  //   .map((x) => x.slice(4));
-  const cookieExists = cook !== null;
+  const categoryEncoded =  utf8Encode.encode(searchParams.get("category")) as unknown as string ?? utf8Encode.encode("undefined") as unknown as string;
 
   // let jwtParsed = jwtDecode(
   //   cook.protected + "." + cook.payload + "." + cook.signature
@@ -50,16 +42,15 @@ export async function loader({ request }) {
     categoryEncoded
   );
 
-  return { videos: videoData, banner: cookieExists };
+  return { videos: videoData };
 }
 
 export default function Home() {
-  const { videos, banner } = useLoaderData<typeof loader>();
+  const { videos } = useLoaderData<typeof loader>();
 
-  console.log(banner);
   return (
     <div>
-      <Navbar displayAvatar={banner}></Navbar>
+      <Navbar></Navbar>
       <div className="bg-white-200 h-screen">
         <div className="px-6 w-full min-h-[calc(100%-53px)] flex flex-col justify-between">
           <div>
