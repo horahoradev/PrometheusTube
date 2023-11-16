@@ -15,6 +15,7 @@ import (
 	_ "github.com/doug-martin/goqu/v9/dialect/postgres"
 	_ "github.com/horahoradev/horahora/user_service/protocol"
 	"github.com/jmoiron/sqlx"
+	log "github.com/sirupsen/logrus"
 	"github.com/zhenghaoz/gorse/client"
 )
 
@@ -119,9 +120,10 @@ func (b *BayesianTagSum) GetRecommendations(uid int64, vid int64) ([]*videoproto
 
 			val, err := b.getVideoInfoForRecs(i)
 			if err != nil {
-				return nil, err
+				// what in the fuck
+				log.Error(err)
+				continue
 			}
-
 			ret = append(ret, val)
 			idMap[i] = true
 		}
@@ -149,7 +151,9 @@ func (b *BayesianTagSum) GetRecommendations(uid int64, vid int64) ([]*videoproto
 
 			val, err := b.getVideoInfoForRecs(i)
 			if err != nil {
-				return nil, err
+				// what in the fuck
+				log.Error(err)
+				continue
 			}
 
 			ret = append(ret, val)
