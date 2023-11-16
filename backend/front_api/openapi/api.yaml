@@ -344,7 +344,6 @@ paths:
             type: integer
         - name: Cookie
           in: header
-          required: true
           description: auth cookies etc
           schema:
             type: string
@@ -366,7 +365,6 @@ paths:
             type: integer
         - name: Cookie
           in: header
-          required: true
           description: auth cookies etc
           schema:
             type: string
@@ -394,7 +392,6 @@ paths:
             type: string
         - name: Cookie
           in: header
-          required: true
           description: auth cookies etc
           schema:
             type: string
@@ -485,7 +482,6 @@ paths:
             type: number
         - name: Cookie
           in: header
-          required: true
           description: auth cookies etc
           schema:
             type: string
@@ -513,7 +509,6 @@ paths:
             type: integer
         - name: Cookie
           in: header
-          required: true
           description: auth cookies etc
           schema:
             type: string
@@ -535,7 +530,6 @@ paths:
             type: integer
         - name: Cookie
           in: header
-          required: true
           description: auth cookies etc
           schema:
             type: string
@@ -790,7 +784,6 @@ paths:
       parameters:
         - name: Cookie
           in: header
-          required: true
           description: auth cookies etc
           schema:
             type: string
@@ -841,7 +834,6 @@ paths:
             type: integer
         - name: Cookie
           in: header
-          required: true
           description: auth cookies etc
           schema:
             type: string
@@ -886,7 +878,6 @@ paths:
             type: string
         - name: Cookie
           in: header
-          required: true
           description: auth cookies etc
           schema:
             type: string
@@ -909,7 +900,6 @@ paths:
             type: integer
         - name: Cookie
           in: header
-          required: true
           description: auth cookies etc
           schema:
             type: string
@@ -932,7 +922,6 @@ paths:
             type: integer
         - name: Cookie
           in: header
-          required: true
           description: auth cookies etc
           schema:
             type: string
