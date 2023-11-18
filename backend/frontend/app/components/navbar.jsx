@@ -141,7 +141,10 @@ export function Navbar({ displayAvatar }) {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Register></Register>
+        <Register setRegister={() => {
+            setOpen();
+            setShowAvatar(true);
+          }}></Register>
       </Modal>
       <Modal
         open={openLogin}
