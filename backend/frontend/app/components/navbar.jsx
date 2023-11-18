@@ -3,6 +3,7 @@ import { BellAlertIcon } from "@heroicons/react/24/outline";
 import Avatar from "@mui/material/Avatar";
 import Login from "app/components/login";
 import Register from "app/components/register";
+import Mature from "app/components/mature";
 
 import Modal from "@mui/material/Modal";
 import React from "react";
@@ -31,6 +32,12 @@ export function Navbar({ displayAvatar }) {
   const [openReset, setOpenReset] = React.useState(false);
   const handleOpenReset = () => setOpenReset(true);
   const handleCloseReset = () => setOpenReset(false);
+
+  let notPromptedForMaturity = UserState((state) => state.mature==undefined);
+
+  const [openMature, setOpenMature] = React.useState(notPromptedForMaturity);
+  const handleOpenMature = () => setOpenMature(true);
+  const handleCloseMature = () => setOpenMature(false);
 
   let [searchParams, setSearchParams] = useSearchParams();
   let loggedIn = UserState((state) => state.loggedIn);
@@ -163,6 +170,14 @@ export function Navbar({ displayAvatar }) {
             setShowAvatar(true);
           }}
         ></Login>
+      </Modal>
+      <Modal
+        open={openMature}
+        onClose={handleCloseLogin}
+        aria-labelledby="modal-modal-login"
+        aria-describedby="modal-modal-login"
+      >
+        <Mature closeWindow={handleCloseMature}></Mature>
       </Modal>
       <Modal
         open={openReset}

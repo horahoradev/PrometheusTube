@@ -5,13 +5,14 @@ type State = {
   UID: string;
   loggedIn: boolean;
   admin: boolean;
-  cooke: string;
+  mature: boolean;
 };
 
 type Action = {
   setLoggedIn: (loggedIn: State["loggedIn"]) => void;
   setUID: (uid: State["UID"]) => void;
   setAdmin: (admin: State["admin"]) => void;
+  setMature: (mature: State["mature"]) => void;
 };
 
 export const UserState = create<State & Action>(
@@ -22,6 +23,7 @@ export const UserState = create<State & Action>(
       setUID: (id) => set(() => ({ UID: id })),
       setLoggedIn: (loggedIn) => set(() => ({ loggedIn: loggedIn })),
       setAdmin: (admin) => set(() => ({ admin: admin })),
+      setMature: (mature) => set(() => ({ mature: mature })),
     }),
     {
       name: "auth",
