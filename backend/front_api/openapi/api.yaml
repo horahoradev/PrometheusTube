@@ -1000,3 +1000,29 @@ paths:
                       type: integer
         default:
           description: Unexpected error
+  /approve-video:
+    post:
+      summary: Retry archive request
+      operationId: approveVideo
+      parameters:
+        - name: videoID
+          in: header
+          required: true
+          description: video ID to download
+          schema:
+            type: integer
+        - name: mature
+          in: header
+          description: auth cookies etc
+          schema:
+            type: boolean
+        - name: Cookie
+          in: header
+          description: auth cookies etc
+          schema:
+            type: string
+      responses:
+        "200":
+          description: approve success
+        default:
+          description: Unexpected error

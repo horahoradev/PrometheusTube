@@ -31,6 +31,18 @@ type ApproveDownloadParams struct {
 	Cookie *string `json:"Cookie,omitempty"`
 }
 
+// ApproveVideoParams defines parameters for ApproveVideo.
+type ApproveVideoParams struct {
+	// VideoID video ID to download
+	VideoID int `json:"videoID"`
+
+	// Mature auth cookies etc
+	Mature *bool `json:"mature,omitempty"`
+
+	// Cookie auth cookies etc
+	Cookie *string `json:"Cookie,omitempty"`
+}
+
 // ArchiveEventsParams defines parameters for ArchiveEvents.
 type ArchiveEventsParams struct {
 	// DownloadID download id to filter on
@@ -343,6 +355,9 @@ type ClientInterface interface {
 	// ApproveDownload request
 	ApproveDownload(ctx context.Context, params *ApproveDownloadParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// ApproveVideo request
+	ApproveVideo(ctx context.Context, params *ApproveVideoParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// ArchiveEvents request
 	ArchiveEvents(ctx context.Context, params *ArchiveEventsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -430,6 +445,18 @@ type ClientInterface interface {
 
 func (c *Client) ApproveDownload(ctx context.Context, params *ApproveDownloadParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewApproveDownloadRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ApproveVideo(ctx context.Context, params *ApproveVideoParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewApproveVideoRequest(c.Server, params)
 	if err != nil {
 		return nil, err
 	}
@@ -818,6 +845,64 @@ func NewApproveDownloadRequest(server string, params *ApproveDownloadParams) (*h
 		}
 
 		req.Header.Set("Cookie", headerParam1)
+	}
+
+	return req, nil
+}
+
+// NewApproveVideoRequest generates requests for ApproveVideo
+func NewApproveVideoRequest(server string, params *ApproveVideoParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/approve-video")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var headerParam0 string
+
+	headerParam0, err = runtime.StyleParamWithLocation("simple", false, "videoID", runtime.ParamLocationHeader, params.VideoID)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set("videoID", headerParam0)
+
+	if params.Mature != nil {
+		var headerParam1 string
+
+		headerParam1, err = runtime.StyleParamWithLocation("simple", false, "mature", runtime.ParamLocationHeader, *params.Mature)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("mature", headerParam1)
+	}
+
+	if params.Cookie != nil {
+		var headerParam2 string
+
+		headerParam2, err = runtime.StyleParamWithLocation("simple", false, "Cookie", runtime.ParamLocationHeader, *params.Cookie)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Cookie", headerParam2)
 	}
 
 	return req, nil
@@ -2225,6 +2310,9 @@ type ClientWithResponsesInterface interface {
 	// ApproveDownload request
 	ApproveDownloadWithResponse(ctx context.Context, params *ApproveDownloadParams, reqEditors ...RequestEditorFn) (*ApproveDownloadResponse, error)
 
+	// ApproveVideo request
+	ApproveVideoWithResponse(ctx context.Context, params *ApproveVideoParams, reqEditors ...RequestEditorFn) (*ApproveVideoResponse, error)
+
 	// ArchiveEvents request
 	ArchiveEventsWithResponse(ctx context.Context, params *ArchiveEventsParams, reqEditors ...RequestEditorFn) (*ArchiveEventsResponse, error)
 
@@ -2325,6 +2413,27 @@ func (r ApproveDownloadResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r ApproveDownloadResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ApproveVideoResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r ApproveVideoResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ApproveVideoResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -3064,6 +3173,15 @@ func (c *ClientWithResponses) ApproveDownloadWithResponse(ctx context.Context, p
 	return ParseApproveDownloadResponse(rsp)
 }
 
+// ApproveVideoWithResponse request returning *ApproveVideoResponse
+func (c *ClientWithResponses) ApproveVideoWithResponse(ctx context.Context, params *ApproveVideoParams, reqEditors ...RequestEditorFn) (*ApproveVideoResponse, error) {
+	rsp, err := c.ApproveVideo(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseApproveVideoResponse(rsp)
+}
+
 // ArchiveEventsWithResponse request returning *ArchiveEventsResponse
 func (c *ClientWithResponses) ArchiveEventsWithResponse(ctx context.Context, params *ArchiveEventsParams, reqEditors ...RequestEditorFn) (*ArchiveEventsResponse, error) {
 	rsp, err := c.ArchiveEvents(ctx, params, reqEditors...)
@@ -3325,6 +3443,22 @@ func ParseApproveDownloadResponse(rsp *http.Response) (*ApproveDownloadResponse,
 	}
 
 	response := &ApproveDownloadResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseApproveVideoResponse parses an HTTP response from a ApproveVideoWithResponse call
+func ParseApproveVideoResponse(rsp *http.Response) (*ApproveVideoResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ApproveVideoResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -4020,6 +4154,9 @@ type ServerInterface interface {
 	// Retry archive request
 	// (POST /approve-download)
 	ApproveDownload(ctx echo.Context, params ApproveDownloadParams) error
+	// Retry archive request
+	// (POST /approve-video)
+	ApproveVideo(ctx echo.Context, params ApproveVideoParams) error
 	// Get archive events
 	// (GET /archive-events)
 	ArchiveEvents(ctx echo.Context, params ArchiveEventsParams) error
@@ -4154,6 +4291,67 @@ func (w *ServerInterfaceWrapper) ApproveDownload(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshalled arguments
 	err = w.Handler.ApproveDownload(ctx, params)
+	return err
+}
+
+// ApproveVideo converts echo context to params.
+func (w *ServerInterfaceWrapper) ApproveVideo(ctx echo.Context) error {
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params ApproveVideoParams
+
+	headers := ctx.Request().Header
+	// ------------- Required header parameter "videoID" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("videoID")]; found {
+		var VideoID int
+		n := len(valueList)
+		if n != 1 {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Expected one value for videoID, got %d", n))
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "videoID", runtime.ParamLocationHeader, valueList[0], &VideoID)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter videoID: %s", err))
+		}
+
+		params.VideoID = VideoID
+	} else {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Header parameter videoID is required, but not found"))
+	}
+	// ------------- Optional header parameter "mature" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("mature")]; found {
+		var Mature bool
+		n := len(valueList)
+		if n != 1 {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Expected one value for mature, got %d", n))
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "mature", runtime.ParamLocationHeader, valueList[0], &Mature)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter mature: %s", err))
+		}
+
+		params.Mature = &Mature
+	}
+	// ------------- Optional header parameter "Cookie" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Cookie")]; found {
+		var Cookie string
+		n := len(valueList)
+		if n != 1 {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Expected one value for Cookie, got %d", n))
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "Cookie", runtime.ParamLocationHeader, valueList[0], &Cookie)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter Cookie: %s", err))
+		}
+
+		params.Cookie = &Cookie
+	}
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.ApproveVideo(ctx, params)
 	return err
 }
 
@@ -5485,6 +5683,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	}
 
 	router.POST(baseURL+"/approve-download", wrapper.ApproveDownload)
+	router.POST(baseURL+"/approve-video", wrapper.ApproveVideo)
 	router.GET(baseURL+"/archive-events", wrapper.ArchiveEvents)
 	router.GET(baseURL+"/archive-requests", wrapper.ArchiveRequests)
 	router.GET(baseURL+"/audit-events", wrapper.AuditEvents)
@@ -5519,45 +5718,45 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"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",
-	"ofT01/Pz8wnJGN7+vv1/AAAA///0+DSYekUAAA==",
+	"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",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

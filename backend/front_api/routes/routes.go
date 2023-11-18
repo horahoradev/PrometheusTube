@@ -93,6 +93,7 @@ func SetupRoutes(e *echo.Echo, cfg *config.Config, srv *socketio.Server) {
 	e.GET("/api/get-unapproved-videos", wrapper.GetUnapprovedVideos)
 	e.POST("/api/unapprove-download", wrapper.UnapproveDownload)
 	e.POST("/api/approve-download", wrapper.ApproveDownload)
+	e.POST("/api/approve-video", wrapper.ApproveVideo)
 }
 
 type Video struct {

@@ -1023,6 +1023,27 @@ func (s Server) ApproveDownload(c echo.Context, params ApproveDownloadParams) er
 	return c.JSON(http.StatusOK, nil)
 }
 
+func (s Server) ApproveVideo(c echo.Context, params ApproveVideoParams) error {
+	idInt := params.VideoID
+	profile, err := s.r.getUserProfileInfo(c)
+	if err != nil {
+		return err
+	}
+
+	if profile.Rank < 1 {
+		// privileged user, can show unapproved videos
+		// TODO(ivan): status forbidden
+		return c.String(http.StatusForbidden, "Insufficient user status")
+	}
+
+	_, err = s.r.v.ApproveVideo(context.Background(), &videoproto.VideoApproval{VideoID: int64(idInt), Mature: params.Mature, UserID: profile.UserID})
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, nil)
+}
+
 func (s Server) GetUnapprovedVideos(c echo.Context, params GetUnapprovedVideosParams) error {
 	profile, err := s.r.getUserProfileInfo(c)
 	if err != nil {
