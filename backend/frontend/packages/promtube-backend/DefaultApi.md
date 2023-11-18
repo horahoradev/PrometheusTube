@@ -4,6 +4,8 @@ All URIs are relative to *http://localhost:3000/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**approveDownload**](DefaultApi.md#approveDownload) | **POST** /approve-download | Retry archive request
+[**approveVideo**](DefaultApi.md#approveVideo) | **POST** /approve-video | Retry archive request
 [**archiveEvents**](DefaultApi.md#archiveEvents) | **GET** /archive-events | Get archive events
 [**archiveRequests**](DefaultApi.md#archiveRequests) | **GET** /archive-requests | Get archive requests
 [**auditEvents**](DefaultApi.md#auditEvents) | **GET** /audit-events | Get archive requests
@@ -16,6 +18,7 @@ Method | HTTP request | Description
 [**follow**](DefaultApi.md#follow) | **POST** /follow/{id} | Upvote a video
 [**followFeed**](DefaultApi.md#followFeed) | **GET** /follow-feed | Upvote a video
 [**getDanmaku**](DefaultApi.md#getDanmaku) | **GET** /danmaku/{id} | Get danmaku for video
+[**getUnapprovedVideos**](DefaultApi.md#getUnapprovedVideos) | **GET** /get-unapproved-videos | Retry archive request
 [**login**](DefaultApi.md#login) | **POST** /login | Log the user in
 [**logout**](DefaultApi.md#logout) | **GET** /logout | Log user out
 [**newArchiveRequest**](DefaultApi.md#newArchiveRequest) | **POST** /new-archive-request | Create new archive request
@@ -23,6 +26,7 @@ Method | HTTP request | Description
 [**register**](DefaultApi.md#register) | **POST** /register | Register user
 [**resetPassword**](DefaultApi.md#resetPassword) | **POST** /reset_password | Reset password
 [**retryArchiveRequest**](DefaultApi.md#retryArchiveRequest) | **POST** /retry-archive-request | Retry archive request
+[**unapproveDownload**](DefaultApi.md#unapproveDownload) | **POST** /unapprove-download | Retry archive request
 [**updateProfile**](DefaultApi.md#updateProfile) | **POST** /update-profile | Update user\&#39;s profile
 [**upload**](DefaultApi.md#upload) | **POST** /upload | Upload a new video
 [**upvote**](DefaultApi.md#upvote) | **GET** /upvote/{id} | Get user video data
@@ -31,6 +35,123 @@ Method | HTTP request | Description
 [**videoDetail**](DefaultApi.md#videoDetail) | **GET** /videos/{id} | Get list of videos
 [**videos**](DefaultApi.md#videos) | **GET** /videos | Get list of videos
 
+
+# **approveDownload**
+> void approveDownload()
+
+
+### Example
+
+
+```typescript
+import {  } from '';
+import * as fs from 'fs';
+
+const configuration = .createConfiguration();
+const apiInstance = new .DefaultApi(configuration);
+
+let body:.DefaultApiApproveDownloadRequest = {
+  // number | video ID to download
+  videoID: 1,
+  // string | auth cookies etc (optional)
+  cookie: "Cookie_example",
+};
+
+apiInstance.approveDownload(body).then((data:any) => {
+  console.log('API called successfully. Returned data: ' + data);
+}).catch((error:any) => console.error(error));
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **videoID** | [**number**] | video ID to download | defaults to undefined
+ **cookie** | [**string**] | auth cookies etc | (optional) defaults to undefined
+
+
+### Return type
+
+**void**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: Not defined
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | delete success |  -  |
+**0** | Unexpected error |  -  |
+
+[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+
+# **approveVideo**
+> void approveVideo()
+
+
+### Example
+
+
+```typescript
+import {  } from '';
+import * as fs from 'fs';
+
+const configuration = .createConfiguration();
+const apiInstance = new .DefaultApi(configuration);
+
+let body:.DefaultApiApproveVideoRequest = {
+  // number | video ID to download
+  videoID: 1,
+  // boolean | auth cookies etc (optional)
+  mature: true,
+  // string | auth cookies etc (optional)
+  cookie: "Cookie_example",
+};
+
+apiInstance.approveVideo(body).then((data:any) => {
+  console.log('API called successfully. Returned data: ' + data);
+}).catch((error:any) => console.error(error));
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **videoID** | [**number**] | video ID to download | defaults to undefined
+ **mature** | [**boolean**] | auth cookies etc | (optional) defaults to undefined
+ **cookie** | [**string**] | auth cookies etc | (optional) defaults to undefined
+
+
+### Return type
+
+**void**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: Not defined
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | approve success |  -  |
+**0** | Unexpected error |  -  |
+
+[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
 
 # **archiveEvents**
 > Array<ArchiveEvents200ResponseInner> archiveEvents()
@@ -101,7 +222,7 @@ const configuration = .createConfiguration();
 const apiInstance = new .DefaultApi(configuration);
 
 let body:.DefaultApiArchiveRequestsRequest = {
-  // string | auth cookies etc
+  // string | auth cookies etc (optional)
   cookie: "Cookie_example",
 };
 
@@ -115,7 +236,7 @@ apiInstance.archiveRequests(body).then((data:any) => {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **cookie** | [**string**] | auth cookies etc | defaults to undefined
+ **cookie** | [**string**] | auth cookies etc | (optional) defaults to undefined
 
 
 ### Return type
@@ -159,7 +280,7 @@ let body:.DefaultApiAuditEventsRequest = {
   pageNumber: 1,
   // number | user id to filter on
   id: 1,
-  // string | auth cookies etc
+  // string | auth cookies etc (optional)
   cookie: "Cookie_example",
 };
 
@@ -175,7 +296,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **pageNumber** | [**number**] | content page number | defaults to undefined
  **id** | [**number**] | user id to filter on | defaults to undefined
- **cookie** | [**string**] | auth cookies etc | defaults to undefined
+ **cookie** | [**string**] | auth cookies etc | (optional) defaults to undefined
 
 
 ### Return type
@@ -221,7 +342,7 @@ let body:.DefaultApiCommentRequest = {
   content: 'YQ==',
   // number | comment\'s video ID
   videoID: 1,
-  // string | auth cookies etc
+  // string | auth cookies etc (optional)
   cookie: "Cookie_example",
 };
 
@@ -238,7 +359,7 @@ Name | Type | Description  | Notes
  **parent** | [**number**] | parent comment ID | defaults to undefined
  **content** | [**string**] | comment message | defaults to undefined
  **videoID** | [**number**] | comment\&#39;s video ID | defaults to undefined
- **cookie** | [**string**] | auth cookies etc | defaults to undefined
+ **cookie** | [**string**] | auth cookies etc | (optional) defaults to undefined
 
 
 ### Return type
@@ -403,7 +524,7 @@ const apiInstance = new .DefaultApi(configuration);
 let body:.DefaultApiDeleteArchiveRequestRequest = {
   // number | download ID of the request to retry
   downloadID: 1,
-  // string | auth cookies etc
+  // string | auth cookies etc (optional)
   cookie: "Cookie_example",
 };
 
@@ -418,7 +539,7 @@ apiInstance.deleteArchiveRequest(body).then((data:any) => {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **downloadID** | [**number**] | download ID of the request to retry | defaults to undefined
- **cookie** | [**string**] | auth cookies etc | defaults to undefined
+ **cookie** | [**string**] | auth cookies etc | (optional) defaults to undefined
 
 
 ### Return type
@@ -460,7 +581,7 @@ const apiInstance = new .DefaultApi(configuration);
 let body:.DefaultApiDeleteCommentRequest = {
   // number | comment ID
   id: 1,
-  // string | auth cookies etc
+  // string | auth cookies etc (optional)
   cookie: "Cookie_example",
 };
 
@@ -475,7 +596,7 @@ apiInstance.deleteComment(body).then((data:any) => {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | [**number**] | comment ID | defaults to undefined
- **cookie** | [**string**] | auth cookies etc | defaults to undefined
+ **cookie** | [**string**] | auth cookies etc | (optional) defaults to undefined
 
 
 ### Return type
@@ -709,6 +830,60 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
 
+# **getUnapprovedVideos**
+> Array<GetUnapprovedVideos200ResponseInner> getUnapprovedVideos()
+
+
+### Example
+
+
+```typescript
+import {  } from '';
+import * as fs from 'fs';
+
+const configuration = .createConfiguration();
+const apiInstance = new .DefaultApi(configuration);
+
+let body:.DefaultApiGetUnapprovedVideosRequest = {
+  // string | auth cookies etc (optional)
+  cookie: "Cookie_example",
+};
+
+apiInstance.getUnapprovedVideos(body).then((data:any) => {
+  console.log('API called successfully. Returned data: ' + data);
+}).catch((error:any) => console.error(error));
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **cookie** | [**string**] | auth cookies etc | (optional) defaults to undefined
+
+
+### Return type
+
+**Array<GetUnapprovedVideos200ResponseInner>**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | list of archive requests |  -  |
+**0** | Unexpected error |  -  |
+
+[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+
 # **login**
 > void login()
 
@@ -831,7 +1006,7 @@ const apiInstance = new .DefaultApi(configuration);
 let body:.DefaultApiNewArchiveRequestRequest = {
   // string | url to archive
   url: "url_example",
-  // string | auth cookies etc
+  // string | auth cookies etc (optional)
   cookie: "Cookie_example",
 };
 
@@ -846,7 +1021,7 @@ apiInstance.newArchiveRequest(body).then((data:any) => {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **url** | [**string**] | url to archive | defaults to undefined
- **cookie** | [**string**] | auth cookies etc | defaults to undefined
+ **cookie** | [**string**] | auth cookies etc | (optional) defaults to undefined
 
 
 ### Return type
@@ -888,7 +1063,7 @@ const apiInstance = new .DefaultApi(configuration);
 let body:.DefaultApiRecommendationsRequest = {
   // number | video ID
   id: 1,
-  // string | auth cookies etc
+  // string | auth cookies etc (optional)
   cookie: "Cookie_example",
 };
 
@@ -903,7 +1078,7 @@ apiInstance.recommendations(body).then((data:any) => {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | [**number**] | video ID | defaults to undefined
- **cookie** | [**string**] | auth cookies etc | defaults to undefined
+ **cookie** | [**string**] | auth cookies etc | (optional) defaults to undefined
 
 
 ### Return type
@@ -1010,7 +1185,7 @@ let body:.DefaultApiResetPasswordRequest = {
   oldpassword: "oldpassword_example",
   // string | new password
   newpassword: "newpassword_example",
-  // string | auth cookies etc
+  // string | auth cookies etc (optional)
   cookie: "Cookie_example",
 };
 
@@ -1026,7 +1201,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **oldpassword** | [**string**] | old password | defaults to undefined
  **newpassword** | [**string**] | new password | defaults to undefined
- **cookie** | [**string**] | auth cookies etc | defaults to undefined
+ **cookie** | [**string**] | auth cookies etc | (optional) defaults to undefined
 
 
 ### Return type
@@ -1068,7 +1243,7 @@ const apiInstance = new .DefaultApi(configuration);
 let body:.DefaultApiRetryArchiveRequestRequest = {
   // number | download ID of the request to retry
   downloadID: 1,
-  // string | auth cookies etc
+  // string | auth cookies etc (optional)
   cookie: "Cookie_example",
 };
 
@@ -1083,7 +1258,7 @@ apiInstance.retryArchiveRequest(body).then((data:any) => {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **downloadID** | [**number**] | download ID of the request to retry | defaults to undefined
- **cookie** | [**string**] | auth cookies etc | defaults to undefined
+ **cookie** | [**string**] | auth cookies etc | (optional) defaults to undefined
 
 
 ### Return type
@@ -1104,6 +1279,63 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | retry success |  -  |
+**0** | Unexpected error |  -  |
+
+[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+
+# **unapproveDownload**
+> void unapproveDownload()
+
+
+### Example
+
+
+```typescript
+import {  } from '';
+import * as fs from 'fs';
+
+const configuration = .createConfiguration();
+const apiInstance = new .DefaultApi(configuration);
+
+let body:.DefaultApiUnapproveDownloadRequest = {
+  // number | video ID to download
+  videoID: 1,
+  // string | auth cookies etc (optional)
+  cookie: "Cookie_example",
+};
+
+apiInstance.unapproveDownload(body).then((data:any) => {
+  console.log('API called successfully. Returned data: ' + data);
+}).catch((error:any) => console.error(error));
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **videoID** | [**number**] | video ID to download | defaults to undefined
+ **cookie** | [**string**] | auth cookies etc | (optional) defaults to undefined
+
+
+### Return type
+
+**void**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: Not defined
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | delete success |  -  |
 **0** | Unexpected error |  -  |
 
 [[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
@@ -1260,7 +1492,7 @@ let body:.DefaultApiUpvoteRequest = {
   id: 1,
   // number | upvote score
   score: 3.14,
-  // string | auth cookies etc
+  // string | auth cookies etc (optional)
   cookie: "Cookie_example",
 };
 
@@ -1276,7 +1508,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | [**number**] | comment ID | defaults to undefined
  **score** | [**number**] | upvote score | defaults to undefined
- **cookie** | [**string**] | auth cookies etc | defaults to undefined
+ **cookie** | [**string**] | auth cookies etc | (optional) defaults to undefined
 
 
 ### Return type
@@ -1320,7 +1552,7 @@ let body:.DefaultApiUpvoteVideoRequest = {
   id: 1,
   // number | upvote score
   score: 1,
-  // string | auth cookies etc
+  // string | auth cookies etc (optional)
   cookie: "Cookie_example",
 };
 
@@ -1336,7 +1568,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | [**number**] | video ID | defaults to undefined
  **score** | [**number**] | upvote score | defaults to undefined
- **cookie** | [**string**] | auth cookies etc | defaults to undefined
+ **cookie** | [**string**] | auth cookies etc | (optional) defaults to undefined
 
 
 ### Return type

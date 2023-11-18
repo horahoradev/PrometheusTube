@@ -10,10 +10,10 @@ import (
 
 	serror "errors"
 
-	videoproto "github.com/KIRAKIRA-DOUGA/KIRAKIRA-golang-backend/video_service/protocol"
 	"github.com/aquasecurity/esquery"
 	_ "github.com/doug-martin/goqu/v9/dialect/postgres"
 	"github.com/elastic/go-elasticsearch/v7"
+	videoproto "github.com/horahoradev/PrometheusTube/backend/video_service/protocol"
 	"github.com/horahoradev/horahora/user_service/errors"
 	_ "github.com/horahoradev/horahora/user_service/protocol"
 	proto "github.com/horahoradev/horahora/user_service/protocol"

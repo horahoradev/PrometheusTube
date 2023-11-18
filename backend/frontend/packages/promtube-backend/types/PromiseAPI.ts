@@ -5,6 +5,7 @@ import { ArchiveEvents200ResponseInner } from '../models/ArchiveEvents200Respons
 import { ArchiveRequests200ResponseInner } from '../models/ArchiveRequests200ResponseInner';
 import { Comments200ResponseInner } from '../models/Comments200ResponseInner';
 import { GetDanmaku200ResponseInner } from '../models/GetDanmaku200ResponseInner';
+import { GetUnapprovedVideos200ResponseInner } from '../models/GetUnapprovedVideos200ResponseInner';
 import { Users200Response } from '../models/Users200Response';
 import { VideoDetail200Response } from '../models/VideoDetail200Response';
 import { Videos200Response } from '../models/Videos200Response';
@@ -26,6 +27,27 @@ export class PromiseDefaultApi {
     }
 
     /**
+     * Retry archive request
+     * @param videoID video ID to download
+     * @param cookie auth cookies etc
+     */
+    public approveDownload(videoID: number, cookie?: string, _options?: Configuration): Promise<void> {
+        const result = this.api.approveDownload(videoID, cookie, _options);
+        return result.toPromise();
+    }
+
+    /**
+     * Retry archive request
+     * @param videoID video ID to download
+     * @param mature auth cookies etc
+     * @param cookie auth cookies etc
+     */
+    public approveVideo(videoID: number, mature?: boolean, cookie?: string, _options?: Configuration): Promise<void> {
+        const result = this.api.approveVideo(videoID, mature, cookie, _options);
+        return result.toPromise();
+    }
+
+    /**
      * Get archive events
      * @param downloadID download id to filter on
      */
@@ -38,7 +60,7 @@ export class PromiseDefaultApi {
      * Get archive requests
      * @param cookie auth cookies etc
      */
-    public archiveRequests(cookie: string, _options?: Configuration): Promise<Array<ArchiveRequests200ResponseInner>> {
+    public archiveRequests(cookie?: string, _options?: Configuration): Promise<Array<ArchiveRequests200ResponseInner>> {
         const result = this.api.archiveRequests(cookie, _options);
         return result.toPromise();
     }
@@ -49,7 +71,7 @@ export class PromiseDefaultApi {
      * @param id user id to filter on
      * @param cookie auth cookies etc
      */
-    public auditEvents(pageNumber: number, id: number, cookie: string, _options?: Configuration): Promise<Array<ArchiveRequests200ResponseInner>> {
+    public auditEvents(pageNumber: number, id: number, cookie?: string, _options?: Configuration): Promise<Array<ArchiveRequests200ResponseInner>> {
         const result = this.api.auditEvents(pageNumber, id, cookie, _options);
         return result.toPromise();
     }
@@ -61,7 +83,7 @@ export class PromiseDefaultApi {
      * @param videoID comment\&#39;s video ID
      * @param cookie auth cookies etc
      */
-    public comment(parent: number, content: string, videoID: number, cookie: string, _options?: Configuration): Promise<void> {
+    public comment(parent: number, content: string, videoID: number, cookie?: string, _options?: Configuration): Promise<void> {
         const result = this.api.comment(parent, content, videoID, cookie, _options);
         return result.toPromise();
     }
@@ -94,7 +116,7 @@ export class PromiseDefaultApi {
      * @param downloadID download ID of the request to retry
      * @param cookie auth cookies etc
      */
-    public deleteArchiveRequest(downloadID: number, cookie: string, _options?: Configuration): Promise<void> {
+    public deleteArchiveRequest(downloadID: number, cookie?: string, _options?: Configuration): Promise<void> {
         const result = this.api.deleteArchiveRequest(downloadID, cookie, _options);
         return result.toPromise();
     }
@@ -104,7 +126,7 @@ export class PromiseDefaultApi {
      * @param id comment ID
      * @param cookie auth cookies etc
      */
-    public deleteComment(id: number, cookie: string, _options?: Configuration): Promise<void> {
+    public deleteComment(id: number, cookie?: string, _options?: Configuration): Promise<void> {
         const result = this.api.deleteComment(id, cookie, _options);
         return result.toPromise();
     }
@@ -145,6 +167,15 @@ export class PromiseDefaultApi {
     }
 
     /**
+     * Retry archive request
+     * @param cookie auth cookies etc
+     */
+    public getUnapprovedVideos(cookie?: string, _options?: Configuration): Promise<Array<GetUnapprovedVideos200ResponseInner>> {
+        const result = this.api.getUnapprovedVideos(cookie, _options);
+        return result.toPromise();
+    }
+
+    /**
      * Log the user in
      * @param username search string
      * @param password sort category
@@ -167,7 +198,7 @@ export class PromiseDefaultApi {
      * @param url url to archive
      * @param cookie auth cookies etc
      */
-    public newArchiveRequest(url: string, cookie: string, _options?: Configuration): Promise<void> {
+    public newArchiveRequest(url: string, cookie?: string, _options?: Configuration): Promise<void> {
         const result = this.api.newArchiveRequest(url, cookie, _options);
         return result.toPromise();
     }
@@ -177,7 +208,7 @@ export class PromiseDefaultApi {
      * @param id video ID
      * @param cookie auth cookies etc
      */
-    public recommendations(id: number, cookie: string, _options?: Configuration): Promise<Array<Videos200ResponseVideosInner>> {
+    public recommendations(id: number, cookie?: string, _options?: Configuration): Promise<Array<Videos200ResponseVideosInner>> {
         const result = this.api.recommendations(id, cookie, _options);
         return result.toPromise();
     }
@@ -200,7 +231,7 @@ export class PromiseDefaultApi {
      * @param newpassword new password
      * @param cookie auth cookies etc
      */
-    public resetPassword(oldpassword: string, newpassword: string, cookie: string, _options?: Configuration): Promise<void> {
+    public resetPassword(oldpassword: string, newpassword: string, cookie?: string, _options?: Configuration): Promise<void> {
         const result = this.api.resetPassword(oldpassword, newpassword, cookie, _options);
         return result.toPromise();
     }
@@ -210,8 +241,18 @@ export class PromiseDefaultApi {
      * @param downloadID download ID of the request to retry
      * @param cookie auth cookies etc
      */
-    public retryArchiveRequest(downloadID: number, cookie: string, _options?: Configuration): Promise<void> {
+    public retryArchiveRequest(downloadID: number, cookie?: string, _options?: Configuration): Promise<void> {
         const result = this.api.retryArchiveRequest(downloadID, cookie, _options);
+        return result.toPromise();
+    }
+
+    /**
+     * Retry archive request
+     * @param videoID video ID to download
+     * @param cookie auth cookies etc
+     */
+    public unapproveDownload(videoID: number, cookie?: string, _options?: Configuration): Promise<void> {
+        const result = this.api.unapproveDownload(videoID, cookie, _options);
         return result.toPromise();
     }
 
@@ -246,7 +287,7 @@ export class PromiseDefaultApi {
      * @param score upvote score
      * @param cookie auth cookies etc
      */
-    public upvote(id: number, score: number, cookie: string, _options?: Configuration): Promise<void> {
+    public upvote(id: number, score: number, cookie?: string, _options?: Configuration): Promise<void> {
         const result = this.api.upvote(id, score, cookie, _options);
         return result.toPromise();
     }
@@ -257,7 +298,7 @@ export class PromiseDefaultApi {
      * @param score upvote score
      * @param cookie auth cookies etc
      */
-    public upvoteVideo(id: number, score: number, cookie: string, _options?: Configuration): Promise<void> {
+    public upvoteVideo(id: number, score: number, cookie?: string, _options?: Configuration): Promise<void> {
         const result = this.api.upvoteVideo(id, score, cookie, _options);
         return result.toPromise();
     }

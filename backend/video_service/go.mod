@@ -1,4 +1,5 @@
 module github.com/horahoradev/PrometheusTube/backend/video_service
+
 go 1.20
 
 require (
@@ -10,7 +11,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.26.5
 	github.com/caarlos0/env v3.5.0+incompatible
 	github.com/doug-martin/goqu/v9 v9.9.0
-	github.com/elastic/go-elasticsearch v0.0.0
+	github.com/elastic/go-elasticsearch/v7 v7.17.10
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/golang/mock v1.4.4
 	github.com/google/uuid v1.3.0
@@ -51,7 +52,6 @@ require (
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
-	github.com/elastic/go-elasticsearch/v7 v7.17.10 // indirect
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/felixge/httpsnoop v1.0.3 // indirect
 	github.com/go-logr/logr v1.2.4 // indirect

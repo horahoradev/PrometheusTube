@@ -3,8 +3,8 @@ package main
 import (
 	"embed"
 
-	"github.com/KIRAKIRA-DOUGA/KIRAKIRA-golang-backend/video_service/internal/config"
-	"github.com/KIRAKIRA-DOUGA/KIRAKIRA-golang-backend/video_service/internal/grpcserver"
+	"github.com/horahoradev/PrometheusTube/backend/video_service/internal/config"
+	"github.com/horahoradev/PrometheusTube/backend/video_service/internal/grpcserver"
 	_ "github.com/lib/pq"
 	log "github.com/sirupsen/logrus"
 

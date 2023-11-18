@@ -20,20 +20,20 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/zhenghaoz/gorse/client"
 
-	"github.com/KIRAKIRA-DOUGA/KIRAKIRA-golang-backend/video_service/storage"
 	"github.com/google/uuid"
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	"github.com/grpc-ecosystem/grpc-opentracing/go/otgrpc"
+	"github.com/horahoradev/PrometheusTube/backend/video_service/storage"
 	"github.com/jmoiron/sqlx"
 	"github.com/opentracing/opentracing-go"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/KIRAKIRA-DOUGA/KIRAKIRA-golang-backend/video_service/internal/dashutils"
-	"github.com/KIRAKIRA-DOUGA/KIRAKIRA-golang-backend/video_service/internal/models"
+	"github.com/horahoradev/PrometheusTube/backend/video_service/internal/dashutils"
+	"github.com/horahoradev/PrometheusTube/backend/video_service/internal/models"
 
-	proto "github.com/KIRAKIRA-DOUGA/KIRAKIRA-golang-backend/video_service/protocol"
 	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
+	proto "github.com/horahoradev/PrometheusTube/backend/video_service/protocol"
 	userproto "github.com/horahoradev/horahora/user_service/protocol"
 
 	log "github.com/sirupsen/logrus"

@@ -130,6 +130,11 @@ export function Navbar({ displayAvatar }) {
               </NavLink>
               : null
               }
+              {admin ? <NavLink to={"/video-downloads/"}>
+                <MenuItem>Download approvals</MenuItem>
+              </NavLink>
+              : null
+              }
               <MenuItem onClick={handleLogout}>Logout</MenuItem>
             </Menu>
           </span>

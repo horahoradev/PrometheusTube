@@ -6,6 +6,7 @@ import { ArchiveEvents200ResponseInner } from '../models/ArchiveEvents200Respons
 import { ArchiveRequests200ResponseInner } from '../models/ArchiveRequests200ResponseInner';
 import { Comments200ResponseInner } from '../models/Comments200ResponseInner';
 import { GetDanmaku200ResponseInner } from '../models/GetDanmaku200ResponseInner';
+import { GetUnapprovedVideos200ResponseInner } from '../models/GetUnapprovedVideos200ResponseInner';
 import { Users200Response } from '../models/Users200Response';
 import { VideoDetail200Response } from '../models/VideoDetail200Response';
 import { Videos200Response } from '../models/Videos200Response';
@@ -27,6 +28,55 @@ export class ObservableDefaultApi {
         this.configuration = configuration;
         this.requestFactory = requestFactory || new DefaultApiRequestFactory(configuration);
         this.responseProcessor = responseProcessor || new DefaultApiResponseProcessor();
+    }
+
+    /**
+     * Retry archive request
+     * @param videoID video ID to download
+     * @param cookie auth cookies etc
+     */
+    public approveDownload(videoID: number, cookie?: string, _options?: Configuration): Observable<void> {
+        const requestContextPromise = this.requestFactory.approveDownload(videoID, cookie, _options);
+
+        // build promise chain
+        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
+        for (let middleware of this.configuration.middleware) {
+            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
+        }
+
+        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => this.configuration.httpApi.send(ctx))).
+            pipe(mergeMap((response: ResponseContext) => {
+                let middlewarePostObservable = of(response);
+                for (let middleware of this.configuration.middleware) {
+                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
+                }
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.approveDownload(rsp)));
+            }));
+    }
+
+    /**
+     * Retry archive request
+     * @param videoID video ID to download
+     * @param mature auth cookies etc
+     * @param cookie auth cookies etc
+     */
+    public approveVideo(videoID: number, mature?: boolean, cookie?: string, _options?: Configuration): Observable<void> {
+        const requestContextPromise = this.requestFactory.approveVideo(videoID, mature, cookie, _options);
+
+        // build promise chain
+        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
+        for (let middleware of this.configuration.middleware) {
+            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
+        }
+
+        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => this.configuration.httpApi.send(ctx))).
+            pipe(mergeMap((response: ResponseContext) => {
+                let middlewarePostObservable = of(response);
+                for (let middleware of this.configuration.middleware) {
+                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
+                }
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.approveVideo(rsp)));
+            }));
     }
 
     /**
@@ -56,7 +106,7 @@ export class ObservableDefaultApi {
      * Get archive requests
      * @param cookie auth cookies etc
      */
-    public archiveRequests(cookie: string, _options?: Configuration): Observable<Array<ArchiveRequests200ResponseInner>> {
+    public archiveRequests(cookie?: string, _options?: Configuration): Observable<Array<ArchiveRequests200ResponseInner>> {
         const requestContextPromise = this.requestFactory.archiveRequests(cookie, _options);
 
         // build promise chain
@@ -81,7 +131,7 @@ export class ObservableDefaultApi {
      * @param id user id to filter on
      * @param cookie auth cookies etc
      */
-    public auditEvents(pageNumber: number, id: number, cookie: string, _options?: Configuration): Observable<Array<ArchiveRequests200ResponseInner>> {
+    public auditEvents(pageNumber: number, id: number, cookie?: string, _options?: Configuration): Observable<Array<ArchiveRequests200ResponseInner>> {
         const requestContextPromise = this.requestFactory.auditEvents(pageNumber, id, cookie, _options);
 
         // build promise chain
@@ -107,7 +157,7 @@ export class ObservableDefaultApi {
      * @param videoID comment\&#39;s video ID
      * @param cookie auth cookies etc
      */
-    public comment(parent: number, content: string, videoID: number, cookie: string, _options?: Configuration): Observable<void> {
+    public comment(parent: number, content: string, videoID: number, cookie?: string, _options?: Configuration): Observable<void> {
         const requestContextPromise = this.requestFactory.comment(parent, content, videoID, cookie, _options);
 
         // build promise chain
@@ -182,7 +232,7 @@ export class ObservableDefaultApi {
      * @param downloadID download ID of the request to retry
      * @param cookie auth cookies etc
      */
-    public deleteArchiveRequest(downloadID: number, cookie: string, _options?: Configuration): Observable<void> {
+    public deleteArchiveRequest(downloadID: number, cookie?: string, _options?: Configuration): Observable<void> {
         const requestContextPromise = this.requestFactory.deleteArchiveRequest(downloadID, cookie, _options);
 
         // build promise chain
@@ -206,7 +256,7 @@ export class ObservableDefaultApi {
      * @param id comment ID
      * @param cookie auth cookies etc
      */
-    public deleteComment(id: number, cookie: string, _options?: Configuration): Observable<void> {
+    public deleteComment(id: number, cookie?: string, _options?: Configuration): Observable<void> {
         const requestContextPromise = this.requestFactory.deleteComment(id, cookie, _options);
 
         // build promise chain
@@ -317,6 +367,29 @@ export class ObservableDefaultApi {
     }
 
     /**
+     * Retry archive request
+     * @param cookie auth cookies etc
+     */
+    public getUnapprovedVideos(cookie?: string, _options?: Configuration): Observable<Array<GetUnapprovedVideos200ResponseInner>> {
+        const requestContextPromise = this.requestFactory.getUnapprovedVideos(cookie, _options);
+
+        // build promise chain
+        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
+        for (let middleware of this.configuration.middleware) {
+            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
+        }
+
+        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => this.configuration.httpApi.send(ctx))).
+            pipe(mergeMap((response: ResponseContext) => {
+                let middlewarePostObservable = of(response);
+                for (let middleware of this.configuration.middleware) {
+                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
+                }
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.getUnapprovedVideos(rsp)));
+            }));
+    }
+
+    /**
      * Log the user in
      * @param username search string
      * @param password sort category
@@ -367,7 +440,7 @@ export class ObservableDefaultApi {
      * @param url url to archive
      * @param cookie auth cookies etc
      */
-    public newArchiveRequest(url: string, cookie: string, _options?: Configuration): Observable<void> {
+    public newArchiveRequest(url: string, cookie?: string, _options?: Configuration): Observable<void> {
         const requestContextPromise = this.requestFactory.newArchiveRequest(url, cookie, _options);
 
         // build promise chain
@@ -391,7 +464,7 @@ export class ObservableDefaultApi {
      * @param id video ID
      * @param cookie auth cookies etc
      */
-    public recommendations(id: number, cookie: string, _options?: Configuration): Observable<Array<Videos200ResponseVideosInner>> {
+    public recommendations(id: number, cookie?: string, _options?: Configuration): Observable<Array<Videos200ResponseVideosInner>> {
         const requestContextPromise = this.requestFactory.recommendations(id, cookie, _options);
 
         // build promise chain
@@ -442,7 +515,7 @@ export class ObservableDefaultApi {
      * @param newpassword new password
      * @param cookie auth cookies etc
      */
-    public resetPassword(oldpassword: string, newpassword: string, cookie: string, _options?: Configuration): Observable<void> {
+    public resetPassword(oldpassword: string, newpassword: string, cookie?: string, _options?: Configuration): Observable<void> {
         const requestContextPromise = this.requestFactory.resetPassword(oldpassword, newpassword, cookie, _options);
 
         // build promise chain
@@ -466,7 +539,7 @@ export class ObservableDefaultApi {
      * @param downloadID download ID of the request to retry
      * @param cookie auth cookies etc
      */
-    public retryArchiveRequest(downloadID: number, cookie: string, _options?: Configuration): Observable<void> {
+    public retryArchiveRequest(downloadID: number, cookie?: string, _options?: Configuration): Observable<void> {
         const requestContextPromise = this.requestFactory.retryArchiveRequest(downloadID, cookie, _options);
 
         // build promise chain
@@ -482,6 +555,30 @@ export class ObservableDefaultApi {
                     middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
                 }
                 return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.retryArchiveRequest(rsp)));
+            }));
+    }
+
+    /**
+     * Retry archive request
+     * @param videoID video ID to download
+     * @param cookie auth cookies etc
+     */
+    public unapproveDownload(videoID: number, cookie?: string, _options?: Configuration): Observable<void> {
+        const requestContextPromise = this.requestFactory.unapproveDownload(videoID, cookie, _options);
+
+        // build promise chain
+        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
+        for (let middleware of this.configuration.middleware) {
+            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
+        }
+
+        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => this.configuration.httpApi.send(ctx))).
+            pipe(mergeMap((response: ResponseContext) => {
+                let middlewarePostObservable = of(response);
+                for (let middleware of this.configuration.middleware) {
+                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
+                }
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.unapproveDownload(rsp)));
             }));
     }
 
@@ -544,7 +641,7 @@ export class ObservableDefaultApi {
      * @param score upvote score
      * @param cookie auth cookies etc
      */
-    public upvote(id: number, score: number, cookie: string, _options?: Configuration): Observable<void> {
+    public upvote(id: number, score: number, cookie?: string, _options?: Configuration): Observable<void> {
         const requestContextPromise = this.requestFactory.upvote(id, score, cookie, _options);
 
         // build promise chain
@@ -569,7 +666,7 @@ export class ObservableDefaultApi {
      * @param score upvote score
      * @param cookie auth cookies etc
      */
-    public upvoteVideo(id: number, score: number, cookie: string, _options?: Configuration): Observable<void> {
+    public upvoteVideo(id: number, score: number, cookie?: string, _options?: Configuration): Observable<void> {
         const requestContextPromise = this.requestFactory.upvoteVideo(id, score, cookie, _options);
 
         // build promise chain

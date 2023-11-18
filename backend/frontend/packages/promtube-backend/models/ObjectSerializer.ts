@@ -2,6 +2,7 @@ export * from '../models/ArchiveEvents200ResponseInner';
 export * from '../models/ArchiveRequests200ResponseInner';
 export * from '../models/Comments200ResponseInner';
 export * from '../models/GetDanmaku200ResponseInner';
+export * from '../models/GetUnapprovedVideos200ResponseInner';
 export * from '../models/Users200Response';
 export * from '../models/VideoDetail200Response';
 export * from '../models/Videos200Response';
@@ -13,6 +14,7 @@ import { ArchiveEvents200ResponseInner } from '../models/ArchiveEvents200Respons
 import { ArchiveRequests200ResponseInner } from '../models/ArchiveRequests200ResponseInner';
 import { Comments200ResponseInner } from '../models/Comments200ResponseInner';
 import { GetDanmaku200ResponseInner } from '../models/GetDanmaku200ResponseInner';
+import { GetUnapprovedVideos200ResponseInner } from '../models/GetUnapprovedVideos200ResponseInner';
 import { Users200Response } from '../models/Users200Response';
 import { VideoDetail200Response } from '../models/VideoDetail200Response';
 import { Videos200Response } from '../models/Videos200Response';
@@ -47,6 +49,7 @@ let typeMap: {[index: string]: any} = {
     "ArchiveRequests200ResponseInner": ArchiveRequests200ResponseInner,
     "Comments200ResponseInner": Comments200ResponseInner,
     "GetDanmaku200ResponseInner": GetDanmaku200ResponseInner,
+    "GetUnapprovedVideos200ResponseInner": GetUnapprovedVideos200ResponseInner,
     "Users200Response": Users200Response,
     "VideoDetail200Response": VideoDetail200Response,
     "Videos200Response": Videos200Response,

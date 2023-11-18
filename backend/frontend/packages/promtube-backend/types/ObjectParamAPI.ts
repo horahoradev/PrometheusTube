@@ -5,6 +5,7 @@ import { ArchiveEvents200ResponseInner } from '../models/ArchiveEvents200Respons
 import { ArchiveRequests200ResponseInner } from '../models/ArchiveRequests200ResponseInner';
 import { Comments200ResponseInner } from '../models/Comments200ResponseInner';
 import { GetDanmaku200ResponseInner } from '../models/GetDanmaku200ResponseInner';
+import { GetUnapprovedVideos200ResponseInner } from '../models/GetUnapprovedVideos200ResponseInner';
 import { Users200Response } from '../models/Users200Response';
 import { VideoDetail200Response } from '../models/VideoDetail200Response';
 import { Videos200Response } from '../models/Videos200Response';
@@ -14,6 +15,42 @@ import { Videos200ResponseVideosInner } from '../models/Videos200ResponseVideosI
 
 import { ObservableDefaultApi } from "./ObservableAPI";
 import { DefaultApiRequestFactory, DefaultApiResponseProcessor} from "../apis/DefaultApi";
+
+export interface DefaultApiApproveDownloadRequest {
+    /**
+     * video ID to download
+     * @type number
+     * @memberof DefaultApiapproveDownload
+     */
+    videoID: number
+    /**
+     * auth cookies etc
+     * @type string
+     * @memberof DefaultApiapproveDownload
+     */
+    cookie?: string
+}
+
+export interface DefaultApiApproveVideoRequest {
+    /**
+     * video ID to download
+     * @type number
+     * @memberof DefaultApiapproveVideo
+     */
+    videoID: number
+    /**
+     * auth cookies etc
+     * @type boolean
+     * @memberof DefaultApiapproveVideo
+     */
+    mature?: boolean
+    /**
+     * auth cookies etc
+     * @type string
+     * @memberof DefaultApiapproveVideo
+     */
+    cookie?: string
+}
 
 export interface DefaultApiArchiveEventsRequest {
     /**
@@ -30,7 +67,7 @@ export interface DefaultApiArchiveRequestsRequest {
      * @type string
      * @memberof DefaultApiarchiveRequests
      */
-    cookie: string
+    cookie?: string
 }
 
 export interface DefaultApiAuditEventsRequest {
@@ -51,7 +88,7 @@ export interface DefaultApiAuditEventsRequest {
      * @type string
      * @memberof DefaultApiauditEvents
      */
-    cookie: string
+    cookie?: string
 }
 
 export interface DefaultApiCommentRequest {
@@ -78,7 +115,7 @@ export interface DefaultApiCommentRequest {
      * @type string
      * @memberof DefaultApicomment
      */
-    cookie: string
+    cookie?: string
 }
 
 export interface DefaultApiCommentsRequest {
@@ -141,7 +178,7 @@ export interface DefaultApiDeleteArchiveRequestRequest {
      * @type string
      * @memberof DefaultApideleteArchiveRequest
      */
-    cookie: string
+    cookie?: string
 }
 
 export interface DefaultApiDeleteCommentRequest {
@@ -156,7 +193,7 @@ export interface DefaultApiDeleteCommentRequest {
      * @type string
      * @memberof DefaultApideleteComment
      */
-    cookie: string
+    cookie?: string
 }
 
 export interface DefaultApiEmailValidationRequest {
@@ -189,6 +226,15 @@ export interface DefaultApiGetDanmakuRequest {
     id: number
 }
 
+export interface DefaultApiGetUnapprovedVideosRequest {
+    /**
+     * auth cookies etc
+     * @type string
+     * @memberof DefaultApigetUnapprovedVideos
+     */
+    cookie?: string
+}
+
 export interface DefaultApiLoginRequest {
     /**
      * search string
@@ -219,7 +265,7 @@ export interface DefaultApiNewArchiveRequestRequest {
      * @type string
      * @memberof DefaultApinewArchiveRequest
      */
-    cookie: string
+    cookie?: string
 }
 
 export interface DefaultApiRecommendationsRequest {
@@ -234,7 +280,7 @@ export interface DefaultApiRecommendationsRequest {
      * @type string
      * @memberof DefaultApirecommendations
      */
-    cookie: string
+    cookie?: string
 }
 
 export interface DefaultApiRegisterRequest {
@@ -282,7 +328,7 @@ export interface DefaultApiResetPasswordRequest {
      * @type string
      * @memberof DefaultApiresetPassword
      */
-    cookie: string
+    cookie?: string
 }
 
 export interface DefaultApiRetryArchiveRequestRequest {
@@ -297,7 +343,22 @@ export interface DefaultApiRetryArchiveRequestRequest {
      * @type string
      * @memberof DefaultApiretryArchiveRequest
      */
-    cookie: string
+    cookie?: string
+}
+
+export interface DefaultApiUnapproveDownloadRequest {
+    /**
+     * video ID to download
+     * @type number
+     * @memberof DefaultApiunapproveDownload
+     */
+    videoID: number
+    /**
+     * auth cookies etc
+     * @type string
+     * @memberof DefaultApiunapproveDownload
+     */
+    cookie?: string
 }
 
 export interface DefaultApiUpdateProfileRequest {
@@ -378,7 +439,7 @@ export interface DefaultApiUpvoteRequest {
      * @type string
      * @memberof DefaultApiupvote
      */
-    cookie: string
+    cookie?: string
 }
 
 export interface DefaultApiUpvoteVideoRequest {
@@ -399,7 +460,7 @@ export interface DefaultApiUpvoteVideoRequest {
      * @type string
      * @memberof DefaultApiupvoteVideo
      */
-    cookie: string
+    cookie?: string
 }
 
 export interface DefaultApiUsersRequest {
@@ -467,6 +528,22 @@ export class ObjectDefaultApi {
     }
 
     /**
+     * Retry archive request
+     * @param param the request object
+     */
+    public approveDownload(param: DefaultApiApproveDownloadRequest, options?: Configuration): Promise<void> {
+        return this.api.approveDownload(param.videoID, param.cookie,  options).toPromise();
+    }
+
+    /**
+     * Retry archive request
+     * @param param the request object
+     */
+    public approveVideo(param: DefaultApiApproveVideoRequest, options?: Configuration): Promise<void> {
+        return this.api.approveVideo(param.videoID, param.mature, param.cookie,  options).toPromise();
+    }
+
+    /**
      * Get archive events
      * @param param the request object
      */
@@ -478,7 +555,7 @@ export class ObjectDefaultApi {
      * Get archive requests
      * @param param the request object
      */
-    public archiveRequests(param: DefaultApiArchiveRequestsRequest, options?: Configuration): Promise<Array<ArchiveRequests200ResponseInner>> {
+    public archiveRequests(param: DefaultApiArchiveRequestsRequest = {}, options?: Configuration): Promise<Array<ArchiveRequests200ResponseInner>> {
         return this.api.archiveRequests(param.cookie,  options).toPromise();
     }
 
@@ -563,6 +640,14 @@ export class ObjectDefaultApi {
     }
 
     /**
+     * Retry archive request
+     * @param param the request object
+     */
+    public getUnapprovedVideos(param: DefaultApiGetUnapprovedVideosRequest = {}, options?: Configuration): Promise<Array<GetUnapprovedVideos200ResponseInner>> {
+        return this.api.getUnapprovedVideos(param.cookie,  options).toPromise();
+    }
+
+    /**
      * Log the user in
      * @param param the request object
      */
@@ -616,6 +701,14 @@ export class ObjectDefaultApi {
      */
     public retryArchiveRequest(param: DefaultApiRetryArchiveRequestRequest, options?: Configuration): Promise<void> {
         return this.api.retryArchiveRequest(param.downloadID, param.cookie,  options).toPromise();
+    }
+
+    /**
+     * Retry archive request
+     * @param param the request object
+     */
+    public unapproveDownload(param: DefaultApiUnapproveDownloadRequest, options?: Configuration): Promise<void> {
+        return this.api.unapproveDownload(param.videoID, param.cookie,  options).toPromise();
     }
 
     /**

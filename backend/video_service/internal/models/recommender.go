@@ -11,8 +11,8 @@ import (
 	"strings"
 	"sync"
 
-	videoproto "github.com/KIRAKIRA-DOUGA/KIRAKIRA-golang-backend/video_service/protocol"
 	_ "github.com/doug-martin/goqu/v9/dialect/postgres"
+	videoproto "github.com/horahoradev/PrometheusTube/backend/video_service/protocol"
 	_ "github.com/horahoradev/horahora/user_service/protocol"
 	"github.com/jmoiron/sqlx"
 	log "github.com/sirupsen/logrus"

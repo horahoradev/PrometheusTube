@@ -12,6 +12,7 @@ import { ArchiveEvents200ResponseInner } from '../models/ArchiveEvents200Respons
 import { ArchiveRequests200ResponseInner } from '../models/ArchiveRequests200ResponseInner';
 import { Comments200ResponseInner } from '../models/Comments200ResponseInner';
 import { GetDanmaku200ResponseInner } from '../models/GetDanmaku200ResponseInner';
+import { GetUnapprovedVideos200ResponseInner } from '../models/GetUnapprovedVideos200ResponseInner';
 import { Users200Response } from '../models/Users200Response';
 import { VideoDetail200Response } from '../models/VideoDetail200Response';
 import { Videos200Response } from '../models/Videos200Response';
@@ -21,6 +22,87 @@ import { Videos200ResponseVideosInner } from '../models/Videos200ResponseVideosI
  * no description
  */
 export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
+
+    /**
+     * Retry archive request
+     * @param videoID video ID to download
+     * @param cookie auth cookies etc
+     */
+    public async approveDownload(videoID: number, cookie?: string, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+        // verify required parameter 'videoID' is not null or undefined
+        if (videoID === null || videoID === undefined) {
+            throw new RequiredError("DefaultApi", "approveDownload", "videoID");
+        }
+
+
+
+        // Path Params
+        const localVarPath = '/approve-download';
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("videoID", ObjectSerializer.serialize(videoID, "number", ""));
+
+        // Header Params
+        requestContext.setHeaderParam("Cookie", ObjectSerializer.serialize(cookie, "string", ""));
+
+
+        
+        const defaultAuth: SecurityAuthentication | undefined = _options?.authMethods?.default || this.configuration?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        return requestContext;
+    }
+
+    /**
+     * Retry archive request
+     * @param videoID video ID to download
+     * @param mature auth cookies etc
+     * @param cookie auth cookies etc
+     */
+    public async approveVideo(videoID: number, mature?: boolean, cookie?: string, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+        // verify required parameter 'videoID' is not null or undefined
+        if (videoID === null || videoID === undefined) {
+            throw new RequiredError("DefaultApi", "approveVideo", "videoID");
+        }
+
+
+
+
+        // Path Params
+        const localVarPath = '/approve-video';
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("videoID", ObjectSerializer.serialize(videoID, "number", ""));
+
+        // Header Params
+        requestContext.setHeaderParam("mature", ObjectSerializer.serialize(mature, "boolean", ""));
+
+        // Header Params
+        requestContext.setHeaderParam("Cookie", ObjectSerializer.serialize(cookie, "string", ""));
+
+
+        
+        const defaultAuth: SecurityAuthentication | undefined = _options?.authMethods?.default || this.configuration?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        return requestContext;
+    }
 
     /**
      * Get archive events
@@ -59,13 +141,8 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
      * Get archive requests
      * @param cookie auth cookies etc
      */
-    public async archiveRequests(cookie: string, _options?: Configuration): Promise<RequestContext> {
+    public async archiveRequests(cookie?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
-
-        // verify required parameter 'cookie' is not null or undefined
-        if (cookie === null || cookie === undefined) {
-            throw new RequiredError("DefaultApi", "archiveRequests", "cookie");
-        }
 
 
         // Path Params
@@ -94,7 +171,7 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
      * @param id user id to filter on
      * @param cookie auth cookies etc
      */
-    public async auditEvents(pageNumber: number, id: number, cookie: string, _options?: Configuration): Promise<RequestContext> {
+    public async auditEvents(pageNumber: number, id: number, cookie?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'pageNumber' is not null or undefined
@@ -108,11 +185,6 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
             throw new RequiredError("DefaultApi", "auditEvents", "id");
         }
 
-
-        // verify required parameter 'cookie' is not null or undefined
-        if (cookie === null || cookie === undefined) {
-            throw new RequiredError("DefaultApi", "auditEvents", "cookie");
-        }
 
 
         // Path Params
@@ -148,7 +220,7 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
      * @param videoID comment\&#39;s video ID
      * @param cookie auth cookies etc
      */
-    public async comment(parent: number, content: string, videoID: number, cookie: string, _options?: Configuration): Promise<RequestContext> {
+    public async comment(parent: number, content: string, videoID: number, cookie?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'parent' is not null or undefined
@@ -168,11 +240,6 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
             throw new RequiredError("DefaultApi", "comment", "videoID");
         }
 
-
-        // verify required parameter 'cookie' is not null or undefined
-        if (cookie === null || cookie === undefined) {
-            throw new RequiredError("DefaultApi", "comment", "cookie");
-        }
 
 
         // Path Params
@@ -323,7 +390,7 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
      * @param downloadID download ID of the request to retry
      * @param cookie auth cookies etc
      */
-    public async deleteArchiveRequest(downloadID: number, cookie: string, _options?: Configuration): Promise<RequestContext> {
+    public async deleteArchiveRequest(downloadID: number, cookie?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'downloadID' is not null or undefined
@@ -331,11 +398,6 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
             throw new RequiredError("DefaultApi", "deleteArchiveRequest", "downloadID");
         }
 
-
-        // verify required parameter 'cookie' is not null or undefined
-        if (cookie === null || cookie === undefined) {
-            throw new RequiredError("DefaultApi", "deleteArchiveRequest", "cookie");
-        }
 
 
         // Path Params
@@ -366,7 +428,7 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
      * @param id comment ID
      * @param cookie auth cookies etc
      */
-    public async deleteComment(id: number, cookie: string, _options?: Configuration): Promise<RequestContext> {
+    public async deleteComment(id: number, cookie?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'id' is not null or undefined
@@ -374,11 +436,6 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
             throw new RequiredError("DefaultApi", "deleteComment", "id");
         }
 
-
-        // verify required parameter 'cookie' is not null or undefined
-        if (cookie === null || cookie === undefined) {
-            throw new RequiredError("DefaultApi", "deleteComment", "cookie");
-        }
 
 
         // Path Params
@@ -523,6 +580,34 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
     }
 
     /**
+     * Retry archive request
+     * @param cookie auth cookies etc
+     */
+    public async getUnapprovedVideos(cookie?: string, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+
+        // Path Params
+        const localVarPath = '/get-unapproved-videos';
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.GET);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("Cookie", ObjectSerializer.serialize(cookie, "string", ""));
+
+
+        
+        const defaultAuth: SecurityAuthentication | undefined = _options?.authMethods?.default || this.configuration?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        return requestContext;
+    }
+
+    /**
      * Log the user in
      * @param username search string
      * @param password sort category
@@ -593,7 +678,7 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
      * @param url url to archive
      * @param cookie auth cookies etc
      */
-    public async newArchiveRequest(url: string, cookie: string, _options?: Configuration): Promise<RequestContext> {
+    public async newArchiveRequest(url: string, cookie?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'url' is not null or undefined
@@ -601,11 +686,6 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
             throw new RequiredError("DefaultApi", "newArchiveRequest", "url");
         }
 
-
-        // verify required parameter 'cookie' is not null or undefined
-        if (cookie === null || cookie === undefined) {
-            throw new RequiredError("DefaultApi", "newArchiveRequest", "cookie");
-        }
 
 
         // Path Params
@@ -636,7 +716,7 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
      * @param id video ID
      * @param cookie auth cookies etc
      */
-    public async recommendations(id: number, cookie: string, _options?: Configuration): Promise<RequestContext> {
+    public async recommendations(id: number, cookie?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'id' is not null or undefined
@@ -644,11 +724,6 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
             throw new RequiredError("DefaultApi", "recommendations", "id");
         }
 
-
-        // verify required parameter 'cookie' is not null or undefined
-        if (cookie === null || cookie === undefined) {
-            throw new RequiredError("DefaultApi", "recommendations", "cookie");
-        }
 
 
         // Path Params
@@ -743,7 +818,7 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
      * @param newpassword new password
      * @param cookie auth cookies etc
      */
-    public async resetPassword(oldpassword: string, newpassword: string, cookie: string, _options?: Configuration): Promise<RequestContext> {
+    public async resetPassword(oldpassword: string, newpassword: string, cookie?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'oldpassword' is not null or undefined
@@ -757,11 +832,6 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
             throw new RequiredError("DefaultApi", "resetPassword", "newpassword");
         }
 
-
-        // verify required parameter 'cookie' is not null or undefined
-        if (cookie === null || cookie === undefined) {
-            throw new RequiredError("DefaultApi", "resetPassword", "cookie");
-        }
 
 
         // Path Params
@@ -795,7 +865,7 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
      * @param downloadID download ID of the request to retry
      * @param cookie auth cookies etc
      */
-    public async retryArchiveRequest(downloadID: number, cookie: string, _options?: Configuration): Promise<RequestContext> {
+    public async retryArchiveRequest(downloadID: number, cookie?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'downloadID' is not null or undefined
@@ -803,11 +873,6 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
             throw new RequiredError("DefaultApi", "retryArchiveRequest", "downloadID");
         }
 
-
-        // verify required parameter 'cookie' is not null or undefined
-        if (cookie === null || cookie === undefined) {
-            throw new RequiredError("DefaultApi", "retryArchiveRequest", "cookie");
-        }
 
 
         // Path Params
@@ -819,6 +884,44 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
 
         // Header Params
         requestContext.setHeaderParam("downloadID", ObjectSerializer.serialize(downloadID, "number", ""));
+
+        // Header Params
+        requestContext.setHeaderParam("Cookie", ObjectSerializer.serialize(cookie, "string", ""));
+
+
+        
+        const defaultAuth: SecurityAuthentication | undefined = _options?.authMethods?.default || this.configuration?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        return requestContext;
+    }
+
+    /**
+     * Retry archive request
+     * @param videoID video ID to download
+     * @param cookie auth cookies etc
+     */
+    public async unapproveDownload(videoID: number, cookie?: string, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+        // verify required parameter 'videoID' is not null or undefined
+        if (videoID === null || videoID === undefined) {
+            throw new RequiredError("DefaultApi", "unapproveDownload", "videoID");
+        }
+
+
+
+        // Path Params
+        const localVarPath = '/unapprove-download';
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("videoID", ObjectSerializer.serialize(videoID, "number", ""));
 
         // Header Params
         requestContext.setHeaderParam("Cookie", ObjectSerializer.serialize(cookie, "string", ""));
@@ -992,7 +1095,7 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
      * @param score upvote score
      * @param cookie auth cookies etc
      */
-    public async upvote(id: number, score: number, cookie: string, _options?: Configuration): Promise<RequestContext> {
+    public async upvote(id: number, score: number, cookie?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'id' is not null or undefined
@@ -1006,11 +1109,6 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
             throw new RequiredError("DefaultApi", "upvote", "score");
         }
 
-
-        // verify required parameter 'cookie' is not null or undefined
-        if (cookie === null || cookie === undefined) {
-            throw new RequiredError("DefaultApi", "upvote", "cookie");
-        }
 
 
         // Path Params
@@ -1043,7 +1141,7 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
      * @param score upvote score
      * @param cookie auth cookies etc
      */
-    public async upvoteVideo(id: number, score: number, cookie: string, _options?: Configuration): Promise<RequestContext> {
+    public async upvoteVideo(id: number, score: number, cookie?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'id' is not null or undefined
@@ -1057,11 +1155,6 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
             throw new RequiredError("DefaultApi", "upvoteVideo", "score");
         }
 
-
-        // verify required parameter 'cookie' is not null or undefined
-        if (cookie === null || cookie === undefined) {
-            throw new RequiredError("DefaultApi", "upvoteVideo", "cookie");
-        }
 
 
         // Path Params
@@ -1206,6 +1299,62 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
 }
 
 export class DefaultApiResponseProcessor {
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
+     * @params response Response returned by the server for a request to approveDownload
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async approveDownload(response: ResponseContext): Promise<void > {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("200", response.httpStatusCode)) {
+            return;
+        }
+        if (isCodeInRange("0", response.httpStatusCode)) {
+            throw new ApiException<undefined>(response.httpStatusCode, "Unexpected error", undefined, response.headers);
+        }
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: void = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "void", ""
+            ) as void;
+            return body;
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
+     * @params response Response returned by the server for a request to approveVideo
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async approveVideo(response: ResponseContext): Promise<void > {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("200", response.httpStatusCode)) {
+            return;
+        }
+        if (isCodeInRange("0", response.httpStatusCode)) {
+            throw new ApiException<undefined>(response.httpStatusCode, "Unexpected error", undefined, response.headers);
+        }
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: void = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "void", ""
+            ) as void;
+            return body;
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
 
     /**
      * Unwraps the actual response sent by the server from the response context and deserializes the response content
@@ -1568,6 +1717,38 @@ export class DefaultApiResponseProcessor {
      * Unwraps the actual response sent by the server from the response context and deserializes the response content
      * to the expected objects
      *
+     * @params response Response returned by the server for a request to getUnapprovedVideos
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async getUnapprovedVideos(response: ResponseContext): Promise<Array<GetUnapprovedVideos200ResponseInner> > {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("200", response.httpStatusCode)) {
+            const body: Array<GetUnapprovedVideos200ResponseInner> = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "Array<GetUnapprovedVideos200ResponseInner>", ""
+            ) as Array<GetUnapprovedVideos200ResponseInner>;
+            return body;
+        }
+        if (isCodeInRange("0", response.httpStatusCode)) {
+            throw new ApiException<undefined>(response.httpStatusCode, "Unexpected error", undefined, response.headers);
+        }
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: Array<GetUnapprovedVideos200ResponseInner> = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "Array<GetUnapprovedVideos200ResponseInner>", ""
+            ) as Array<GetUnapprovedVideos200ResponseInner>;
+            return body;
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
      * @params response Response returned by the server for a request to login
      * @throws ApiException if the response code was not in [200, 299]
      */
@@ -1744,6 +1925,34 @@ export class DefaultApiResponseProcessor {
      * @throws ApiException if the response code was not in [200, 299]
      */
      public async retryArchiveRequest(response: ResponseContext): Promise<void > {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("200", response.httpStatusCode)) {
+            return;
+        }
+        if (isCodeInRange("0", response.httpStatusCode)) {
+            throw new ApiException<undefined>(response.httpStatusCode, "Unexpected error", undefined, response.headers);
+        }
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: void = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "void", ""
+            ) as void;
+            return body;
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
+     * @params response Response returned by the server for a request to unapproveDownload
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async unapproveDownload(response: ResponseContext): Promise<void > {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
             return;
