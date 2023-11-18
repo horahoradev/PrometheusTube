@@ -10,8 +10,8 @@ import (
 	redis_store "github.com/eko/gocache/store/redis/v4"
 
 	userproto "github.com/KIRAKIRA-DOUGA/KIRAKIRA-golang-backend/user_service/protocol"
-	videoproto "github.com/KIRAKIRA-DOUGA/KIRAKIRA-golang-backend/video_service/protocol"
 	socketio "github.com/googollee/go-socket.io"
+	videoproto "github.com/horahoradev/PrometheusTube/backend/video_service/protocol"
 	"github.com/horahoradev/horahora/front_api/config"
 	schedulerproto "github.com/horahoradev/horahora/scheduler/protocol"
 	"github.com/redis/go-redis/v9"

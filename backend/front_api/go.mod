@@ -12,6 +12,7 @@ require (
 	github.com/getkin/kin-openapi v0.118.0
 	github.com/googollee/go-socket.io v1.6.2
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
+	github.com/horahoradev/PrometheusTube/backend/video_service v0.0.0-20231118220618-9bb57ce98401
 	github.com/horahoradev/horahora/scheduler v0.0.0-20221218222730-094304eae0b2
 	github.com/labstack/echo-contrib v0.13.0
 	github.com/labstack/echo/v4 v4.10.2

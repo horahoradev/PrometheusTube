@@ -7,7 +7,7 @@ import (
 	grpc_retry "github.com/grpc-ecosystem/go-grpc-middleware/retry"
 
 	userproto "github.com/KIRAKIRA-DOUGA/KIRAKIRA-golang-backend/user_service/protocol"
-	videoproto "github.com/KIRAKIRA-DOUGA/KIRAKIRA-golang-backend/video_service/protocol"
+	videoproto "github.com/horahoradev/PrometheusTube/backend/video_service/protocol"
 	schedulerproto "github.com/horahoradev/horahora/scheduler/protocol"
 
 	"google.golang.org/grpc"

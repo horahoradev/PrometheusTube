@@ -41,18 +41,8 @@ github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym
 github.com/DATA-DOG/go-sqlmock v1.3.3/go.mod h1:f/Ixk793poVmq4qj/V1dPUg2JEAKC73Q5eFN3EC/SaM=
 github.com/DATA-DOG/go-sqlmock v1.4.1/go.mod h1:f/Ixk793poVmq4qj/V1dPUg2JEAKC73Q5eFN3EC/SaM=
 github.com/HdrHistogram/hdrhistogram-go v1.1.0/go.mod h1:yDgFjdqOqDEKOvasDdhWNXYg9BVp4O+o5f6V/ehm6Oo=
-github.com/KIRAKIRA-DOUGA/KIRAKIRA-golang-backend/user_service v0.0.0-20230903003949-94e0244dacad h1:ayO901zAuwoRXOadHOusq4n71dpPe/SXeArJeQJR5bY=
-github.com/KIRAKIRA-DOUGA/KIRAKIRA-golang-backend/user_service v0.0.0-20230903003949-94e0244dacad/go.mod h1:o1rLmVVXGB498+gggCToXJB8Dy3l0m1hTxEIydSrApg=
-github.com/KIRAKIRA-DOUGA/KIRAKIRA-golang-backend/user_service v0.0.0-20230903234432-edc8888e5dca h1:JVwpm4M3P1ozcXlRD+Xiwp4fFz8gm3d+itmsXeqTTro=
-github.com/KIRAKIRA-DOUGA/KIRAKIRA-golang-backend/user_service v0.0.0-20230903234432-edc8888e5dca/go.mod h1:o1rLmVVXGB498+gggCToXJB8Dy3l0m1hTxEIydSrApg=
-github.com/KIRAKIRA-DOUGA/KIRAKIRA-golang-backend/user_service v0.0.0-20230922221301-a8590de7d03e h1:NyxcY/n7ZmlKB+mSZkWJnSIb7bS/O8fBQ8V4AGYwm4s=
-github.com/KIRAKIRA-DOUGA/KIRAKIRA-golang-backend/user_service v0.0.0-20230922221301-a8590de7d03e/go.mod h1:FHRWysV4C9kSWUjj84oQPZ2LL46qvI+6LV3pLvn/cqQ=
 github.com/KIRAKIRA-DOUGA/KIRAKIRA-golang-backend/user_service v0.0.0-20230922224943-e9ddf33d28b6 h1:+nu7qTGWw6TwgVOQkcpMtb8AaxUUEzRTT/RjjCqW0FU=
 github.com/KIRAKIRA-DOUGA/KIRAKIRA-golang-backend/user_service v0.0.0-20230922224943-e9ddf33d28b6/go.mod h1:FHRWysV4C9kSWUjj84oQPZ2LL46qvI+6LV3pLvn/cqQ=
-github.com/KIRAKIRA-DOUGA/KIRAKIRA-golang-backend/video_service v0.0.0-20230902021342-c94bcf6b86b5 h1:OsTorZnsH8+E9WJd6RNqNiomScfz8yZDvwdwl52Hkw8=
-github.com/KIRAKIRA-DOUGA/KIRAKIRA-golang-backend/video_service v0.0.0-20230902021342-c94bcf6b86b5/go.mod h1:IWqTfFGJNc9tnUOwfxN/pqcjPdICBwyJJ0ii6qsNuUg=
-github.com/KIRAKIRA-DOUGA/KIRAKIRA-golang-backend/video_service v0.0.0-20230903235213-783eae6cb16b h1:VCLc661QSpu1mv1EM9kUGAaOeKuVkJyvUxHtXkvveIg=
-github.com/KIRAKIRA-DOUGA/KIRAKIRA-golang-backend/video_service v0.0.0-20230903235213-783eae6cb16b/go.mod h1:IWqTfFGJNc9tnUOwfxN/pqcjPdICBwyJJ0ii6qsNuUg=
 github.com/RaveNoX/go-jsoncommentstrip v1.0.0/go.mod h1:78ihd09MekBnJnxpICcwzCMzGrKSKYe4AqU6PDYYpjk=
 github.com/ajstarks/svgo v0.0.0-20180226025133-644b8db467af/go.mod h1:K08gAheRH3/J6wwsYMMT4xOr94bZjxIelGM0+d/wbFw=
 github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
@@ -92,9 +82,7 @@ github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDk
 github.com/cncf/udpa/go v0.0.0-20191209042840-269d4d468f6f/go.mod h1:M8M6+tZqaGXZJjfX53e64911xZQV5JYwmTeXPW+k8Sc=
 github.com/cncf/udpa/go v0.0.0-20200629203442-efcf912fb354/go.mod h1:WmhPx2Nbnhtbo57+VJT5O0JRkEi1Wbu0z5j0R8u5Hbk=
 github.com/cncf/udpa/go v0.0.0-20201120205902-5459f2c99403/go.mod h1:WmhPx2Nbnhtbo57+VJT5O0JRkEi1Wbu0z5j0R8u5Hbk=
-github.com/cncf/udpa/go v0.0.0-20210930031921-04548b0d99d4/go.mod h1:6pvJx4me5XPnfI9Z40ddWsdw2W/uZgQLFXToKeRcDiI=
 github.com/cncf/xds/go v0.0.0-20210312221358-fbca930ec8ed/go.mod h1:eXthEFrGJvWHgFFCl3hGmgk+/aYT6PnTQLykKQRLhEs=
-github.com/cncf/xds/go v0.0.0-20211011173535-cb28da3451f1/go.mod h1:eXthEFrGJvWHgFFCl3hGmgk+/aYT6PnTQLykKQRLhEs=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
@@ -117,7 +105,6 @@ github.com/envoyproxy/go-control-plane v0.9.4/go.mod h1:6rpuAdCZL397s3pYoYcLgu1m
 github.com/envoyproxy/go-control-plane v0.9.7/go.mod h1:cwu0lG7PUMfa9snN8LXBig5ynNVH9qI8YYLbd1fK2po=
 github.com/envoyproxy/go-control-plane v0.9.9-0.20201210154907-fd9021fe5dad/go.mod h1:cXg6YxExXjJnVBQHBLXeUAgxn2UodCpnH306RInaBQk=
 github.com/envoyproxy/go-control-plane v0.9.9-0.20210512163311-63b5d3c536b0/go.mod h1:hliV/p42l8fGbc6Y9bQ70uLwIvmJyVE5k4iMKlh8wCQ=
-github.com/envoyproxy/go-control-plane v0.10.2-0.20220325020618-49ff273808a1/go.mod h1:KJwIaB5Mv44NWtYuAOFCVOjcI94vtpEz2JU/D2v6IjE=
 github.com/envoyproxy/protoc-gen-validate v0.1.0/go.mod h1:iSmxcyjqTsJpI2R4NaDN7+kN2VEUnK/pcBlmesArF7c=
 github.com/envoyproxy/protoc-gen-validate v0.6.8 h1:B2cR/FAaiMtYDHv5BQpaqtkjGuWQIgr2KQZtHQ7f6i8=
 github.com/envoyproxy/protoc-gen-validate v0.6.8/go.mod h1:0ZMblUx0cxNoWRswEEXoj9kHBmqX8pxGweMiyIAfR6A=
@@ -163,8 +150,8 @@ github.com/go-playground/universal-translator v0.18.1 h1:Bcnm0ZwsGyWbCzImXv+pAJn
 github.com/go-playground/universal-translator v0.18.1/go.mod h1:xekY+UJKNuX9WP91TpwSH2VMlDf28Uj24BCp08ZFTUY=
 github.com/go-playground/validator/v10 v10.14.0 h1:vgvQWe3XCz3gIeFDm/HnTIbj6UGmg/+t63MyGU2n5js=
 github.com/go-playground/validator/v10 v10.14.0/go.mod h1:9iXMNT7sEkjXb0I+enO7QXmzG6QCsPWY4zveKFVRSyU=
-github.com/go-redis/redis v6.15.8+incompatible h1:BKZuG6mCnRj5AOaWJXoCgf6rqTYnYJLe4en2hxT7r9o=
 github.com/go-redis/redis v6.15.8+incompatible/go.mod h1:NAIEuMOZ/fxfXJIrKDQDz8wamY7mA7PouImQ2Jvg6kA=
+github.com/go-redis/redis v6.15.9+incompatible h1:K0pv1D7EQUjfyoMql+r/jZqCLizCGKFlFgcHWWmHQjg=
 github.com/go-redis/redis/v9 v9.0.0-rc.1 h1:/+bS+yeUnanqAbuD3QwlejzQZ+4eqgfUtFTG4b+QnXs=
 github.com/go-redsync/redsync v1.4.2/go.mod h1:my8/M5YL986u2jBMtZTLkBIgBsKNNSixJWzWwISH6Uw=
 github.com/go-sql-driver/mysql v1.4.0/go.mod h1:zAC/RDZ24gD3HViQzih4MyKcchzm+sOG5ZlKdlhCg5w=
@@ -271,6 +258,8 @@ github.com/hashicorp/errwrap v1.0.0/go.mod h1:YH+1FKiLXxHSkmPseP+kNlulaMuP3n2brv
 github.com/hashicorp/go-multierror v1.0.0/go.mod h1:dHtQlpGsu+cZNNAkkCN/P3hoUDHhCYQXV3UM06sGGrk=
 github.com/hashicorp/golang-lru v0.5.0/go.mod h1:/m3WP610KZHVQ1SGc6re/UDhFvYD7pJ4Ao+sR/qLZy8=
 github.com/hashicorp/golang-lru v0.5.1/go.mod h1:/m3WP610KZHVQ1SGc6re/UDhFvYD7pJ4Ao+sR/qLZy8=
+github.com/horahoradev/PrometheusTube/backend/video_service v0.0.0-20231118220618-9bb57ce98401 h1:PZmELM6XCp2IDCLDGQ8n4fFTZYCKKrjcaBzJxWYlTRM=
+github.com/horahoradev/PrometheusTube/backend/video_service v0.0.0-20231118220618-9bb57ce98401/go.mod h1:4Mj3mBl3asneNX09mWRmYcNoPia0malXKx8bgOL+5K4=
 github.com/horahoradev/horahora/scheduler v0.0.0-20221218222730-094304eae0b2 h1:h7OEOEGsE35IYzo6D4s3pYbXvgcDVqJUIJZXgAXWfJc=
 github.com/horahoradev/horahora/scheduler v0.0.0-20221218222730-094304eae0b2/go.mod h1:JTfDBAcTqK2BMlt/IUZqU4epuk024VfTteCY0YX7L1M=
 github.com/horahoradev/horahora/user_service v0.0.0-20210710200304-9892f28bcdf0/go.mod h1:c2+68tn7GMxziU+YXln0KRssXWtaB8kYqe8zONW5PN4=

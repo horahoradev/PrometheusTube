@@ -16,8 +16,8 @@ import (
 	schedulerproto "github.com/horahoradev/horahora/scheduler/protocol"
 
 	userproto "github.com/KIRAKIRA-DOUGA/KIRAKIRA-golang-backend/user_service/protocol"
-	videoproto "github.com/KIRAKIRA-DOUGA/KIRAKIRA-golang-backend/video_service/protocol"
 	"github.com/davegardnerisme/deephash"
+	videoproto "github.com/horahoradev/PrometheusTube/backend/video_service/protocol"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 	"github.com/zhenghaoz/gorse/client"
@@ -1036,7 +1036,7 @@ func (s Server) ApproveVideo(c echo.Context, params ApproveVideoParams) error {
 		return c.String(http.StatusForbidden, "Insufficient user status")
 	}
 
-	_, err = s.r.v.ApproveVideo(context.Background(), &videoproto.VideoApproval{VideoID: int64(idInt), Mature: params.Mature, UserID: profile.UserID})
+	_, err = s.r.v.ApproveVideo(context.Background(), &videoproto.VideoApproval{VideoID: int64(idInt), Mature: *params.Mature, UserID: profile.UserID})
 	if err != nil {
 		return err
 	}
