@@ -612,7 +612,7 @@ func (g GRPCServer) GetVideo(ctx context.Context, req *proto.VideoRequest) (*pro
 }
 
 func (g GRPCServer) ApproveVideo(ctx context.Context, req *proto.VideoApproval) (*proto.Nothing, error) {
-	if err := g.VideoModel.ApproveVideo(int(req.UserID), int(req.VideoID)); err != nil {
+	if err := g.VideoModel.ApproveVideo(int(req.UserID), int(req.VideoID), req.Mature); err != nil {
 		return nil, err
 	}
 

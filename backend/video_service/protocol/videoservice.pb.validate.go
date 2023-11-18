@@ -2567,6 +2567,8 @@ func (m *VideoApproval) validate(all bool) error {
 
 	// no validation rules for VideoID
 
+	// no validation rules for Mature
+
 	if len(errors) > 0 {
 		return VideoApprovalMultiError(errors)
 	}

@@ -585,9 +585,9 @@ func (v *VideoModel) GetAverageRatingForVideoID(videoID int64) (int, error) {
 	return rating, nil
 }
 
-func (v *VideoModel) MarkVideoApproved(videoID string) error {
-	sql := "UPDATE videos SET is_approved = TRUE WHERE id = $1"
-	_, err := v.db.Exec(sql, videoID)
+func (v *VideoModel) MarkVideoApproved(videoID string, mature bool) error {
+	sql := "UPDATE videos SET is_approved = TRUE, is_mature = $2 WHERE id = $1"
+	_, err := v.db.Exec(sql, videoID, mature)
 	if err != nil {
 		return err
 	}
@@ -599,9 +599,9 @@ func (v *VideoModel) MarkVideoApproved(videoID string) error {
 // e.g. approvalsmodel, viewmodel, etc
 
 // Individual trusted user approves of the video
-func (v *VideoModel) ApproveVideo(userID, videoID int) error {
-	sql := "INSERT INTO approvals (user_id, video_id) VALUES ($1, $2)"
-	_, err := v.db.Exec(sql, userID, videoID)
+func (v *VideoModel) ApproveVideo(userID, videoID int, mature bool) error {
+	sql := "INSERT INTO approvals (user_id, video_id, mature) VALUES ($1, $2, $3)"
+	_, err := v.db.Exec(sql, userID, videoID, mature)
 	if err != nil {
 		return err
 	}
@@ -615,11 +615,12 @@ func (v *VideoModel) ApproveVideo(userID, videoID int) error {
 
 type Approval struct {
 	VideoID string `db:"video_id"`
+	Mature  string `db:"mature"`
 }
 
 func (v *VideoModel) MarkApprovals() error {
 	var approvals []Approval
-	sql := "SELECT video_id FROM approvals GROUP BY video_id HAVING count(*) >= 1"
+	sql := "SELECT video_id, mature FROM approvals GROUP BY video_id HAVING count(*) >= 1"
 
 	if err := v.db.Select(&approvals, sql); err != nil {
 		log.Errorf("Failed to retrieve video approvals. Err: %s", err)
@@ -627,7 +628,7 @@ func (v *VideoModel) MarkApprovals() error {
 	}
 
 	for _, approval := range approvals {
-		err := v.MarkVideoApproved(approval.VideoID)
+		err := v.MarkVideoApproved(approval.VideoID, approval.Mature)
 		if err != nil {
 			// Log and move on
 			log.Errorf("Could not mark video %s as approved. Err: %s", approval.VideoID, err)

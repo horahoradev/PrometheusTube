@@ -175,6 +175,7 @@ message videoViewing {
 message videoApproval {
     int64 userID = 1;
     int64 videoID = 2;
+    bool mature = 3;
 }
 
 message VideoQueryConfig {
