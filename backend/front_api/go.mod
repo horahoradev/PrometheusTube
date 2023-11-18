@@ -4,7 +4,6 @@ go 1.20
 
 require (
 	github.com/KIRAKIRA-DOUGA/KIRAKIRA-golang-backend/user_service v0.0.0-20230922224943-e9ddf33d28b6
-	github.com/KIRAKIRA-DOUGA/KIRAKIRA-golang-backend/video_service v0.0.0-20230903235213-783eae6cb16b
 	github.com/caarlos0/env v3.5.0+incompatible
 	github.com/davegardnerisme/deephash v0.0.0-20210406090112-6d072427d830
 	github.com/deepmap/oapi-codegen v1.13.0

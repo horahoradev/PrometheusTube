@@ -1,5 +1,4 @@
-module github.com/KIRAKIRA-DOUGA/KIRAKIRA-golang-backend/video_service
-
+module github.com/horahoradev/PrometheusTube/backend/video_service
 go 1.20
 
 require (
