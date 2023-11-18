@@ -22,6 +22,15 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// ApproveDownloadParams defines parameters for ApproveDownload.
+type ApproveDownloadParams struct {
+	// VideoID video ID to download
+	VideoID int `json:"videoID"`
+
+	// Cookie auth cookies etc
+	Cookie *string `json:"Cookie,omitempty"`
+}
+
 // ArchiveEventsParams defines parameters for ArchiveEvents.
 type ArchiveEventsParams struct {
 	// DownloadID download id to filter on
@@ -31,7 +40,7 @@ type ArchiveEventsParams struct {
 // ArchiveRequestsParams defines parameters for ArchiveRequests.
 type ArchiveRequestsParams struct {
 	// Cookie auth cookies etc
-	Cookie string `json:"Cookie"`
+	Cookie *string `json:"Cookie,omitempty"`
 }
 
 // AuditEventsParams defines parameters for AuditEvents.
@@ -43,7 +52,7 @@ type AuditEventsParams struct {
 	Id int `json:"id"`
 
 	// Cookie auth cookies etc
-	Cookie string `json:"Cookie"`
+	Cookie *string `json:"Cookie,omitempty"`
 }
 
 // CommentParams defines parameters for Comment.
@@ -56,6 +65,9 @@ type CommentParams struct {
 
 	// VideoID comment's video ID
 	VideoID int `json:"videoID"`
+
+	// Cookie auth cookies etc
+	Cookie *string `json:"Cookie,omitempty"`
 }
 
 // CreateDanmakuParams defines parameters for CreateDanmaku.
@@ -85,19 +97,28 @@ type DeleteArchiveRequestParams struct {
 	DownloadID int `json:"downloadID"`
 
 	// Cookie auth cookies etc
-	Cookie string `json:"Cookie"`
+	Cookie *string `json:"Cookie,omitempty"`
 }
 
 // DeleteCommentParams defines parameters for DeleteComment.
 type DeleteCommentParams struct {
 	// Id comment ID
 	Id int `json:"id"`
+
+	// Cookie auth cookies etc
+	Cookie *string `json:"Cookie,omitempty"`
 }
 
 // EmailValidationParams defines parameters for EmailValidation.
 type EmailValidationParams struct {
 	// Email email
 	Email string `json:"email"`
+}
+
+// GetUnapprovedVideosParams defines parameters for GetUnapprovedVideos.
+type GetUnapprovedVideosParams struct {
+	// Cookie auth cookies etc
+	Cookie *string `json:"Cookie,omitempty"`
 }
 
 // LoginParams defines parameters for Login.
@@ -115,7 +136,13 @@ type NewArchiveRequestParams struct {
 	Url string `json:"url"`
 
 	// Cookie auth cookies etc
-	Cookie string `json:"Cookie"`
+	Cookie *string `json:"Cookie,omitempty"`
+}
+
+// RecommendationsParams defines parameters for Recommendations.
+type RecommendationsParams struct {
+	// Cookie auth cookies etc
+	Cookie *string `json:"Cookie,omitempty"`
 }
 
 // RegisterParams defines parameters for Register.
@@ -140,6 +167,9 @@ type ResetPasswordParams struct {
 
 	// Newpassword new password
 	Newpassword string `json:"newpassword"`
+
+	// Cookie auth cookies etc
+	Cookie *string `json:"Cookie,omitempty"`
 }
 
 // RetryArchiveRequestParams defines parameters for RetryArchiveRequest.
@@ -148,7 +178,16 @@ type RetryArchiveRequestParams struct {
 	DownloadID int `json:"downloadID"`
 
 	// Cookie auth cookies etc
-	Cookie string `json:"Cookie"`
+	Cookie *string `json:"Cookie,omitempty"`
+}
+
+// UnapproveDownloadParams defines parameters for UnapproveDownload.
+type UnapproveDownloadParams struct {
+	// VideoID video ID to download
+	VideoID int `json:"videoID"`
+
+	// Cookie auth cookies etc
+	Cookie *string `json:"Cookie,omitempty"`
 }
 
 // UpdateProfileParams defines parameters for UpdateProfile.
@@ -190,12 +229,18 @@ type UploadParams struct {
 type UpvoteParams struct {
 	// Score upvote score
 	Score float32 `json:"score"`
+
+	// Cookie auth cookies etc
+	Cookie *string `json:"Cookie,omitempty"`
 }
 
 // UpvoteVideoParams defines parameters for UpvoteVideo.
 type UpvoteVideoParams struct {
 	// Score upvote score
 	Score int `json:"score"`
+
+	// Cookie auth cookies etc
+	Cookie *string `json:"Cookie,omitempty"`
 }
 
 // VideosParams defines parameters for Videos.
@@ -295,6 +340,9 @@ func WithRequestEditorFn(fn RequestEditorFn) ClientOption {
 
 // The interface specification for the client above.
 type ClientInterface interface {
+	// ApproveDownload request
+	ApproveDownload(ctx context.Context, params *ApproveDownloadParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// ArchiveEvents request
 	ArchiveEvents(ctx context.Context, params *ArchiveEventsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -331,6 +379,9 @@ type ClientInterface interface {
 	// Follow request
 	Follow(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// GetUnapprovedVideos request
+	GetUnapprovedVideos(ctx context.Context, params *GetUnapprovedVideosParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// Login request
 	Login(ctx context.Context, params *LoginParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -341,7 +392,7 @@ type ClientInterface interface {
 	NewArchiveRequest(ctx context.Context, params *NewArchiveRequestParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// Recommendations request
-	Recommendations(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*http.Response, error)
+	Recommendations(ctx context.Context, id int, params *RecommendationsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// Register request
 	Register(ctx context.Context, params *RegisterParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -351,6 +402,9 @@ type ClientInterface interface {
 
 	// RetryArchiveRequest request
 	RetryArchiveRequest(ctx context.Context, params *RetryArchiveRequestParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UnapproveDownload request
+	UnapproveDownload(ctx context.Context, params *UnapproveDownloadParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// UpdateProfile request
 	UpdateProfile(ctx context.Context, params *UpdateProfileParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -372,6 +426,18 @@ type ClientInterface interface {
 
 	// VideoDetail request
 	VideoDetail(ctx context.Context, id float32, reqEditors ...RequestEditorFn) (*http.Response, error)
+}
+
+func (c *Client) ApproveDownload(ctx context.Context, params *ApproveDownloadParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewApproveDownloadRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
 }
 
 func (c *Client) ArchiveEvents(ctx context.Context, params *ArchiveEventsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
@@ -518,6 +584,18 @@ func (c *Client) Follow(ctx context.Context, id int, reqEditors ...RequestEditor
 	return c.Client.Do(req)
 }
 
+func (c *Client) GetUnapprovedVideos(ctx context.Context, params *GetUnapprovedVideosParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetUnapprovedVideosRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) Login(ctx context.Context, params *LoginParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewLoginRequest(c.Server, params)
 	if err != nil {
@@ -554,8 +632,8 @@ func (c *Client) NewArchiveRequest(ctx context.Context, params *NewArchiveReques
 	return c.Client.Do(req)
 }
 
-func (c *Client) Recommendations(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewRecommendationsRequest(c.Server, id)
+func (c *Client) Recommendations(ctx context.Context, id int, params *RecommendationsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewRecommendationsRequest(c.Server, id, params)
 	if err != nil {
 		return nil, err
 	}
@@ -592,6 +670,18 @@ func (c *Client) ResetPassword(ctx context.Context, params *ResetPasswordParams,
 
 func (c *Client) RetryArchiveRequest(ctx context.Context, params *RetryArchiveRequestParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewRetryArchiveRequestRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UnapproveDownload(ctx context.Context, params *UnapproveDownloadParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUnapproveDownloadRequest(c.Server, params)
 	if err != nil {
 		return nil, err
 	}
@@ -686,6 +776,53 @@ func (c *Client) VideoDetail(ctx context.Context, id float32, reqEditors ...Requ
 	return c.Client.Do(req)
 }
 
+// NewApproveDownloadRequest generates requests for ApproveDownload
+func NewApproveDownloadRequest(server string, params *ApproveDownloadParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/approve-download")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var headerParam0 string
+
+	headerParam0, err = runtime.StyleParamWithLocation("simple", false, "videoID", runtime.ParamLocationHeader, params.VideoID)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set("videoID", headerParam0)
+
+	if params.Cookie != nil {
+		var headerParam1 string
+
+		headerParam1, err = runtime.StyleParamWithLocation("simple", false, "Cookie", runtime.ParamLocationHeader, *params.Cookie)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Cookie", headerParam1)
+	}
+
+	return req, nil
+}
+
 // NewArchiveEventsRequest generates requests for ArchiveEvents
 func NewArchiveEventsRequest(server string, params *ArchiveEventsParams) (*http.Request, error) {
 	var err error
@@ -746,14 +883,16 @@ func NewArchiveRequestsRequest(server string, params *ArchiveRequestsParams) (*h
 		return nil, err
 	}
 
-	var headerParam0 string
+	if params.Cookie != nil {
+		var headerParam0 string
 
-	headerParam0, err = runtime.StyleParamWithLocation("simple", false, "Cookie", runtime.ParamLocationHeader, params.Cookie)
-	if err != nil {
-		return nil, err
+		headerParam0, err = runtime.StyleParamWithLocation("simple", false, "Cookie", runtime.ParamLocationHeader, *params.Cookie)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Cookie", headerParam0)
 	}
-
-	req.Header.Set("Cookie", headerParam0)
 
 	return req, nil
 }
@@ -800,14 +939,16 @@ func NewAuditEventsRequest(server string, params *AuditEventsParams) (*http.Requ
 
 	req.Header.Set("id", headerParam1)
 
-	var headerParam2 string
+	if params.Cookie != nil {
+		var headerParam2 string
 
-	headerParam2, err = runtime.StyleParamWithLocation("simple", false, "Cookie", runtime.ParamLocationHeader, params.Cookie)
-	if err != nil {
-		return nil, err
+		headerParam2, err = runtime.StyleParamWithLocation("simple", false, "Cookie", runtime.ParamLocationHeader, *params.Cookie)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Cookie", headerParam2)
 	}
-
-	req.Header.Set("Cookie", headerParam2)
 
 	return req, nil
 }
@@ -862,6 +1003,17 @@ func NewCommentRequest(server string, params *CommentParams) (*http.Request, err
 	}
 
 	req.Header.Set("videoID", headerParam2)
+
+	if params.Cookie != nil {
+		var headerParam3 string
+
+		headerParam3, err = runtime.StyleParamWithLocation("simple", false, "Cookie", runtime.ParamLocationHeader, *params.Cookie)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Cookie", headerParam3)
+	}
 
 	return req, nil
 }
@@ -1048,14 +1200,16 @@ func NewDeleteArchiveRequestRequest(server string, params *DeleteArchiveRequestP
 
 	req.Header.Set("downloadID", headerParam0)
 
-	var headerParam1 string
+	if params.Cookie != nil {
+		var headerParam1 string
 
-	headerParam1, err = runtime.StyleParamWithLocation("simple", false, "Cookie", runtime.ParamLocationHeader, params.Cookie)
-	if err != nil {
-		return nil, err
+		headerParam1, err = runtime.StyleParamWithLocation("simple", false, "Cookie", runtime.ParamLocationHeader, *params.Cookie)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Cookie", headerParam1)
 	}
-
-	req.Header.Set("Cookie", headerParam1)
 
 	return req, nil
 }
@@ -1092,6 +1246,17 @@ func NewDeleteCommentRequest(server string, params *DeleteCommentParams) (*http.
 	}
 
 	req.Header.Set("id", headerParam0)
+
+	if params.Cookie != nil {
+		var headerParam1 string
+
+		headerParam1, err = runtime.StyleParamWithLocation("simple", false, "Cookie", runtime.ParamLocationHeader, *params.Cookie)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Cookie", headerParam1)
+	}
 
 	return req, nil
 }
@@ -1188,6 +1353,44 @@ func NewFollowRequest(server string, id int) (*http.Request, error) {
 	req, err := http.NewRequest("POST", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetUnapprovedVideosRequest generates requests for GetUnapprovedVideos
+func NewGetUnapprovedVideosRequest(server string, params *GetUnapprovedVideosParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/get-unapproved-videos")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params.Cookie != nil {
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParamWithLocation("simple", false, "Cookie", runtime.ParamLocationHeader, *params.Cookie)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Cookie", headerParam0)
 	}
 
 	return req, nil
@@ -1298,20 +1501,22 @@ func NewNewArchiveRequestRequest(server string, params *NewArchiveRequestParams)
 
 	req.Header.Set("url", headerParam0)
 
-	var headerParam1 string
+	if params.Cookie != nil {
+		var headerParam1 string
 
-	headerParam1, err = runtime.StyleParamWithLocation("simple", false, "Cookie", runtime.ParamLocationHeader, params.Cookie)
-	if err != nil {
-		return nil, err
+		headerParam1, err = runtime.StyleParamWithLocation("simple", false, "Cookie", runtime.ParamLocationHeader, *params.Cookie)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Cookie", headerParam1)
 	}
-
-	req.Header.Set("Cookie", headerParam1)
 
 	return req, nil
 }
 
 // NewRecommendationsRequest generates requests for Recommendations
-func NewRecommendationsRequest(server string, id int) (*http.Request, error) {
+func NewRecommendationsRequest(server string, id int, params *RecommendationsParams) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -1339,6 +1544,17 @@ func NewRecommendationsRequest(server string, id int) (*http.Request, error) {
 	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
+	}
+
+	if params.Cookie != nil {
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParamWithLocation("simple", false, "Cookie", runtime.ParamLocationHeader, *params.Cookie)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Cookie", headerParam0)
 	}
 
 	return req, nil
@@ -1458,6 +1674,17 @@ func NewResetPasswordRequest(server string, params *ResetPasswordParams) (*http.
 
 	req.Header.Set("newpassword", headerParam1)
 
+	if params.Cookie != nil {
+		var headerParam2 string
+
+		headerParam2, err = runtime.StyleParamWithLocation("simple", false, "Cookie", runtime.ParamLocationHeader, *params.Cookie)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Cookie", headerParam2)
+	}
+
 	return req, nil
 }
 
@@ -1494,14 +1721,63 @@ func NewRetryArchiveRequestRequest(server string, params *RetryArchiveRequestPar
 
 	req.Header.Set("downloadID", headerParam0)
 
-	var headerParam1 string
+	if params.Cookie != nil {
+		var headerParam1 string
 
-	headerParam1, err = runtime.StyleParamWithLocation("simple", false, "Cookie", runtime.ParamLocationHeader, params.Cookie)
+		headerParam1, err = runtime.StyleParamWithLocation("simple", false, "Cookie", runtime.ParamLocationHeader, *params.Cookie)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Cookie", headerParam1)
+	}
+
+	return req, nil
+}
+
+// NewUnapproveDownloadRequest generates requests for UnapproveDownload
+func NewUnapproveDownloadRequest(server string, params *UnapproveDownloadParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
 
-	req.Header.Set("Cookie", headerParam1)
+	operationPath := fmt.Sprintf("/unapprove-download")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var headerParam0 string
+
+	headerParam0, err = runtime.StyleParamWithLocation("simple", false, "videoID", runtime.ParamLocationHeader, params.VideoID)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set("videoID", headerParam0)
+
+	if params.Cookie != nil {
+		var headerParam1 string
+
+		headerParam1, err = runtime.StyleParamWithLocation("simple", false, "Cookie", runtime.ParamLocationHeader, *params.Cookie)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Cookie", headerParam1)
+	}
 
 	return req, nil
 }
@@ -1674,6 +1950,17 @@ func NewUpvoteRequest(server string, id int, params *UpvoteParams) (*http.Reques
 
 	req.Header.Set("score", headerParam0)
 
+	if params.Cookie != nil {
+		var headerParam1 string
+
+		headerParam1, err = runtime.StyleParamWithLocation("simple", false, "Cookie", runtime.ParamLocationHeader, *params.Cookie)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Cookie", headerParam1)
+	}
+
 	return req, nil
 }
 
@@ -1716,6 +2003,17 @@ func NewUpvoteVideoRequest(server string, id int, params *UpvoteVideoParams) (*h
 	}
 
 	req.Header.Set("score", headerParam0)
+
+	if params.Cookie != nil {
+		var headerParam1 string
+
+		headerParam1, err = runtime.StyleParamWithLocation("simple", false, "Cookie", runtime.ParamLocationHeader, *params.Cookie)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Cookie", headerParam1)
+	}
 
 	return req, nil
 }
@@ -1924,6 +2222,9 @@ func WithBaseURL(baseURL string) ClientOption {
 
 // ClientWithResponsesInterface is the interface specification for the client with responses above.
 type ClientWithResponsesInterface interface {
+	// ApproveDownload request
+	ApproveDownloadWithResponse(ctx context.Context, params *ApproveDownloadParams, reqEditors ...RequestEditorFn) (*ApproveDownloadResponse, error)
+
 	// ArchiveEvents request
 	ArchiveEventsWithResponse(ctx context.Context, params *ArchiveEventsParams, reqEditors ...RequestEditorFn) (*ArchiveEventsResponse, error)
 
@@ -1960,6 +2261,9 @@ type ClientWithResponsesInterface interface {
 	// Follow request
 	FollowWithResponse(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*FollowResponse, error)
 
+	// GetUnapprovedVideos request
+	GetUnapprovedVideosWithResponse(ctx context.Context, params *GetUnapprovedVideosParams, reqEditors ...RequestEditorFn) (*GetUnapprovedVideosResponse, error)
+
 	// Login request
 	LoginWithResponse(ctx context.Context, params *LoginParams, reqEditors ...RequestEditorFn) (*LoginResponse, error)
 
@@ -1970,7 +2274,7 @@ type ClientWithResponsesInterface interface {
 	NewArchiveRequestWithResponse(ctx context.Context, params *NewArchiveRequestParams, reqEditors ...RequestEditorFn) (*NewArchiveRequestResponse, error)
 
 	// Recommendations request
-	RecommendationsWithResponse(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*RecommendationsResponse, error)
+	RecommendationsWithResponse(ctx context.Context, id int, params *RecommendationsParams, reqEditors ...RequestEditorFn) (*RecommendationsResponse, error)
 
 	// Register request
 	RegisterWithResponse(ctx context.Context, params *RegisterParams, reqEditors ...RequestEditorFn) (*RegisterResponse, error)
@@ -1980,6 +2284,9 @@ type ClientWithResponsesInterface interface {
 
 	// RetryArchiveRequest request
 	RetryArchiveRequestWithResponse(ctx context.Context, params *RetryArchiveRequestParams, reqEditors ...RequestEditorFn) (*RetryArchiveRequestResponse, error)
+
+	// UnapproveDownload request
+	UnapproveDownloadWithResponse(ctx context.Context, params *UnapproveDownloadParams, reqEditors ...RequestEditorFn) (*UnapproveDownloadResponse, error)
 
 	// UpdateProfile request
 	UpdateProfileWithResponse(ctx context.Context, params *UpdateProfileParams, reqEditors ...RequestEditorFn) (*UpdateProfileResponse, error)
@@ -2001,6 +2308,27 @@ type ClientWithResponsesInterface interface {
 
 	// VideoDetail request
 	VideoDetailWithResponse(ctx context.Context, id float32, reqEditors ...RequestEditorFn) (*VideoDetailResponse, error)
+}
+
+type ApproveDownloadResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r ApproveDownloadResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ApproveDownloadResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
 }
 
 type ArchiveEventsResponse struct {
@@ -2312,6 +2640,32 @@ func (r FollowResponse) StatusCode() int {
 	return 0
 }
 
+type GetUnapprovedVideosResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]struct {
+		Category *int    `json:"Category,omitempty"`
+		URL      *string `json:"URL,omitempty"`
+		VideoID  *int    `json:"VideoID,omitempty"`
+	}
+}
+
+// Status returns HTTPResponse.Status
+func (r GetUnapprovedVideosResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetUnapprovedVideosResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type LoginResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -2463,6 +2817,27 @@ func (r RetryArchiveRequestResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r RetryArchiveRequestResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type UnapproveDownloadResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r UnapproveDownloadResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UnapproveDownloadResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -2680,6 +3055,15 @@ func (r VideoDetailResponse) StatusCode() int {
 	return 0
 }
 
+// ApproveDownloadWithResponse request returning *ApproveDownloadResponse
+func (c *ClientWithResponses) ApproveDownloadWithResponse(ctx context.Context, params *ApproveDownloadParams, reqEditors ...RequestEditorFn) (*ApproveDownloadResponse, error) {
+	rsp, err := c.ApproveDownload(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseApproveDownloadResponse(rsp)
+}
+
 // ArchiveEventsWithResponse request returning *ArchiveEventsResponse
 func (c *ClientWithResponses) ArchiveEventsWithResponse(ctx context.Context, params *ArchiveEventsParams, reqEditors ...RequestEditorFn) (*ArchiveEventsResponse, error) {
 	rsp, err := c.ArchiveEvents(ctx, params, reqEditors...)
@@ -2788,6 +3172,15 @@ func (c *ClientWithResponses) FollowWithResponse(ctx context.Context, id int, re
 	return ParseFollowResponse(rsp)
 }
 
+// GetUnapprovedVideosWithResponse request returning *GetUnapprovedVideosResponse
+func (c *ClientWithResponses) GetUnapprovedVideosWithResponse(ctx context.Context, params *GetUnapprovedVideosParams, reqEditors ...RequestEditorFn) (*GetUnapprovedVideosResponse, error) {
+	rsp, err := c.GetUnapprovedVideos(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetUnapprovedVideosResponse(rsp)
+}
+
 // LoginWithResponse request returning *LoginResponse
 func (c *ClientWithResponses) LoginWithResponse(ctx context.Context, params *LoginParams, reqEditors ...RequestEditorFn) (*LoginResponse, error) {
 	rsp, err := c.Login(ctx, params, reqEditors...)
@@ -2816,8 +3209,8 @@ func (c *ClientWithResponses) NewArchiveRequestWithResponse(ctx context.Context,
 }
 
 // RecommendationsWithResponse request returning *RecommendationsResponse
-func (c *ClientWithResponses) RecommendationsWithResponse(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*RecommendationsResponse, error) {
-	rsp, err := c.Recommendations(ctx, id, reqEditors...)
+func (c *ClientWithResponses) RecommendationsWithResponse(ctx context.Context, id int, params *RecommendationsParams, reqEditors ...RequestEditorFn) (*RecommendationsResponse, error) {
+	rsp, err := c.Recommendations(ctx, id, params, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -2849,6 +3242,15 @@ func (c *ClientWithResponses) RetryArchiveRequestWithResponse(ctx context.Contex
 		return nil, err
 	}
 	return ParseRetryArchiveRequestResponse(rsp)
+}
+
+// UnapproveDownloadWithResponse request returning *UnapproveDownloadResponse
+func (c *ClientWithResponses) UnapproveDownloadWithResponse(ctx context.Context, params *UnapproveDownloadParams, reqEditors ...RequestEditorFn) (*UnapproveDownloadResponse, error) {
+	rsp, err := c.UnapproveDownload(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUnapproveDownloadResponse(rsp)
 }
 
 // UpdateProfileWithResponse request returning *UpdateProfileResponse
@@ -2912,6 +3314,22 @@ func (c *ClientWithResponses) VideoDetailWithResponse(ctx context.Context, id fl
 		return nil, err
 	}
 	return ParseVideoDetailResponse(rsp)
+}
+
+// ParseApproveDownloadResponse parses an HTTP response from a ApproveDownloadWithResponse call
+func ParseApproveDownloadResponse(rsp *http.Response) (*ApproveDownloadResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ApproveDownloadResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
 }
 
 // ParseArchiveEventsResponse parses an HTTP response from a ArchiveEventsWithResponse call
@@ -3217,6 +3635,36 @@ func ParseFollowResponse(rsp *http.Response) (*FollowResponse, error) {
 	return response, nil
 }
 
+// ParseGetUnapprovedVideosResponse parses an HTTP response from a GetUnapprovedVideosWithResponse call
+func ParseGetUnapprovedVideosResponse(rsp *http.Response) (*GetUnapprovedVideosResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetUnapprovedVideosResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []struct {
+			Category *int    `json:"Category,omitempty"`
+			URL      *string `json:"URL,omitempty"`
+			VideoID  *int    `json:"VideoID,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseLoginResponse parses an HTTP response from a LoginWithResponse call
 func ParseLoginResponse(rsp *http.Response) (*LoginResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -3341,6 +3789,22 @@ func ParseRetryArchiveRequestResponse(rsp *http.Response) (*RetryArchiveRequestR
 	}
 
 	response := &RetryArchiveRequestResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseUnapproveDownloadResponse parses an HTTP response from a UnapproveDownloadWithResponse call
+func ParseUnapproveDownloadResponse(rsp *http.Response) (*UnapproveDownloadResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UnapproveDownloadResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -3553,6 +4017,9 @@ func ParseVideoDetailResponse(rsp *http.Response) (*VideoDetailResponse, error) 
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
+	// Retry archive request
+	// (POST /approve-download)
+	ApproveDownload(ctx echo.Context, params ApproveDownloadParams) error
 	// Get archive events
 	// (GET /archive-events)
 	ArchiveEvents(ctx echo.Context, params ArchiveEventsParams) error
@@ -3589,6 +4056,9 @@ type ServerInterface interface {
 	// Upvote a video
 	// (POST /follow/{id})
 	Follow(ctx echo.Context, id int) error
+	// Retry archive request
+	// (GET /get-unapproved-videos)
+	GetUnapprovedVideos(ctx echo.Context, params GetUnapprovedVideosParams) error
 	// Log the user in
 	// (POST /login)
 	Login(ctx echo.Context, params LoginParams) error
@@ -3600,7 +4070,7 @@ type ServerInterface interface {
 	NewArchiveRequest(ctx echo.Context, params NewArchiveRequestParams) error
 	// Get list of videos
 	// (GET /recommendations/{id})
-	Recommendations(ctx echo.Context, id int) error
+	Recommendations(ctx echo.Context, id int, params RecommendationsParams) error
 	// Register user
 	// (POST /register)
 	Register(ctx echo.Context, params RegisterParams) error
@@ -3610,6 +4080,9 @@ type ServerInterface interface {
 	// Retry archive request
 	// (POST /retry-archive-request)
 	RetryArchiveRequest(ctx echo.Context, params RetryArchiveRequestParams) error
+	// Retry archive request
+	// (POST /unapprove-download)
+	UnapproveDownload(ctx echo.Context, params UnapproveDownloadParams) error
 	// Update user's profile
 	// (POST /update-profile)
 	UpdateProfile(ctx echo.Context, params UpdateProfileParams) error
@@ -3636,6 +4109,52 @@ type ServerInterface interface {
 // ServerInterfaceWrapper converts echo contexts to parameters.
 type ServerInterfaceWrapper struct {
 	Handler ServerInterface
+}
+
+// ApproveDownload converts echo context to params.
+func (w *ServerInterfaceWrapper) ApproveDownload(ctx echo.Context) error {
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params ApproveDownloadParams
+
+	headers := ctx.Request().Header
+	// ------------- Required header parameter "videoID" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("videoID")]; found {
+		var VideoID int
+		n := len(valueList)
+		if n != 1 {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Expected one value for videoID, got %d", n))
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "videoID", runtime.ParamLocationHeader, valueList[0], &VideoID)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter videoID: %s", err))
+		}
+
+		params.VideoID = VideoID
+	} else {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Header parameter videoID is required, but not found"))
+	}
+	// ------------- Optional header parameter "Cookie" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Cookie")]; found {
+		var Cookie string
+		n := len(valueList)
+		if n != 1 {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Expected one value for Cookie, got %d", n))
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "Cookie", runtime.ParamLocationHeader, valueList[0], &Cookie)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter Cookie: %s", err))
+		}
+
+		params.Cookie = &Cookie
+	}
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.ApproveDownload(ctx, params)
+	return err
 }
 
 // ArchiveEvents converts echo context to params.
@@ -3677,7 +4196,7 @@ func (w *ServerInterfaceWrapper) ArchiveRequests(ctx echo.Context) error {
 	var params ArchiveRequestsParams
 
 	headers := ctx.Request().Header
-	// ------------- Required header parameter "Cookie" -------------
+	// ------------- Optional header parameter "Cookie" -------------
 	if valueList, found := headers[http.CanonicalHeaderKey("Cookie")]; found {
 		var Cookie string
 		n := len(valueList)
@@ -3690,9 +4209,7 @@ func (w *ServerInterfaceWrapper) ArchiveRequests(ctx echo.Context) error {
 			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter Cookie: %s", err))
 		}
 
-		params.Cookie = Cookie
-	} else {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Header parameter Cookie is required, but not found"))
+		params.Cookie = &Cookie
 	}
 
 	// Invoke the callback with all the unmarshalled arguments
@@ -3742,7 +4259,7 @@ func (w *ServerInterfaceWrapper) AuditEvents(ctx echo.Context) error {
 	} else {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Header parameter id is required, but not found"))
 	}
-	// ------------- Required header parameter "Cookie" -------------
+	// ------------- Optional header parameter "Cookie" -------------
 	if valueList, found := headers[http.CanonicalHeaderKey("Cookie")]; found {
 		var Cookie string
 		n := len(valueList)
@@ -3755,9 +4272,7 @@ func (w *ServerInterfaceWrapper) AuditEvents(ctx echo.Context) error {
 			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter Cookie: %s", err))
 		}
 
-		params.Cookie = Cookie
-	} else {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Header parameter Cookie is required, but not found"))
+		params.Cookie = &Cookie
 	}
 
 	// Invoke the callback with all the unmarshalled arguments
@@ -3823,6 +4338,21 @@ func (w *ServerInterfaceWrapper) Comment(ctx echo.Context) error {
 		params.VideoID = VideoID
 	} else {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Header parameter videoID is required, but not found"))
+	}
+	// ------------- Optional header parameter "Cookie" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Cookie")]; found {
+		var Cookie string
+		n := len(valueList)
+		if n != 1 {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Expected one value for Cookie, got %d", n))
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "Cookie", runtime.ParamLocationHeader, valueList[0], &Cookie)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter Cookie: %s", err))
+		}
+
+		params.Cookie = &Cookie
 	}
 
 	// Invoke the callback with all the unmarshalled arguments
@@ -4003,7 +4533,7 @@ func (w *ServerInterfaceWrapper) DeleteArchiveRequest(ctx echo.Context) error {
 	} else {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Header parameter downloadID is required, but not found"))
 	}
-	// ------------- Required header parameter "Cookie" -------------
+	// ------------- Optional header parameter "Cookie" -------------
 	if valueList, found := headers[http.CanonicalHeaderKey("Cookie")]; found {
 		var Cookie string
 		n := len(valueList)
@@ -4016,9 +4546,7 @@ func (w *ServerInterfaceWrapper) DeleteArchiveRequest(ctx echo.Context) error {
 			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter Cookie: %s", err))
 		}
 
-		params.Cookie = Cookie
-	} else {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Header parameter Cookie is required, but not found"))
+		params.Cookie = &Cookie
 	}
 
 	// Invoke the callback with all the unmarshalled arguments
@@ -4050,6 +4578,21 @@ func (w *ServerInterfaceWrapper) DeleteComment(ctx echo.Context) error {
 		params.Id = Id
 	} else {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Header parameter id is required, but not found"))
+	}
+	// ------------- Optional header parameter "Cookie" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Cookie")]; found {
+		var Cookie string
+		n := len(valueList)
+		if n != 1 {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Expected one value for Cookie, got %d", n))
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "Cookie", runtime.ParamLocationHeader, valueList[0], &Cookie)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter Cookie: %s", err))
+		}
+
+		params.Cookie = &Cookie
 	}
 
 	// Invoke the callback with all the unmarshalled arguments
@@ -4110,6 +4653,35 @@ func (w *ServerInterfaceWrapper) Follow(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshalled arguments
 	err = w.Handler.Follow(ctx, id)
+	return err
+}
+
+// GetUnapprovedVideos converts echo context to params.
+func (w *ServerInterfaceWrapper) GetUnapprovedVideos(ctx echo.Context) error {
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetUnapprovedVideosParams
+
+	headers := ctx.Request().Header
+	// ------------- Optional header parameter "Cookie" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Cookie")]; found {
+		var Cookie string
+		n := len(valueList)
+		if n != 1 {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Expected one value for Cookie, got %d", n))
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "Cookie", runtime.ParamLocationHeader, valueList[0], &Cookie)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter Cookie: %s", err))
+		}
+
+		params.Cookie = &Cookie
+	}
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.GetUnapprovedVideos(ctx, params)
 	return err
 }
 
@@ -4195,7 +4767,7 @@ func (w *ServerInterfaceWrapper) NewArchiveRequest(ctx echo.Context) error {
 	} else {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Header parameter url is required, but not found"))
 	}
-	// ------------- Required header parameter "Cookie" -------------
+	// ------------- Optional header parameter "Cookie" -------------
 	if valueList, found := headers[http.CanonicalHeaderKey("Cookie")]; found {
 		var Cookie string
 		n := len(valueList)
@@ -4208,9 +4780,7 @@ func (w *ServerInterfaceWrapper) NewArchiveRequest(ctx echo.Context) error {
 			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter Cookie: %s", err))
 		}
 
-		params.Cookie = Cookie
-	} else {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Header parameter Cookie is required, but not found"))
+		params.Cookie = &Cookie
 	}
 
 	// Invoke the callback with all the unmarshalled arguments
@@ -4229,8 +4799,28 @@ func (w *ServerInterfaceWrapper) Recommendations(ctx echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
 	}
 
+	// Parameter object where we will unmarshal all parameters from the context
+	var params RecommendationsParams
+
+	headers := ctx.Request().Header
+	// ------------- Optional header parameter "Cookie" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Cookie")]; found {
+		var Cookie string
+		n := len(valueList)
+		if n != 1 {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Expected one value for Cookie, got %d", n))
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "Cookie", runtime.ParamLocationHeader, valueList[0], &Cookie)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter Cookie: %s", err))
+		}
+
+		params.Cookie = &Cookie
+	}
+
 	// Invoke the callback with all the unmarshalled arguments
-	err = w.Handler.Recommendations(ctx, id)
+	err = w.Handler.Recommendations(ctx, id, params)
 	return err
 }
 
@@ -4347,6 +4937,21 @@ func (w *ServerInterfaceWrapper) ResetPassword(ctx echo.Context) error {
 	} else {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Header parameter newpassword is required, but not found"))
 	}
+	// ------------- Optional header parameter "Cookie" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Cookie")]; found {
+		var Cookie string
+		n := len(valueList)
+		if n != 1 {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Expected one value for Cookie, got %d", n))
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "Cookie", runtime.ParamLocationHeader, valueList[0], &Cookie)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter Cookie: %s", err))
+		}
+
+		params.Cookie = &Cookie
+	}
 
 	// Invoke the callback with all the unmarshalled arguments
 	err = w.Handler.ResetPassword(ctx, params)
@@ -4378,7 +4983,7 @@ func (w *ServerInterfaceWrapper) RetryArchiveRequest(ctx echo.Context) error {
 	} else {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Header parameter downloadID is required, but not found"))
 	}
-	// ------------- Required header parameter "Cookie" -------------
+	// ------------- Optional header parameter "Cookie" -------------
 	if valueList, found := headers[http.CanonicalHeaderKey("Cookie")]; found {
 		var Cookie string
 		n := len(valueList)
@@ -4391,13 +4996,57 @@ func (w *ServerInterfaceWrapper) RetryArchiveRequest(ctx echo.Context) error {
 			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter Cookie: %s", err))
 		}
 
-		params.Cookie = Cookie
-	} else {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Header parameter Cookie is required, but not found"))
+		params.Cookie = &Cookie
 	}
 
 	// Invoke the callback with all the unmarshalled arguments
 	err = w.Handler.RetryArchiveRequest(ctx, params)
+	return err
+}
+
+// UnapproveDownload converts echo context to params.
+func (w *ServerInterfaceWrapper) UnapproveDownload(ctx echo.Context) error {
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params UnapproveDownloadParams
+
+	headers := ctx.Request().Header
+	// ------------- Required header parameter "videoID" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("videoID")]; found {
+		var VideoID int
+		n := len(valueList)
+		if n != 1 {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Expected one value for videoID, got %d", n))
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "videoID", runtime.ParamLocationHeader, valueList[0], &VideoID)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter videoID: %s", err))
+		}
+
+		params.VideoID = VideoID
+	} else {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Header parameter videoID is required, but not found"))
+	}
+	// ------------- Optional header parameter "Cookie" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Cookie")]; found {
+		var Cookie string
+		n := len(valueList)
+		if n != 1 {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Expected one value for Cookie, got %d", n))
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "Cookie", runtime.ParamLocationHeader, valueList[0], &Cookie)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter Cookie: %s", err))
+		}
+
+		params.Cookie = &Cookie
+	}
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.UnapproveDownload(ctx, params)
 	return err
 }
 
@@ -4597,6 +5246,21 @@ func (w *ServerInterfaceWrapper) Upvote(ctx echo.Context) error {
 	} else {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Header parameter score is required, but not found"))
 	}
+	// ------------- Optional header parameter "Cookie" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Cookie")]; found {
+		var Cookie string
+		n := len(valueList)
+		if n != 1 {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Expected one value for Cookie, got %d", n))
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "Cookie", runtime.ParamLocationHeader, valueList[0], &Cookie)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter Cookie: %s", err))
+		}
+
+		params.Cookie = &Cookie
+	}
 
 	// Invoke the callback with all the unmarshalled arguments
 	err = w.Handler.Upvote(ctx, id, params)
@@ -4634,6 +5298,21 @@ func (w *ServerInterfaceWrapper) UpvoteVideo(ctx echo.Context) error {
 		params.Score = Score
 	} else {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Header parameter score is required, but not found"))
+	}
+	// ------------- Optional header parameter "Cookie" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Cookie")]; found {
+		var Cookie string
+		n := len(valueList)
+		if n != 1 {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Expected one value for Cookie, got %d", n))
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "Cookie", runtime.ParamLocationHeader, valueList[0], &Cookie)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter Cookie: %s", err))
+		}
+
+		params.Cookie = &Cookie
 	}
 
 	// Invoke the callback with all the unmarshalled arguments
@@ -4805,6 +5484,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 		Handler: si,
 	}
 
+	router.POST(baseURL+"/approve-download", wrapper.ApproveDownload)
 	router.GET(baseURL+"/archive-events", wrapper.ArchiveEvents)
 	router.GET(baseURL+"/archive-requests", wrapper.ArchiveRequests)
 	router.GET(baseURL+"/audit-events", wrapper.AuditEvents)
@@ -4817,6 +5497,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.POST(baseURL+"/email-verification", wrapper.EmailValidation)
 	router.GET(baseURL+"/follow-feed", wrapper.FollowFeed)
 	router.POST(baseURL+"/follow/:id", wrapper.Follow)
+	router.GET(baseURL+"/get-unapproved-videos", wrapper.GetUnapprovedVideos)
 	router.POST(baseURL+"/login", wrapper.Login)
 	router.GET(baseURL+"/logout", wrapper.Logout)
 	router.POST(baseURL+"/new-archive-request", wrapper.NewArchiveRequest)
@@ -4824,6 +5505,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.POST(baseURL+"/register", wrapper.Register)
 	router.POST(baseURL+"/reset_password", wrapper.ResetPassword)
 	router.POST(baseURL+"/retry-archive-request", wrapper.RetryArchiveRequest)
+	router.POST(baseURL+"/unapprove-download", wrapper.UnapproveDownload)
 	router.POST(baseURL+"/update-profile", wrapper.UpdateProfile)
 	router.POST(baseURL+"/upload", wrapper.Upload)
 	router.GET(baseURL+"/upvote/:id", wrapper.Upvote)
@@ -4837,44 +5519,45 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"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",
-	"AA==",
+	"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",
+	"ofT01/Pz8wnJGN7+vv1/AAAA///0+DSYekUAAA==",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

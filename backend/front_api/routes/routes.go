@@ -90,6 +90,9 @@ func SetupRoutes(e *echo.Echo, cfg *config.Config, srv *socketio.Server) {
 	e.POST("/api/danmaku", wrapper.CreateDanmaku)
 	e.GET("/api/danmaku/:id", wrapper.GetDanmaku)
 
+	e.GET("/api/get-unapproved-videos", wrapper.GetUnapprovedVideos)
+	e.POST("/api/unapprove-download", wrapper.UnapproveDownload)
+	e.POST("/api/approve-download", wrapper.ApproveDownload)
 }
 
 type Video struct {

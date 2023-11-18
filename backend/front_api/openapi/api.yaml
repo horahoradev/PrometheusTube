@@ -930,3 +930,73 @@ paths:
           description: delete success
         default:
           description: Unexpected error
+  /approve-download:
+    post:
+      summary: Retry archive request
+      operationId: approveDownload
+      parameters:
+        - name: videoID
+          in: header
+          required: true
+          description: video ID to download
+          schema:
+            type: integer
+        - name: Cookie
+          in: header
+          description: auth cookies etc
+          schema:
+            type: string
+      responses:
+        "200":
+          description: delete success
+        default:
+          description: Unexpected error
+  /unapprove-download:
+    post:
+      summary: Retry archive request
+      operationId: unapproveDownload
+      parameters:
+        - name: videoID
+          in: header
+          required: true
+          description: video ID to download
+          schema:
+            type: integer
+        - name: Cookie
+          in: header
+          description: auth cookies etc
+          schema:
+            type: string
+      responses:
+        "200":
+          description: delete success
+        default:
+          description: Unexpected error
+  /get-unapproved-videos:
+    get:
+      summary: Retry archive request
+      operationId: getUnapprovedVideos
+      parameters:
+        - name: Cookie
+          in: header
+          description: auth cookies etc
+          schema:
+            type: string
+      responses:
+        "200":
+          description: list of archive requests
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    VideoID:
+                      type: integer
+                    URL:
+                      type: string
+                    Category:
+                      type: integer
+        default:
+          description: Unexpected error

@@ -80,7 +80,7 @@ func (p *poller) getVideos() ([]*models.VideoDLRequest, error) {
 	for _, url := range urls {
 
 		// TODO : AND is_approved IS true
-		sql := "WITH  j AS (SELECT v.id, v.video_id, v.url, downloads.id AS download_id FROM downloads INNER JOIN downloads_to_videos d ON downloads.id = d.download_id INNER JOIN videos v ON d.video_id = v.id WHERE downloads.url = $1 AND v.dlStatus = 0 LIMIT 10), up as (UPDATE videos SET dlStatus=3 WHERE videos.id IN (select j.id FROM j) RETURNING videos.id)  SELECT id, j.video_id, j.URL, j.download_id FROM j WHERE j.id IN (select * from up);"
+		sql := "WITH  j AS (SELECT v.id, v.video_id, v.url, downloads.id AS download_id FROM downloads INNER JOIN downloads_to_videos d ON downloads.id = d.download_id INNER JOIN videos v ON d.video_id = v.id WHERE downloads.url = $1 AND v.dlStatus = 0 AND is_approved IS true LIMIT 10), up as (UPDATE videos SET dlStatus=3 WHERE videos.id IN (select j.id FROM j) RETURNING videos.id)  SELECT id, j.video_id, j.URL, j.download_id FROM j WHERE j.id IN (select * from up);"
 		res, err := p.Db.Query(sql, url)
 		if err != nil {
 			return nil, err
@@ -121,7 +121,7 @@ func (p *poller) getURLs() ([]string, error) {
 	sql := "select d.url,  count(user_id) * random() AS score FROM " +
 		"user_download_subscriptions s " +
 		"INNER JOIN downloads d ON d.id = s.download_id " +
-		"WHERE d.id IN (select downloads.id from downloads INNER JOIN downloads_to_videos d ON downloads.id = d.download_id INNER JOIN videos v on d.video_id = v.id WHERE v.dlStatus = 0 GROUP BY downloads.id) " +
+		"WHERE d.id IN (select downloads.id from downloads INNER JOIN downloads_to_videos d ON downloads.id = d.download_id INNER JOIN videos v on d.video_id = v.id WHERE v.dlStatus = 0 AND is_approved IS true GROUP BY downloads.id) " +
 		"GROUP BY d.id ORDER BY score desc LIMIT 1"
 	row := p.Db.QueryRow(sql)
 

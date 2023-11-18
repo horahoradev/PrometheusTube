@@ -636,7 +636,7 @@ func (s Server) UpvoteVideo(c echo.Context, id int, params UpvoteVideoParams) er
 	return c.JSON(http.StatusOK, nil)
 }
 
-func (s Server) Recommendations(c echo.Context, id int) error {
+func (s Server) Recommendations(c echo.Context, id int, params RecommendationsParams) error {
 	profile, _ := s.r.getUserProfileInfo(c)
 
 	var userID int64 = 0
@@ -981,4 +981,72 @@ func (s Server) DeleteArchiveRequest(c echo.Context, params DeleteArchiveRequest
 	_, err = s.r.s.DeleteArchivalRequest(context.TODO(), &schedulerproto.DeletionRequest{UserID: uint64(profile.UserID), DownloadID: uint64(downloadIDInt)})
 
 	return err
+}
+
+func (s Server) UnapproveDownload(c echo.Context, params UnapproveDownloadParams) error {
+	profile, err := s.r.getUserProfileInfo(c)
+	if err != nil {
+		return err
+	}
+
+	if profile.Rank < 1 {
+		// privileged user, can show unapproved videos
+		// TODO(ivan): status forbidden
+		return c.String(http.StatusForbidden, "Insufficient user status")
+	}
+
+	_, err = s.r.s.UnapproveVideo(context.Background(), &schedulerproto.ApproveVideoReq{VideoID: fmt.Sprintf("%d", params.VideoID)})
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, nil)
+}
+
+func (s Server) ApproveDownload(c echo.Context, params ApproveDownloadParams) error {
+	profile, err := s.r.getUserProfileInfo(c)
+	if err != nil {
+		return err
+	}
+
+	if profile.Rank < 1 {
+		// privileged user, can show unapproved videos
+		// TODO(ivan): status forbidden
+		return c.String(http.StatusForbidden, "Insufficient user status")
+	}
+
+	_, err = s.r.s.ApproveVideo(context.Background(), &schedulerproto.ApproveVideoReq{VideoID: fmt.Sprintf("%d", params.VideoID)})
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, nil)
+}
+
+func (s Server) GetUnapprovedVideos(c echo.Context, params GetUnapprovedVideosParams) error {
+	profile, err := s.r.getUserProfileInfo(c)
+	if err != nil {
+		return err
+	}
+
+	if profile.Rank != 2 {
+		return c.String(http.StatusForbidden, "Insufficient user status")
+	}
+
+	resp, err := s.r.s.GetUnapprovedVideoList(context.TODO(), &schedulerproto.Empty{})
+	if err != nil {
+		return err
+	}
+
+	var videos []UnapprovedVideo
+	for _, video := range resp.UnapprovedVideos {
+		vid := UnapprovedVideo{
+			VideoID:  video.VideoID,
+			URL:      video.Url,
+			Category: video.Category,
+		}
+		videos = append(videos, vid)
+	}
+
+	return c.JSON(http.StatusOK, videos)
 }
