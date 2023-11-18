@@ -615,7 +615,7 @@ func (v *VideoModel) ApproveVideo(userID, videoID int, mature bool) error {
 
 type Approval struct {
 	VideoID string `db:"video_id"`
-	Mature  string `db:"mature"`
+	Mature  bool   `db:"mature"`
 }
 
 func (v *VideoModel) MarkApprovals() error {
