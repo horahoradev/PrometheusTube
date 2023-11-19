@@ -127,6 +127,12 @@ type EmailValidationParams struct {
 	Email string `json:"email"`
 }
 
+// FollowFeedParams defines parameters for FollowFeed.
+type FollowFeedParams struct {
+	// ShowMature show mature
+	ShowMature bool `json:"showMature"`
+}
+
 // GetUnapprovedVideosParams defines parameters for GetUnapprovedVideos.
 type GetUnapprovedVideosParams struct {
 	// Cookie auth cookies etc
@@ -269,6 +275,9 @@ type VideosParams struct {
 	// Unapproved sort category
 	Unapproved *string `json:"unapproved,omitempty"`
 
+	// ShowMature show mature
+	ShowMature bool `json:"showMature"`
+
 	// PageNumber page number
 	PageNumber *int `json:"pageNumber,omitempty"`
 
@@ -389,7 +398,7 @@ type ClientInterface interface {
 	EmailValidation(ctx context.Context, params *EmailValidationParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// FollowFeed request
-	FollowFeed(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+	FollowFeed(ctx context.Context, params *FollowFeedParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// Follow request
 	Follow(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -587,8 +596,8 @@ func (c *Client) EmailValidation(ctx context.Context, params *EmailValidationPar
 	return c.Client.Do(req)
 }
 
-func (c *Client) FollowFeed(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewFollowFeedRequest(c.Server)
+func (c *Client) FollowFeed(ctx context.Context, params *FollowFeedParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewFollowFeedRequest(c.Server, params)
 	if err != nil {
 		return nil, err
 	}
@@ -1383,7 +1392,7 @@ func NewEmailValidationRequest(server string, params *EmailValidationParams) (*h
 }
 
 // NewFollowFeedRequest generates requests for FollowFeed
-func NewFollowFeedRequest(server string) (*http.Request, error) {
+func NewFollowFeedRequest(server string, params *FollowFeedParams) (*http.Request, error) {
 	var err error
 
 	serverURL, err := url.Parse(server)
@@ -1405,6 +1414,15 @@ func NewFollowFeedRequest(server string) (*http.Request, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	var headerParam0 string
+
+	headerParam0, err = runtime.StyleParamWithLocation("simple", false, "showMature", runtime.ParamLocationHeader, params.ShowMature)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set("showMature", headerParam0)
 
 	return req, nil
 }
@@ -2205,26 +2223,35 @@ func NewVideosRequest(server string, params *VideosParams) (*http.Request, error
 		req.Header.Set("unapproved", headerParam3)
 	}
 
-	if params.PageNumber != nil {
-		var headerParam4 string
+	var headerParam4 string
 
-		headerParam4, err = runtime.StyleParamWithLocation("simple", false, "pageNumber", runtime.ParamLocationHeader, *params.PageNumber)
+	headerParam4, err = runtime.StyleParamWithLocation("simple", false, "showMature", runtime.ParamLocationHeader, params.ShowMature)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set("showMature", headerParam4)
+
+	if params.PageNumber != nil {
+		var headerParam5 string
+
+		headerParam5, err = runtime.StyleParamWithLocation("simple", false, "pageNumber", runtime.ParamLocationHeader, *params.PageNumber)
 		if err != nil {
 			return nil, err
 		}
 
-		req.Header.Set("pageNumber", headerParam4)
+		req.Header.Set("pageNumber", headerParam5)
 	}
 
 	if params.Category != nil {
-		var headerParam5 string
+		var headerParam6 string
 
-		headerParam5, err = runtime.StyleParamWithLocation("simple", false, "category", runtime.ParamLocationHeader, *params.Category)
+		headerParam6, err = runtime.StyleParamWithLocation("simple", false, "category", runtime.ParamLocationHeader, *params.Category)
 		if err != nil {
 			return nil, err
 		}
 
-		req.Header.Set("category", headerParam5)
+		req.Header.Set("category", headerParam6)
 	}
 
 	return req, nil
@@ -2344,7 +2371,7 @@ type ClientWithResponsesInterface interface {
 	EmailValidationWithResponse(ctx context.Context, params *EmailValidationParams, reqEditors ...RequestEditorFn) (*EmailValidationResponse, error)
 
 	// FollowFeed request
-	FollowFeedWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*FollowFeedResponse, error)
+	FollowFeedWithResponse(ctx context.Context, params *FollowFeedParams, reqEditors ...RequestEditorFn) (*FollowFeedResponse, error)
 
 	// Follow request
 	FollowWithResponse(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*FollowResponse, error)
@@ -3273,8 +3300,8 @@ func (c *ClientWithResponses) EmailValidationWithResponse(ctx context.Context, p
 }
 
 // FollowFeedWithResponse request returning *FollowFeedResponse
-func (c *ClientWithResponses) FollowFeedWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*FollowFeedResponse, error) {
-	rsp, err := c.FollowFeed(ctx, reqEditors...)
+func (c *ClientWithResponses) FollowFeedWithResponse(ctx context.Context, params *FollowFeedParams, reqEditors ...RequestEditorFn) (*FollowFeedResponse, error) {
+	rsp, err := c.FollowFeed(ctx, params, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -4189,7 +4216,7 @@ type ServerInterface interface {
 	EmailValidation(ctx echo.Context, params EmailValidationParams) error
 	// Upvote a video
 	// (GET /follow-feed)
-	FollowFeed(ctx echo.Context) error
+	FollowFeed(ctx echo.Context, params FollowFeedParams) error
 	// Upvote a video
 	// (POST /follow/{id})
 	Follow(ctx echo.Context, id int) error
@@ -4833,8 +4860,30 @@ func (w *ServerInterfaceWrapper) EmailValidation(ctx echo.Context) error {
 func (w *ServerInterfaceWrapper) FollowFeed(ctx echo.Context) error {
 	var err error
 
+	// Parameter object where we will unmarshal all parameters from the context
+	var params FollowFeedParams
+
+	headers := ctx.Request().Header
+	// ------------- Required header parameter "showMature" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("showMature")]; found {
+		var ShowMature bool
+		n := len(valueList)
+		if n != 1 {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Expected one value for showMature, got %d", n))
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "showMature", runtime.ParamLocationHeader, valueList[0], &ShowMature)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter showMature: %s", err))
+		}
+
+		params.ShowMature = ShowMature
+	} else {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Header parameter showMature is required, but not found"))
+	}
+
 	// Invoke the callback with all the unmarshalled arguments
-	err = w.Handler.FollowFeed(ctx)
+	err = w.Handler.FollowFeed(ctx, params)
 	return err
 }
 
@@ -5602,6 +5651,23 @@ func (w *ServerInterfaceWrapper) Videos(ctx echo.Context) error {
 
 		params.Unapproved = &Unapproved
 	}
+	// ------------- Required header parameter "showMature" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("showMature")]; found {
+		var ShowMature bool
+		n := len(valueList)
+		if n != 1 {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Expected one value for showMature, got %d", n))
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "showMature", runtime.ParamLocationHeader, valueList[0], &ShowMature)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter showMature: %s", err))
+		}
+
+		params.ShowMature = ShowMature
+	} else {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Header parameter showMature is required, but not found"))
+	}
 	// ------------- Optional header parameter "pageNumber" -------------
 	if valueList, found := headers[http.CanonicalHeaderKey("pageNumber")]; found {
 		var PageNumber int
@@ -5718,45 +5784,46 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"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",
+	"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",
+	"JGV489vm/wEAAP//SB4C+llIAAA=",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

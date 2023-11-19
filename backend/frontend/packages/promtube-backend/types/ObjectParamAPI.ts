@@ -215,6 +215,12 @@ export interface DefaultApiFollowRequest {
 }
 
 export interface DefaultApiFollowFeedRequest {
+    /**
+     * show mature
+     * @type boolean
+     * @memberof DefaultApifollowFeed
+     */
+    showMature: boolean
 }
 
 export interface DefaultApiGetDanmakuRequest {
@@ -483,6 +489,12 @@ export interface DefaultApiVideoDetailRequest {
 
 export interface DefaultApiVideosRequest {
     /**
+     * show mature
+     * @type boolean
+     * @memberof DefaultApivideos
+     */
+    showMature: boolean
+    /**
      * search string
      * @type string
      * @memberof DefaultApivideos
@@ -627,8 +639,8 @@ export class ObjectDefaultApi {
      * Upvote a video
      * @param param the request object
      */
-    public followFeed(param: DefaultApiFollowFeedRequest = {}, options?: Configuration): Promise<Array<Videos200ResponseVideosInner>> {
-        return this.api.followFeed( options).toPromise();
+    public followFeed(param: DefaultApiFollowFeedRequest, options?: Configuration): Promise<Array<Videos200ResponseVideosInner>> {
+        return this.api.followFeed(param.showMature,  options).toPromise();
     }
 
     /**
@@ -763,8 +775,8 @@ export class ObjectDefaultApi {
      * Get list of videos
      * @param param the request object
      */
-    public videos(param: DefaultApiVideosRequest = {}, options?: Configuration): Promise<Videos200Response> {
-        return this.api.videos(param.search, param.sortCategory, param.order, param.unapproved, param.pageNumber, param.category,  options).toPromise();
+    public videos(param: DefaultApiVideosRequest, options?: Configuration): Promise<Videos200Response> {
+        return this.api.videos(param.showMature, param.search, param.sortCategory, param.order, param.unapproved, param.pageNumber, param.category,  options).toPromise();
     }
 
 }

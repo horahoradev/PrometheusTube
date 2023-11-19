@@ -21,7 +21,7 @@ import (
 
 // TODO: test suite for recommender implementations with precision and recall for sample dataset
 type Recommender interface {
-	GetRecommendations(userID int64, vid int64) ([]*videoproto.Video, error)
+	GetRecommendations(userID int64, vid int64, mature bool) ([]*videoproto.Video, error)
 	RemoveRecommendedVideoForUser(userID, videoID int64) error
 }
 
@@ -99,7 +99,7 @@ func (b *BayesianTagSum) GetPopular(n int64) (*NeighborResults, error) {
 	return &ret, err
 }
 
-func (b *BayesianTagSum) GetRecommendations(uid int64, vid int64) ([]*videoproto.Video, error) {
+func (b *BayesianTagSum) GetRecommendations(uid int64, vid int64, mature bool) ([]*videoproto.Video, error) {
 	var ret []*videoproto.Video
 	switch uid {
 	case 0: // TODO lmaooooo
@@ -118,7 +118,7 @@ func (b *BayesianTagSum) GetRecommendations(uid int64, vid int64) ([]*videoproto
 				return nil, err
 			}
 
-			val, err := b.getVideoInfoForRecs(i)
+			val, err := b.getVideoInfoForRecs(i, mature)
 			if err != nil {
 				// what in the fuck
 				log.Error(err)
@@ -128,7 +128,7 @@ func (b *BayesianTagSum) GetRecommendations(uid int64, vid int64) ([]*videoproto
 			idMap[i] = true
 		}
 
-		remainingItems := 15 - len(*r)
+		remainingItems := 20 - len(*r)
 		if remainingItems == 0 {
 			return ret, nil
 		}
@@ -149,7 +149,7 @@ func (b *BayesianTagSum) GetRecommendations(uid int64, vid int64) ([]*videoproto
 				continue
 			}
 
-			val, err := b.getVideoInfoForRecs(i)
+			val, err := b.getVideoInfoForRecs(i, mature)
 			if err != nil {
 				// what in the fuck
 				log.Error(err)
@@ -160,7 +160,7 @@ func (b *BayesianTagSum) GetRecommendations(uid int64, vid int64) ([]*videoproto
 		}
 
 	default:
-		ids, err := b.GetRecommended(uid, 10)
+		ids, err := b.GetRecommended(uid, 20)
 		if err != nil {
 			return nil, err
 		}
@@ -171,7 +171,7 @@ func (b *BayesianTagSum) GetRecommendations(uid int64, vid int64) ([]*videoproto
 				return nil, err
 			}
 
-			val, err := b.getVideoInfoForRecs(i)
+			val, err := b.getVideoInfoForRecs(i, mature)
 			if err != nil {
 				return nil, err
 			}
@@ -186,11 +186,18 @@ func (b *BayesianTagSum) GetRecommendations(uid int64, vid int64) ([]*videoproto
 		ret[i], ret[j] = ret[j], ret[i]
 	}
 
-	return ret, nil
+	return ret[:min(len(ret), 10)], nil
 }
 
-func (b *BayesianTagSum) getVideoInfoForRecs(videoID int64) (*videoproto.Video, error) {
-	sql := "SELECT title, newLink, views, upload_date, userID, video_duration from videos WHERE id = $1" // GOD NO!!! BATCH THIS QUERY!
+func min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
+
+func (b *BayesianTagSum) getVideoInfoForRecs(videoID int64, showMature bool) (*videoproto.Video, error) {
+	sql := "SELECT title, newLink, views, upload_date, userID, video_duration, is_mature from videos WHERE id = $1" // GOD NO!!! BATCH THIS QUERY!
 	rows, err := b.db.Query(sql, videoID)
 	if err != nil {
 		return nil, err
@@ -199,10 +206,16 @@ func (b *BayesianTagSum) getVideoInfoForRecs(videoID int64) (*videoproto.Video, 
 
 	for rows.Next() {
 		var ret videoproto.Video
-		err = rows.Scan(&ret.VideoTitle, &ret.ThumbnailLoc, &ret.Views, &ret.UploadDate, &ret.AuthorID, &ret.VideoDuration)
+		var mature bool
+		err = rows.Scan(&ret.VideoTitle, &ret.ThumbnailLoc, &ret.Views, &ret.UploadDate, &ret.AuthorID, &ret.VideoDuration, &mature)
 		if err != nil {
 			return nil, err
 		}
+
+		if !showMature && mature {
+			return nil, errors.New("filtering mature video")
+		}
+
 		// I should stop doing this...
 		ret.ThumbnailLoc = strings.Replace(ret.ThumbnailLoc, ".mpd", ".thumb", 1)
 

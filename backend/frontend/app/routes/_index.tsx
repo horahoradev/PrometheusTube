@@ -12,6 +12,7 @@ import { Footer } from "app/components/footer";
 import { useLoaderData, NavLink, useSearchParams } from "@remix-run/react";
 import { jwtDecode } from "jwt-decode";
 import { UserState } from "~/state";
+import {parse} from "cookie-parse";
 
 export async function loader({ request }) {
   // let setUserID = UserState((state) => state.setUserID);
@@ -35,11 +36,15 @@ export async function loader({ request }) {
   // setLoggedIn(cookieExists);
   // setUserID(jwtParsed["uid"]);
   const cookie = createCookie("jwt", {});
+  const mature = createCookie("mature", {});
   const cookieExists =
     (await cookie.parse(request.headers.get("Cookie"))) !== null;
-
+  // wtf is with the builtin dogshit cookie api? what the hell, remix?
+  const showMature = parse(request.headers.get("Cookie")).mature ?? false;
+  console.log(showMature);
   let api = useApi();
   let videoData = await api.videos(
+    showMature, // oh GOD
     searchEncoded,
     searchParams.get("sortCategory") ?? undefined,
     searchParams.get("order") ?? "desc",

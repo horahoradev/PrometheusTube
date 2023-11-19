@@ -677,7 +677,7 @@ func (g GRPCServer) GetCommentsForVideo(ctx context.Context, commentListReq *pro
 }
 
 func (g GRPCServer) GetVideoRecommendations(ctx context.Context, req *proto.RecReq) (*proto.RecResp, error) {
-	resp, err := g.VideoModel.GetVideoRecommendations(req.UserId, req.VideoId)
+	resp, err := g.VideoModel.GetVideoRecommendations(req.UserId, req.VideoId, req.ShowMature)
 	if err != nil {
 		return nil, err
 	}

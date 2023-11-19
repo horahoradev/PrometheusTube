@@ -323,9 +323,10 @@ export class ObservableDefaultApi {
 
     /**
      * Upvote a video
+     * @param showMature show mature
      */
-    public followFeed(_options?: Configuration): Observable<Array<Videos200ResponseVideosInner>> {
-        const requestContextPromise = this.requestFactory.followFeed(_options);
+    public followFeed(showMature: boolean, _options?: Configuration): Observable<Array<Videos200ResponseVideosInner>> {
+        const requestContextPromise = this.requestFactory.followFeed(showMature, _options);
 
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
@@ -733,6 +734,7 @@ export class ObservableDefaultApi {
 
     /**
      * Get list of videos
+     * @param showMature show mature
      * @param search search string
      * @param sortCategory sort category
      * @param order sort category
@@ -740,8 +742,8 @@ export class ObservableDefaultApi {
      * @param pageNumber page number
      * @param category category
      */
-    public videos(search?: string, sortCategory?: string, order?: string, unapproved?: string, pageNumber?: number, category?: string, _options?: Configuration): Observable<Videos200Response> {
-        const requestContextPromise = this.requestFactory.videos(search, sortCategory, order, unapproved, pageNumber, category, _options);
+    public videos(showMature: boolean, search?: string, sortCategory?: string, order?: string, unapproved?: string, pageNumber?: number, category?: string, _options?: Configuration): Observable<Videos200Response> {
+        const requestContextPromise = this.requestFactory.videos(showMature, search, sortCategory, order, unapproved, pageNumber, category, _options);
 
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);

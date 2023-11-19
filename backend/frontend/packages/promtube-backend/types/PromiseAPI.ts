@@ -151,9 +151,10 @@ export class PromiseDefaultApi {
 
     /**
      * Upvote a video
+     * @param showMature show mature
      */
-    public followFeed(_options?: Configuration): Promise<Array<Videos200ResponseVideosInner>> {
-        const result = this.api.followFeed(_options);
+    public followFeed(showMature: boolean, _options?: Configuration): Promise<Array<Videos200ResponseVideosInner>> {
+        const result = this.api.followFeed(showMature, _options);
         return result.toPromise();
     }
 
@@ -323,6 +324,7 @@ export class PromiseDefaultApi {
 
     /**
      * Get list of videos
+     * @param showMature show mature
      * @param search search string
      * @param sortCategory sort category
      * @param order sort category
@@ -330,8 +332,8 @@ export class PromiseDefaultApi {
      * @param pageNumber page number
      * @param category category
      */
-    public videos(search?: string, sortCategory?: string, order?: string, unapproved?: string, pageNumber?: number, category?: string, _options?: Configuration): Promise<Videos200Response> {
-        const result = this.api.videos(search, sortCategory, order, unapproved, pageNumber, category, _options);
+    public videos(showMature: boolean, search?: string, sortCategory?: string, order?: string, unapproved?: string, pageNumber?: number, category?: string, _options?: Configuration): Promise<Videos200Response> {
+        const result = this.api.videos(showMature, search, sortCategory, order, unapproved, pageNumber, category, _options);
         return result.toPromise();
     }
 

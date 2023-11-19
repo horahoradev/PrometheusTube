@@ -1048,6 +1048,8 @@ func (m *RecReq) validate(all bool) error {
 
 	// no validation rules for VideoId
 
+	// no validation rules for ShowMature
+
 	if len(errors) > 0 {
 		return RecReqMultiError(errors)
 	}

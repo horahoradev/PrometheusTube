@@ -24,7 +24,7 @@ const style = {
 };
 
 export default function Mature({ closeWindow }) {
-  let setMature = UserState((state) => state.setMature);
+  let setMature = (e)=> Cookies.set('mature',  e);
 
   return (
     <Box

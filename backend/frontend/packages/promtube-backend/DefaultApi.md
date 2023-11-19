@@ -743,7 +743,10 @@ import * as fs from 'fs';
 const configuration = .createConfiguration();
 const apiInstance = new .DefaultApi(configuration);
 
-let body:any = {};
+let body:.DefaultApiFollowFeedRequest = {
+  // boolean | show mature
+  showMature: true,
+};
 
 apiInstance.followFeed(body).then((data:any) => {
   console.log('API called successfully. Returned data: ' + data);
@@ -752,7 +755,10 @@ apiInstance.followFeed(body).then((data:any) => {
 
 
 ### Parameters
-This endpoint does not need any parameter.
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **showMature** | [**boolean**] | show mature | defaults to undefined
 
 
 ### Return type
@@ -1716,6 +1722,8 @@ const configuration = .createConfiguration();
 const apiInstance = new .DefaultApi(configuration);
 
 let body:.DefaultApiVideosRequest = {
+  // boolean | show mature
+  showMature: true,
   // string | search string (optional)
   search: 'YQ==',
   // string | sort category (optional)
@@ -1740,6 +1748,7 @@ apiInstance.videos(body).then((data:any) => {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
+ **showMature** | [**boolean**] | show mature | defaults to undefined
  **search** | [**string**] | search string | (optional) defaults to undefined
  **sortCategory** | [**string**] | sort category | (optional) defaults to undefined
  **order** | [**string**] | sort category | (optional) defaults to undefined

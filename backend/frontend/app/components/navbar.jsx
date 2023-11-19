@@ -4,7 +4,7 @@ import Avatar from "@mui/material/Avatar";
 import Login from "app/components/login";
 import Register from "app/components/register";
 import Mature from "app/components/mature";
-
+import Cookies from "js-cookie";
 import Modal from "@mui/material/Modal";
 import React from "react";
 import { UserState } from "~/state";
@@ -33,7 +33,7 @@ export function Navbar({ displayAvatar }) {
   const handleOpenReset = () => setOpenReset(true);
   const handleCloseReset = () => setOpenReset(false);
 
-  let notPromptedForMaturity = UserState((state) => state.mature==undefined);
+  let notPromptedForMaturity = UserState((state) => Cookies.get("mature") == undefined);
 
   const [openMature, setOpenMature] = React.useState(notPromptedForMaturity);
   const handleOpenMature = () => setOpenMature(true);

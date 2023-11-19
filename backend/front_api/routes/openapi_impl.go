@@ -294,6 +294,7 @@ func (s Server) Videos(ctx echo.Context, params VideosParams) error {
 		ShowUnapproved: showUnapproved,
 		UnapprovedOnly: unapprovedBool,
 		Category:       string(*category),
+		ShowMature:     params.ShowMature,
 	}
 
 	videoList, err := s.r.v.GetVideoList(context.TODO(), &req)
@@ -673,7 +674,7 @@ func (s Server) Recommendations(c echo.Context, id int, params RecommendationsPa
 	return c.JSON(http.StatusOK, recVideos)
 }
 
-func (s Server) FollowFeed(ctx echo.Context) error {
+func (s Server) FollowFeed(ctx echo.Context, params FollowFeedParams) error {
 	profile, err := s.r.getUserProfileInfo(ctx)
 	if err != nil {
 		return err
@@ -685,6 +686,7 @@ func (s Server) FollowFeed(ctx echo.Context) error {
 
 	videos, err := s.r.v.GetFollowFeed(context.Background(), &videoproto.FeedReq{
 		FollowedUsers: users.Users,
+		ShowMature:    params.ShowMature,
 	})
 	if err != nil {
 		return err

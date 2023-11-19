@@ -527,9 +527,16 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
 
     /**
      * Upvote a video
+     * @param showMature show mature
      */
-    public async followFeed(_options?: Configuration): Promise<RequestContext> {
+    public async followFeed(showMature: boolean, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
+
+        // verify required parameter 'showMature' is not null or undefined
+        if (showMature === null || showMature === undefined) {
+            throw new RequiredError("DefaultApi", "followFeed", "showMature");
+        }
+
 
         // Path Params
         const localVarPath = '/follow-feed';
@@ -537,6 +544,9 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.GET);
         requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("showMature", ObjectSerializer.serialize(showMature, "boolean", ""));
 
 
         
@@ -1245,6 +1255,7 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
 
     /**
      * Get list of videos
+     * @param showMature show mature
      * @param search search string
      * @param sortCategory sort category
      * @param order sort category
@@ -1252,8 +1263,14 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
      * @param pageNumber page number
      * @param category category
      */
-    public async videos(search?: string, sortCategory?: string, order?: string, unapproved?: string, pageNumber?: number, category?: string, _options?: Configuration): Promise<RequestContext> {
+    public async videos(showMature: boolean, search?: string, sortCategory?: string, order?: string, unapproved?: string, pageNumber?: number, category?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
+
+        // verify required parameter 'showMature' is not null or undefined
+        if (showMature === null || showMature === undefined) {
+            throw new RequiredError("DefaultApi", "videos", "showMature");
+        }
+
 
 
 
@@ -1279,6 +1296,9 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
 
         // Header Params
         requestContext.setHeaderParam("unapproved", ObjectSerializer.serialize(unapproved, "string", ""));
+
+        // Header Params
+        requestContext.setHeaderParam("showMature", ObjectSerializer.serialize(showMature, "boolean", ""));
 
         // Header Params
         requestContext.setHeaderParam("pageNumber", ObjectSerializer.serialize(pageNumber, "number", ""));

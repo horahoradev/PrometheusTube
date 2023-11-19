@@ -156,6 +156,12 @@ paths:
           description: sort category
           schema:
             type: string
+        - name: showMature
+          in: header
+          required: true
+          description: show mature
+          schema:
+            type: boolean
         - name: pageNumber
           in: header
           required: false
@@ -411,6 +417,12 @@ paths:
           description: user ID
           schema:
             type: integer
+        - name: showMature
+          in: header
+          required: true
+          description: user ID
+          schema:
+            type: boolean
       responses:
         "200":
           description: get video details for a specific video
@@ -533,6 +545,12 @@ paths:
           description: auth cookies etc
           schema:
             type: string
+        - name: showMature
+          in: header
+          required: true
+          description: user ID
+          schema:
+            type: boolean
       responses:
         "200":
           description: list of video recommendations
@@ -581,6 +599,13 @@ paths:
     get:
       summary: Upvote a video
       operationId: followFeed
+      parameters:
+        - name: showMature
+          in: header
+          required: true
+          description: show mature
+          schema:
+            type: boolean
       responses:
         "200":
           description: list of follow feed videos

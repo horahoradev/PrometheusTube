@@ -771,8 +771,8 @@ func (v *VideoModel) GetDanmaku(videoID int) (*videoproto.DanmakuList, error) {
 	return &categories, nil
 }
 
-func (v *VideoModel) GetVideoRecommendations(userID int64, videoID int64) (*videoproto.RecResp, error) {
-	videoList, err := v.r.GetRecommendations(userID, videoID)
+func (v *VideoModel) GetVideoRecommendations(userID int64, videoID int64, mature bool) (*videoproto.RecResp, error) {
+	videoList, err := v.r.GetRecommendations(userID, videoID, mature)
 	if err != nil {
 		log.Errorf("Could not get recommendations. Err: %s", err)
 		return nil, err
