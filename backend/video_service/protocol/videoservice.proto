@@ -59,6 +59,7 @@ message favoriteReq {
 
 message feedReq {
     repeated int64 followed_users = 1;
+    bool showMature = 2;
 }
 
 message CategoryList {
@@ -188,6 +189,7 @@ message VideoQueryConfig {
     bool unapprovedOnly = 7;
     string category = 8;
     // bool favoritesOnly = 9;
+    bool showMature = 10;
 }
 
 

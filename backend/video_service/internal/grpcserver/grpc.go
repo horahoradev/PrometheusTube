@@ -133,7 +133,7 @@ func (g GRPCServer) GetFollowFeed(ctx context.Context, req *proto.FeedReq) (*pro
 	// TODO on pagination
 	// TODO on unapproved
 	// TODO on cardinality
-	videos, _, _, err := g.VideoModel.GetVideoList(proto.SortDirection_desc, 1, 0, "", true, false, proto.OrderCategory_upload_date, "", true, req.FollowedUsers)
+	videos, _, _, err := g.VideoModel.GetVideoList(proto.SortDirection_desc, 1, 0, "", true, false, proto.OrderCategory_upload_date, "", true, req.FollowedUsers, req.ShowMature)
 	return &proto.VideoList{
 		Videos: videos,
 	}, err
@@ -566,7 +566,7 @@ func (g GRPCServer) GetVideoList(ctx context.Context, queryConfig *proto.VideoQu
 	switch queryConfig.OrderBy {
 	case proto.OrderCategory_rating, proto.OrderCategory_views, proto.OrderCategory_upload_date, proto.OrderCategory_my_ratings:
 		videos, n, categories, err := g.VideoModel.GetVideoList(queryConfig.Direction, queryConfig.PageNumber,
-			queryConfig.FromUserID, queryConfig.SearchVal, queryConfig.ShowUnapproved, queryConfig.UnapprovedOnly, queryConfig.OrderBy, queryConfig.Category, false, nil)
+			queryConfig.FromUserID, queryConfig.SearchVal, queryConfig.ShowUnapproved, queryConfig.UnapprovedOnly, queryConfig.OrderBy, queryConfig.Category, false, nil, queryConfig.ShowMature)
 		if err != nil {
 			log.Errorf("Could not get video list. Err: %s", err)
 			return nil, err

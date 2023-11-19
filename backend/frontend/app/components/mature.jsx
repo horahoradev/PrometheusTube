@@ -34,7 +34,7 @@ export default function Mature({ closeWindow }) {
       noValidate
       autoComplete="off"
     >
-      <div className="text-heading-3 flex justify-around">Are you over the age of 18?</div>
+      <div className="text-heading-3 flex justify-around">Are you over the age of 18, and do you want to see NSFW content?</div>
       <div>
         <div className="mt-4">
         <Button
@@ -46,7 +46,7 @@ export default function Mature({ closeWindow }) {
             closeWindow();
           }}
         >
-          Yes, I am over 18
+          Yes, I am over 18, and I wish to see NSFW content
         </Button>
         </div>
         <div className="mt-4">
@@ -59,7 +59,7 @@ export default function Mature({ closeWindow }) {
             closeWindow();
         }}
         >
-          No, I am not over 18
+          No, I am not over 18, or do not wish to see NSFW content
         </Button>
         </div>
       </div>

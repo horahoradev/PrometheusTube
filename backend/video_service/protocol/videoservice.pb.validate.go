@@ -508,6 +508,8 @@ func (m *FeedReq) validate(all bool) error {
 
 	var errors []error
 
+	// no validation rules for ShowMature
+
 	if len(errors) > 0 {
 		return FeedReqMultiError(errors)
 	}
@@ -2684,6 +2686,8 @@ func (m *VideoQueryConfig) validate(all bool) error {
 	// no validation rules for UnapprovedOnly
 
 	// no validation rules for Category
+
+	// no validation rules for ShowMature
 
 	if len(errors) > 0 {
 		return VideoQueryConfigMultiError(errors)

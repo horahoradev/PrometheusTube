@@ -300,8 +300,8 @@ type ESVideoResp struct {
 // For now, this only supports either fromUserID or withTag. Can support both in future, need to switch to
 // goqu and write better tests
 func (v *VideoModel) GetVideoList(direction videoproto.SortDirection, pageNum int64, fromUserID int64, searchVal string, showUnapproved, unapprovedOnly bool,
-	orderCategory videoproto.OrderCategory, category string, followFeed bool, following []int64) ([]*videoproto.Video, int, *videoproto.CategoryList, error) {
-	sql, err := v.generateVideoListSQL(direction, pageNum, fromUserID, searchVal, showUnapproved, unapprovedOnly, orderCategory, category, followFeed, following)
+	orderCategory videoproto.OrderCategory, category string, followFeed bool, following []int64, showMature bool) ([]*videoproto.Video, int, *videoproto.CategoryList, error) {
+	sql, err := v.generateVideoListSQL(direction, pageNum, fromUserID, searchVal, showUnapproved, unapprovedOnly, orderCategory, category, followFeed, following, showMature)
 	if err != nil {
 		return nil, 0, nil, err
 	}
@@ -344,7 +344,7 @@ func (v *VideoModel) GetVideoList(direction videoproto.SortDirection, pageNum in
 	return results, st.Hits.Total.Value, &cl, nil
 }
 
-func (v *VideoModel) generateVideoListSQL(direction videoproto.SortDirection, pageNum, fromUserID int64, searchVal string, showUnapproved, unapprovedOnly bool, orderCategory videoproto.OrderCategory, category string, followFeed bool, following []int64) (string, error) {
+func (v *VideoModel) generateVideoListSQL(direction videoproto.SortDirection, pageNum, fromUserID int64, searchVal string, showUnapproved, unapprovedOnly bool, orderCategory videoproto.OrderCategory, category string, followFeed bool, following []int64, showMature bool) (string, error) {
 	minResultNum := (pageNum - 1) * NumResultsPerPage
 	res := esquery.Search().Size(NumResultsPerPage).From(uint64(minResultNum))
 
@@ -418,6 +418,12 @@ func (v *VideoModel) generateVideoListSQL(direction videoproto.SortDirection, pa
 	} else if unapprovedOnly {
 		queries = append(queries,
 			esquery.Term("is_approved", false))
+	}
+
+	if !showMature {
+		// only show approved
+		queries = append(queries,
+			esquery.Term("is_mature", false))
 	}
 
 	// Only show transcoded videos
