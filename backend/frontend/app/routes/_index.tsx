@@ -55,7 +55,7 @@ export async function loader({ request }) {
   const showMature = parse(request.headers.get("Cookie")).mature ?? false;
   let api = useApi();
   let videoData = await api.videos(
-    true, // oh GOD
+    showMature, // oh GOD
     searchEncoded,
     searchParams.get("sortCategory") ?? undefined,
     searchParams.get("order") ?? "desc",

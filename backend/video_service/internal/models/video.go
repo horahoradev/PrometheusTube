@@ -424,7 +424,7 @@ func (v *VideoModel) generateVideoListSQL(direction videoproto.SortDirection, pa
 	if !showMature {
 		// only show suitable content
 		queries = append(queries,
-			esquery.Term("ismature", false))
+			esquery.Term("is_mature", false))
 	}
 
 	// Only show transcoded videos

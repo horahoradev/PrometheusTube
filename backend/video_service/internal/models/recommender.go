@@ -173,7 +173,9 @@ func (b *BayesianTagSum) GetRecommendations(uid int64, vid int64, mature bool) (
 
 			val, err := b.getVideoInfoForRecs(i, mature)
 			if err != nil {
-				return nil, err
+				// what in the fuck
+				log.Error(err)
+				continue
 			}
 
 			ret = append(ret, val)

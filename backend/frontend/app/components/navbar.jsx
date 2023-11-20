@@ -79,7 +79,7 @@ export function Navbar({ displayAvatar, handleRefresh }) {
         <input
           placeholder="Search"
           value={searchParams.get("search") ?? ""}
-          className="w-[calc(100%-6rem)] bg-white-300 rounded-full w-full pl-3 p-1 float-left"
+          className="w-[calc(100%-24px)] bg-white-300 rounded-full w-full pl-3 p-1 float-left"
           onChange={async (event) => {
             setSearchParams((prev) => {
               prev.set("search", event.currentTarget.value);
