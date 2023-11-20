@@ -26,21 +26,8 @@ export const links: LinksFunction = () => [
   { rel: "stylesheet", href: videojs },
 ];
 
-export const loader = async () => {
-  const contacts = await getContacts();
-  return json({ contacts });
-};
-
-import { createEmptyContact, getContacts } from "./data";
-
-export const action = async () => {
-  const contact = await createEmptyContact();
-  return json({ contact });
-};
 
 export default function App() {
-  const { contacts } = useLoaderData<typeof loader>();
-  const navigation = useNavigation();
   const theme = createTheme({
     palette: {
       secondary: {
@@ -56,8 +43,11 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <html lang="en">
         <head>
-          <meta charSet="utf-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta charSet="utf-8" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1"
+        />
           <Meta />
           <Links />
         </head>

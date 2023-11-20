@@ -724,14 +724,21 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
     /**
      * Get list of videos
      * @param id video ID
+     * @param showMature user ID
      * @param cookie auth cookies etc
      */
-    public async recommendations(id: number, cookie?: string, _options?: Configuration): Promise<RequestContext> {
+    public async recommendations(id: number, showMature: boolean, cookie?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'id' is not null or undefined
         if (id === null || id === undefined) {
             throw new RequiredError("DefaultApi", "recommendations", "id");
+        }
+
+
+        // verify required parameter 'showMature' is not null or undefined
+        if (showMature === null || showMature === undefined) {
+            throw new RequiredError("DefaultApi", "recommendations", "showMature");
         }
 
 
@@ -746,6 +753,9 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
 
         // Header Params
         requestContext.setHeaderParam("Cookie", ObjectSerializer.serialize(cookie, "string", ""));
+
+        // Header Params
+        requestContext.setHeaderParam("showMature", ObjectSerializer.serialize(showMature, "boolean", ""));
 
 
         
@@ -1194,13 +1204,20 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
     /**
      * Get user video data
      * @param id user ID
+     * @param showMature user ID
      */
-    public async users(id: number, _options?: Configuration): Promise<RequestContext> {
+    public async users(id: number, showMature: boolean, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'id' is not null or undefined
         if (id === null || id === undefined) {
             throw new RequiredError("DefaultApi", "users", "id");
+        }
+
+
+        // verify required parameter 'showMature' is not null or undefined
+        if (showMature === null || showMature === undefined) {
+            throw new RequiredError("DefaultApi", "users", "showMature");
         }
 
 
@@ -1211,6 +1228,9 @@ export class DefaultApiRequestFactory extends BaseAPIRequestFactory {
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.GET);
         requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("showMature", ObjectSerializer.serialize(showMature, "boolean", ""));
 
 
         

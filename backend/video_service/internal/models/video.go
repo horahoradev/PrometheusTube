@@ -277,6 +277,7 @@ type ESVideoResp struct {
 				Transcoded    bool     `json:"transcoded"`
 				TooBig        bool     `json:"too_big"`
 				IsApproved    bool     `json:"is_approved"`
+				IsMature      bool     `json:"is_mature"`
 				ZdbCtid       int64    `json:"zdb_ctid"`
 				ZdbCmin       int      `json:"zdb_cmin"`
 				ZdbCmax       int      `json:"zdb_cmax"`
@@ -421,9 +422,9 @@ func (v *VideoModel) generateVideoListSQL(direction videoproto.SortDirection, pa
 	}
 
 	if !showMature {
-		// only show approved
+		// only show suitable content
 		queries = append(queries,
-			esquery.Term("is_mature", false))
+			esquery.Term("ismature", false))
 	}
 
 	// Only show transcoded videos
@@ -447,6 +448,8 @@ func (v *VideoModel) generateVideoListSQL(direction videoproto.SortDirection, pa
 	if err != nil {
 		return "", err
 	}
+
+	// log.Errorf(string(payload))
 
 	return string(payload), err
 }
@@ -626,7 +629,7 @@ type Approval struct {
 
 func (v *VideoModel) MarkApprovals() error {
 	var approvals []Approval
-	sql := "SELECT video_id, mature FROM approvals GROUP BY video_id HAVING count(*) >= 1"
+	sql := "SELECT video_id, mature FROM approvals GROUP BY (video_id, mature) HAVING count(*) >= 1"
 
 	if err := v.db.Select(&approvals, sql); err != nil {
 		log.Errorf("Failed to retrieve video approvals. Err: %s", err)

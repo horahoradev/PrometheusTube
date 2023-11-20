@@ -10,6 +10,7 @@ import { Users200Response } from "node_modules/promtube-backend";
 import { useLoaderData, NavLink, useSearchParams } from "@remix-run/react";
 import { json, redirect, createCookie } from "@remix-run/node";
 import { Footer } from "~/components/footer";
+import {parse} from "cookie-parse";
 const VideocardList = loadable(() => import("app/components/videocard"), {
   ssr: false,
 });
@@ -18,9 +19,10 @@ export async function loader({ request, params }) {
   const cookie = createCookie("jwt", {});
   const cookieExists =
     (await cookie.parse(request.headers.get("Cookie"))) !== null;
+  const showMature = parse(request.headers.get("Cookie")).mature ?? false;
 
   let api = useApi();
-  let userData: Users200Response = await api.users(params.id);
+  let userData: Users200Response = await api.users(params.id, showMature);
 
   return { user: userData, banner: cookieExists };
 }

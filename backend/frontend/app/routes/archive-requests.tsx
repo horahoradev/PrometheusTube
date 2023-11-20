@@ -79,7 +79,7 @@ export default function Video() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {events.map((row) => (
+          {events != null ? events.map((row) => (
             <TableRow
               key={row.downloadID}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -96,7 +96,7 @@ export default function Video() {
               <TableCell align="left">{row.lastSynced}</TableCell>
 
             </TableRow>
-          ))}
+          )) : null}
         </TableBody>
       </Table>
     </TableContainer>

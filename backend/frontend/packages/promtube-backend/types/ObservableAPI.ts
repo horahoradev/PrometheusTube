@@ -463,10 +463,11 @@ export class ObservableDefaultApi {
     /**
      * Get list of videos
      * @param id video ID
+     * @param showMature user ID
      * @param cookie auth cookies etc
      */
-    public recommendations(id: number, cookie?: string, _options?: Configuration): Observable<Array<Videos200ResponseVideosInner>> {
-        const requestContextPromise = this.requestFactory.recommendations(id, cookie, _options);
+    public recommendations(id: number, showMature: boolean, cookie?: string, _options?: Configuration): Observable<Array<Videos200ResponseVideosInner>> {
+        const requestContextPromise = this.requestFactory.recommendations(id, showMature, cookie, _options);
 
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
@@ -689,9 +690,10 @@ export class ObservableDefaultApi {
     /**
      * Get user video data
      * @param id user ID
+     * @param showMature user ID
      */
-    public users(id: number, _options?: Configuration): Observable<Users200Response> {
-        const requestContextPromise = this.requestFactory.users(id, _options);
+    public users(id: number, showMature: boolean, _options?: Configuration): Observable<Users200Response> {
+        const requestContextPromise = this.requestFactory.users(id, showMature, _options);
 
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);

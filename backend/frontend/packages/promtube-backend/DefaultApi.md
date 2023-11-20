@@ -1069,6 +1069,8 @@ const apiInstance = new .DefaultApi(configuration);
 let body:.DefaultApiRecommendationsRequest = {
   // number | video ID
   id: 1,
+  // boolean | user ID
+  showMature: true,
   // string | auth cookies etc (optional)
   cookie: "Cookie_example",
 };
@@ -1084,6 +1086,7 @@ apiInstance.recommendations(body).then((data:any) => {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | [**number**] | video ID | defaults to undefined
+ **showMature** | [**boolean**] | user ID | defaults to undefined
  **cookie** | [**string**] | auth cookies etc | (optional) defaults to undefined
 
 
@@ -1616,6 +1619,8 @@ const apiInstance = new .DefaultApi(configuration);
 let body:.DefaultApiUsersRequest = {
   // number | user ID
   id: 1,
+  // boolean | user ID
+  showMature: true,
 };
 
 apiInstance.users(body).then((data:any) => {
@@ -1629,6 +1634,7 @@ apiInstance.users(body).then((data:any) => {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | [**number**] | user ID | defaults to undefined
+ **showMature** | [**boolean**] | user ID | defaults to undefined
 
 
 ### Return type

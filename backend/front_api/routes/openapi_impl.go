@@ -479,7 +479,7 @@ func (s Server) Comments(c echo.Context, videoIDInt int) error {
 	return c.JSON(http.StatusOK, &commentList)
 }
 
-func (s Server) Users(c echo.Context, idInt int) error {
+func (s Server) Users(c echo.Context, idInt int, params UsersParams) error {
 	getUserReq := userproto.GetUserFromIDRequest{UserID: int64(idInt)}
 
 	profile, err := s.r.u.GetUserFromID(context.TODO(), &getUserReq)
@@ -496,6 +496,8 @@ func (s Server) Users(c echo.Context, idInt int) error {
 		SearchVal:      "",
 		FromUserID:     int64(idInt),
 		ShowUnapproved: true,
+		ShowMature:     params.ShowMature,
+		UnapprovedOnly: false,
 	}
 
 	videoList, err := s.r.v.GetVideoList(context.TODO(), &videoQueryConfig)
@@ -645,8 +647,9 @@ func (s Server) Recommendations(c echo.Context, id int, params RecommendationsPa
 		userID = profile.UserID
 	}
 	recResp, err := s.r.v.GetVideoRecommendations(context.Background(), &videoproto.RecReq{
-		UserId:  userID,
-		VideoId: int64(id),
+		UserId:     userID,
+		VideoId:    int64(id),
+		ShowMature: params.ShowMature,
 	})
 	if err != nil {
 		return err

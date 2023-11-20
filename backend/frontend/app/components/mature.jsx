@@ -23,7 +23,7 @@ const style = {
   p: 3,
 };
 
-export default function Mature({ closeWindow }) {
+export default function Mature({ closeWindow, handleRefresh}) {
   let setMature = (e)=> Cookies.set('mature',  e);
 
   return (
@@ -34,7 +34,8 @@ export default function Mature({ closeWindow }) {
       noValidate
       autoComplete="off"
     >
-      <div className="text-heading-3 flex justify-around">Are you over the age of 18, and do you want to see NSFW content?</div>
+      <div className="text-heading-3 flex justify-around">Are you over the age of 18?</div>
+      <div>The answer to this question determines whether NSFW content will be visible to you </div>
       <div>
         <div className="mt-4">
         <Button
@@ -44,9 +45,10 @@ export default function Mature({ closeWindow }) {
           onClick={() => {
             setMature(true);
             closeWindow();
+            handleRefresh();
           }}
         >
-          Yes, I am over 18, and I wish to see NSFW content
+          Yes, I am over age 18
         </Button>
         </div>
         <div className="mt-4">
@@ -57,10 +59,23 @@ export default function Mature({ closeWindow }) {
           onClick={() => {
             setMature(false);
             closeWindow();
+            handleRefresh();
         }}
         >
-          No, I am not over 18, or do not wish to see NSFW content
+          No, I am not over 18, but I am at least age 13, OR I am at least 18, but do not wish to see NSFW content.
         </Button>
+
+        <div className="mt-4 mb-4">
+          <NavLink to="https://www.roblox.com/">
+            <Button
+            color="secondary"
+            className="text-single-100 w-full mt-4"
+            variant="contained"
+          >
+            I am not at least age 13
+          </Button>
+        </NavLink>
+        </div>
         </div>
       </div>
     </Box>

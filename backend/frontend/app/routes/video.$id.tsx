@@ -10,20 +10,39 @@ import { ClientOnly } from "remix-utils/client-only";
 
 import { useApi } from "~/lib/oapi";
 import { useLoaderData, NavLink, useSearchParams } from "@remix-run/react";
-
+import {parse} from "cookie-parse";
+import { useState, useEffect } from "react";
 import loadable from "@loadable/component";
 import { VideoDetail200Response } from "node_modules/promtube-backend";
 import { Navbar } from "app/components/navbar";
 import { Footer } from "~/components/footer";
+import { MetaFunction } from "@remix-run/node";
+import { UserState } from "~/state";
+import { Button } from "@mui/material";
 const VideoPlayer = loadable(() => import("app/components/videoplayer"), {
   ssr: false,
 });
 
+export const meta: MetaFunction<typeof loader> = ({
+  data,
+}) => {
+  return [ 
+    {title: data.video.title},
+    {description: data.video.videoDescription},
+    {"twitter:card": "summary_large_image"},
+    {"og:description": data.video.videoDescription},
+    {"og:image": data.video.thumbnail},
+    {"og:title": data.video.title},
+   ];
+};
+
 export async function loader({ request, params }: LoaderFunctionArgs) {
   let api = useApi();
   var detail = await api.videoDetail(params.id);
+  const showMature = parse(request.headers.get("Cookie")).mature ?? false;
   var recommendations = await api.recommendations(
     params.id,
+    showMature,
     request.headers.get("Cookie")
   );
 
@@ -43,8 +62,16 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 }
 
 export default function Video() {
+  let admin = UserState((state) => state.admin);
   const { video, banner, recommendations, cookie, comments } =
     useLoaderData<typeof loader>();
+  let api = useApi();
+
+  const [isHydrated, setIsHydrated] = useState(false);
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
+
 
   const playerRef = React.useRef(null);
 
@@ -89,6 +116,17 @@ export default function Video() {
             <RecommendationsList videos={recommendations}></RecommendationsList>
           </div>
         </div>
+        {isHydrated && admin ? <div><div className="mt-4"><Button          color="primary"
+          className="text-single-100 w-full"
+          variant="contained" onClick={()=>api.approveVideo(video.videoID, true)}>Approve, mature content</Button>
+          </div>
+          <div className="mt-4">
+
+        <Button          color="primary"
+          className="text-single-100 w-full"
+          variant="contained" onClick={()=>api.approveVideo(video.videoID, false)}>Approve, suitable for ages under 18</Button>
+      </div>
+      </div> : null }
       </div>
       <Footer displayAvatar={true}></Footer>
     </div>

@@ -282,6 +282,12 @@ export interface DefaultApiRecommendationsRequest {
      */
     id: number
     /**
+     * user ID
+     * @type boolean
+     * @memberof DefaultApirecommendations
+     */
+    showMature: boolean
+    /**
      * auth cookies etc
      * @type string
      * @memberof DefaultApirecommendations
@@ -476,6 +482,12 @@ export interface DefaultApiUsersRequest {
      * @memberof DefaultApiusers
      */
     id: number
+    /**
+     * user ID
+     * @type boolean
+     * @memberof DefaultApiusers
+     */
+    showMature: boolean
 }
 
 export interface DefaultApiVideoDetailRequest {
@@ -688,7 +700,7 @@ export class ObjectDefaultApi {
      * @param param the request object
      */
     public recommendations(param: DefaultApiRecommendationsRequest, options?: Configuration): Promise<Array<Videos200ResponseVideosInner>> {
-        return this.api.recommendations(param.id, param.cookie,  options).toPromise();
+        return this.api.recommendations(param.id, param.showMature, param.cookie,  options).toPromise();
     }
 
     /**
@@ -760,7 +772,7 @@ export class ObjectDefaultApi {
      * @param param the request object
      */
     public users(param: DefaultApiUsersRequest, options?: Configuration): Promise<Users200Response> {
-        return this.api.users(param.id,  options).toPromise();
+        return this.api.users(param.id, param.showMature,  options).toPromise();
     }
 
     /**

@@ -207,10 +207,11 @@ export class PromiseDefaultApi {
     /**
      * Get list of videos
      * @param id video ID
+     * @param showMature user ID
      * @param cookie auth cookies etc
      */
-    public recommendations(id: number, cookie?: string, _options?: Configuration): Promise<Array<Videos200ResponseVideosInner>> {
-        const result = this.api.recommendations(id, cookie, _options);
+    public recommendations(id: number, showMature: boolean, cookie?: string, _options?: Configuration): Promise<Array<Videos200ResponseVideosInner>> {
+        const result = this.api.recommendations(id, showMature, cookie, _options);
         return result.toPromise();
     }
 
@@ -307,9 +308,10 @@ export class PromiseDefaultApi {
     /**
      * Get user video data
      * @param id user ID
+     * @param showMature user ID
      */
-    public users(id: number, _options?: Configuration): Promise<Users200Response> {
-        const result = this.api.users(id, _options);
+    public users(id: number, showMature: boolean, _options?: Configuration): Promise<Users200Response> {
+        const result = this.api.users(id, showMature, _options);
         return result.toPromise();
     }
 

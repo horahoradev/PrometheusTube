@@ -1,5 +1,5 @@
 import { NavLink, useSearchParams } from "@remix-run/react";
-import { BellAlertIcon } from "@heroicons/react/24/outline";
+import { BellAlertIcon, Cog6ToothIcon } from "@heroicons/react/24/outline";
 import Avatar from "@mui/material/Avatar";
 import Login from "app/components/login";
 import Register from "app/components/register";
@@ -13,7 +13,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ChangePassword from "./changepassword";
 
-export function Navbar({ displayAvatar }) {
+export function Navbar({ displayAvatar, handleRefresh }) {
   const [isHydrated, setIsHydrated] = useState(false);
   useEffect(() => {
     setIsHydrated(true);
@@ -35,7 +35,7 @@ export function Navbar({ displayAvatar }) {
 
   let notPromptedForMaturity = UserState((state) => Cookies.get("mature") == undefined);
 
-  const [openMature, setOpenMature] = React.useState(notPromptedForMaturity);
+  const [openMature, setOpenMature] = React.useState(false);
   const handleOpenMature = () => setOpenMature(true);
   const handleCloseMature = () => setOpenMature(false);
 
@@ -57,10 +57,12 @@ export function Navbar({ displayAvatar }) {
 
   let setLoggedIn = UserState((state) => state.setLoggedIn);
   let setUID = UserState((state) => state.setUID);
+  let setAdmin = UserState((state) => state.setAdmin);
 
   function handleLogout() {
     setLoggedIn(false);
     setUID(null); // TODO clear the jwt cookie
+    setAdmin(false);
   }
 
   return (
@@ -77,7 +79,7 @@ export function Navbar({ displayAvatar }) {
         <input
           placeholder="Search"
           value={searchParams.get("search") ?? ""}
-          className="w-full bg-white-300 rounded-full w-full pl-3 p-1"
+          className="w-[calc(100%-6rem)] bg-white-300 rounded-full w-full pl-3 p-1 float-left"
           onChange={async (event) => {
             setSearchParams((prev) => {
               prev.set("search", event.currentTarget.value);
@@ -85,6 +87,7 @@ export function Navbar({ displayAvatar }) {
             });
           }}
         />
+        <Cog6ToothIcon onClick={handleOpenMature} className="w-5 mt-1 ml-1"></Cog6ToothIcon>
       </div>
       <div className="inline-block text-right w-36 ">
         {!loggedIn || !isHydrated ? (
@@ -173,11 +176,11 @@ export function Navbar({ displayAvatar }) {
       </Modal>
       <Modal
         open={openMature}
-        onClose={handleCloseLogin}
-        aria-labelledby="modal-modal-login"
-        aria-describedby="modal-modal-login"
+        onClose={handleCloseMature}
+        aria-labelledby="modal-modal-mature"
+        aria-describedby="modal-modal-mature"
       >
-        <Mature closeWindow={handleCloseMature}></Mature>
+        <Mature handleRefresh={handleRefresh} closeWindow={handleCloseMature}></Mature>
       </Modal>
       <Modal
         open={openReset}

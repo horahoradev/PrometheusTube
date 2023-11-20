@@ -11,9 +11,7 @@ import { useLoaderData } from "@remix-run/react";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useApi } from "~/lib/oapi";
 import { Videos200ResponseVideosInner } from "node_modules/promtube-backend";
-import { json } from "@remix-run/node";
-
-
+import { json, MetaFunction } from "@remix-run/node";
 
 export default function VideocardList({videos}) {
   return (

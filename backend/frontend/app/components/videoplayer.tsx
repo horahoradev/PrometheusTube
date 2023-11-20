@@ -8,6 +8,9 @@ import { NavLink } from "@remix-run/react";
 import { VideoDetail200Response } from "node_modules/promtube-backend";
 import { useApi } from "~/lib/oapi";
 import moment from "moment";
+import { UserState } from "~/state";
+
+
 export const VideoPlayer = ({options, onReady, videoInp, Cookie, comments}) => {
   const videoRef = React.useRef(null);
   const playerRef = React.useRef(null);

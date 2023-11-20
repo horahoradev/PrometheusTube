@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	baseURL    = "https://prometheus.tube/api"
+	baseURL    = "http://localhost:9000/api"
 	sm9TestTag = "今年レンコンコマンダー常盤"
 )
 
@@ -141,7 +141,7 @@ func pageHasVideos(client *http.Client, tag string, count int) error {
 }
 
 func makeArchiveRequest(client *http.Client, inpURL string) error {
-	response, err := client.PostForm(baseURL+"/archiverequests", url.Values{
+	response, err := client.PostForm(baseURL+"/new-archive-request", url.Values{
 		"url": {inpURL},
 	})
 

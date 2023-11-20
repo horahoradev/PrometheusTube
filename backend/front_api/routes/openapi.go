@@ -161,6 +161,9 @@ type NewArchiveRequestParams struct {
 type RecommendationsParams struct {
 	// Cookie auth cookies etc
 	Cookie *string `json:"Cookie,omitempty"`
+
+	// ShowMature user ID
+	ShowMature bool `json:"showMature"`
 }
 
 // RegisterParams defines parameters for Register.
@@ -259,6 +262,12 @@ type UpvoteVideoParams struct {
 
 	// Cookie auth cookies etc
 	Cookie *string `json:"Cookie,omitempty"`
+}
+
+// UsersParams defines parameters for Users.
+type UsersParams struct {
+	// ShowMature user ID
+	ShowMature bool `json:"showMature"`
 }
 
 // VideosParams defines parameters for Videos.
@@ -443,7 +452,7 @@ type ClientInterface interface {
 	UpvoteVideo(ctx context.Context, id int, params *UpvoteVideoParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// Users request
-	Users(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*http.Response, error)
+	Users(ctx context.Context, id int, params *UsersParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// Videos request
 	Videos(ctx context.Context, params *VideosParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -776,8 +785,8 @@ func (c *Client) UpvoteVideo(ctx context.Context, id int, params *UpvoteVideoPar
 	return c.Client.Do(req)
 }
 
-func (c *Client) Users(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewUsersRequest(c.Server, id)
+func (c *Client) Users(ctx context.Context, id int, params *UsersParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUsersRequest(c.Server, id, params)
 	if err != nil {
 		return nil, err
 	}
@@ -1660,6 +1669,15 @@ func NewRecommendationsRequest(server string, id int, params *RecommendationsPar
 		req.Header.Set("Cookie", headerParam0)
 	}
 
+	var headerParam1 string
+
+	headerParam1, err = runtime.StyleParamWithLocation("simple", false, "showMature", runtime.ParamLocationHeader, params.ShowMature)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set("showMature", headerParam1)
+
 	return req, nil
 }
 
@@ -2122,7 +2140,7 @@ func NewUpvoteVideoRequest(server string, id int, params *UpvoteVideoParams) (*h
 }
 
 // NewUsersRequest generates requests for Users
-func NewUsersRequest(server string, id int) (*http.Request, error) {
+func NewUsersRequest(server string, id int, params *UsersParams) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -2151,6 +2169,15 @@ func NewUsersRequest(server string, id int) (*http.Request, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	var headerParam0 string
+
+	headerParam0, err = runtime.StyleParamWithLocation("simple", false, "showMature", runtime.ParamLocationHeader, params.ShowMature)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set("showMature", headerParam0)
 
 	return req, nil
 }
@@ -2416,7 +2443,7 @@ type ClientWithResponsesInterface interface {
 	UpvoteVideoWithResponse(ctx context.Context, id int, params *UpvoteVideoParams, reqEditors ...RequestEditorFn) (*UpvoteVideoResponse, error)
 
 	// Users request
-	UsersWithResponse(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*UsersResponse, error)
+	UsersWithResponse(ctx context.Context, id int, params *UsersParams, reqEditors ...RequestEditorFn) (*UsersResponse, error)
 
 	// Videos request
 	VideosWithResponse(ctx context.Context, params *VideosParams, reqEditors ...RequestEditorFn) (*VideosResponse, error)
@@ -3435,8 +3462,8 @@ func (c *ClientWithResponses) UpvoteVideoWithResponse(ctx context.Context, id in
 }
 
 // UsersWithResponse request returning *UsersResponse
-func (c *ClientWithResponses) UsersWithResponse(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*UsersResponse, error) {
-	rsp, err := c.Users(ctx, id, reqEditors...)
+func (c *ClientWithResponses) UsersWithResponse(ctx context.Context, id int, params *UsersParams, reqEditors ...RequestEditorFn) (*UsersResponse, error) {
+	rsp, err := c.Users(ctx, id, params, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -4261,7 +4288,7 @@ type ServerInterface interface {
 	UpvoteVideo(ctx echo.Context, id int, params UpvoteVideoParams) error
 	// Get user video data
 	// (GET /users/{id})
-	Users(ctx echo.Context, id int) error
+	Users(ctx echo.Context, id int, params UsersParams) error
 	// Get list of videos
 	// (GET /videos)
 	Videos(ctx echo.Context, params VideosParams) error
@@ -5065,6 +5092,23 @@ func (w *ServerInterfaceWrapper) Recommendations(ctx echo.Context) error {
 
 		params.Cookie = &Cookie
 	}
+	// ------------- Required header parameter "showMature" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("showMature")]; found {
+		var ShowMature bool
+		n := len(valueList)
+		if n != 1 {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Expected one value for showMature, got %d", n))
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "showMature", runtime.ParamLocationHeader, valueList[0], &ShowMature)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter showMature: %s", err))
+		}
+
+		params.ShowMature = ShowMature
+	} else {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Header parameter showMature is required, but not found"))
+	}
 
 	// Invoke the callback with all the unmarshalled arguments
 	err = w.Handler.Recommendations(ctx, id, params)
@@ -5578,8 +5622,30 @@ func (w *ServerInterfaceWrapper) Users(ctx echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
 	}
 
+	// Parameter object where we will unmarshal all parameters from the context
+	var params UsersParams
+
+	headers := ctx.Request().Header
+	// ------------- Required header parameter "showMature" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("showMature")]; found {
+		var ShowMature bool
+		n := len(valueList)
+		if n != 1 {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Expected one value for showMature, got %d", n))
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "showMature", runtime.ParamLocationHeader, valueList[0], &ShowMature)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter showMature: %s", err))
+		}
+
+		params.ShowMature = ShowMature
+	} else {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Header parameter showMature is required, but not found"))
+	}
+
 	// Invoke the callback with all the unmarshalled arguments
-	err = w.Handler.Users(ctx, id)
+	err = w.Handler.Users(ctx, id, params)
 	return err
 }
 
@@ -5810,20 +5876,20 @@ var swaggerSpec = []string{
 	"6AunUnWObl19WKtPNAvQw4znx3p0uCq7g6Gc86EkzjuJb/4w5ZJoWAgjIW9P9PY6bEevuyl6IMmIxYId",
 	"CGfXdrjJG4OZGuUiCajV2Iv9eUQ8G2Cl1/aah6l88X6qoYTUKCrUFuzDKvUoJO3CuZWBWmH1YZ/XYmHz",
 	"aHfawktNiUwHLfLaDbdcp8jKtuc8i7uu1a7TcLcL5fDYvuL4Co/HlRuZjE1dkTMIok3G3RoNJ79PYfdD",
-	"4p6TMa/NS3DprcvPGnrTt3Xi07YY3uKR4Hui1xjbHEh2YNi1XV2bXBVIXzCl3dmD3//cFhQt0j2DLdfT",
-	"KN/pLdSdMLY9k9Xx1egen+0SGkWClu77jwws46LJv0V36cj6TqadDuVWAQy0W++gQJKNhgX8FOhpqaMD",
-	"IFSgbypVHkSiiCnaUrtXVyKm/SDDxJAmZhwe+2F26phbSBxFS8IXXbWvQFeiytWv5bp9KmSz9Pfea7Pl",
-	"mmLmZVuvZSHc4kZ4WQe/3wk/aXs8SynRMMwP9Q/ox9Ld5GQNujH+bit8Pz+8H31UazgvgNNwWlGO9sx1",
-	"xqReGhmFGG8TdIwlMybCXESnvbVCpgMDykHTTy/NzmhA8ZMqJi4Q2uA50jbuop40a7JQwYsKbiwswrJk",
-	"2asRdjL3gd9nuY9ugtck3GCX/DC/01I9CwWvGkmX+wQNSe/W+JGnMNZTXQi63ikqkyzWLCVSjwygh5Ro",
-	"Uq8r6+WkQVNxz6lUX2UKjBO7uEaF7hZrtjo7cavI4R0R25nYaj2721GH2xCuZX386WbP/Qe3VKQiceDk",
-	"KR9s5FOV0j86YOcHAj24Q1OJ23ZgbssG3ltKtk8bzl/cYo76iOstaPsV5Wf9qdt3kmTU39BUfDAkr+GE",
-	"rXW3r+6VL5jwhtGLMlPyjX52CZxv6F+ChS8u3ZAF48XdJs9q8s8Hbur3lKoWnvvy49/zq53wf6iVl+fL",
-	"N+6qbOjsa+97gIrpQ5ElB1uS6r2L2qaL6gndP+Y+sNetN5wTtzsabnWA6Ihwp3KnVaPTEF1WNH33UYV0",
-	"f/Y9b3V4f+TkL3eXZrD/7cxxn6od9aVM+1S+c1H5zLCRoyr/K3gLQVLGScz02u/N/X6v2ZO8B5L3QNIQ",
-	"SOpnaIhwitISM7nX7/+Uzv0+nDE6qdnodoqioBRrvw7gIBrLr8CqwUqXX24mIajVLexoJJOFOqY3tIX9",
-	"I4Hvyv9glmvsfLKtyADNXTYzRDOr/Gf5iyYup7LQH5XI7dmgoQC5Ksyp+kd6xqNRLCISL4XS41/Pz89H",
-	"JGV489vm/wEAAP//SB4C+llIAAA=",
+	"4p6TMa/NS3DprcvPGnrTt3Xi07YYXlItg4aI/p5QvvmE0oFxB+5d2+K1yVVhUQumtDvj8Pu524KiRVpp",
+	"AOd6J+U7vYXUE8bQZ7I6vurd47NdqqNI0DJM/JGBZVwcJmzRXTqyvpN2p0O5VWgD7dajKJBko24BPwV6",
+	"WuroAAgV6JtKlQeRKGKKttTu1ZWIaT/IMLGqiRmHx36YnTq2FxJH0ZLwRVftK9CVqHL1a7lun3LZauC9",
+	"x9tsuaZoetkWb1lwt7h5Xtbb73fPT9qGz1JKNAzzywMH9GPpbnKyBt0Yf7cVvp8f3o8+EjacF8BpOK0o",
+	"R3vmOmNSL42MQoy3CTrGkhkTYS6i095aIdOBAeWg6adnZ2c0oPhJFRMXCG3wHGkbd1FPmjVZqOCFCDcW",
+	"FmFZsuzVCDuZ+8Dvs9zHPcHrGG6wS36Y352pnoWCV42ky72FhqR3a/zI0x7rqS4EXe8UlUkWa5YSqUcG",
+	"0ENKNKnXlfVy0qCpuE9Vqq8yBcaJXVyjQneLNVudnbgl5fCOiO2AbLW43S2sw+0O1xo//hS15z6HWypS",
+	"kThwwpUPNvKpSukfHbDzg4ce3KGpxG3DJrdlA+8tJdunDec8bjFHfSz2FrT9ivKz/tTtO7Ey6m9oXj4Y",
+	"kpOe5L2VrmLd+18w4Q3XF2VG5hv97BJF39C/BAtfxLohC8aLu1qe1eSfQ9zU711VrUL3Jcu/51c7acah",
+	"lmGel9+4q7+hs7y97xsqpg9FNh5sfar3bm2bbq0nRfgx95u94aPh3LvdUXerA1FHhDuVVa0aqobosqLp",
+	"u18rpPuz73mrywhHTv5yd4MG+98CHffp3VFf/rQvGToXr88MGzmq8r+CtyokZZzETK/93tzv95o9yXsg",
+	"eQ8kDYGkflaHCKcoLTGTe/3+TwPd78OZqZOajW6nKD5KsfbrAA6isfyqrRqsdPnlZhKCWt3CjkYyWahj",
+	"elBb2D8S+K7NEMxyjZ1PthUZoLnLZoZoZpX/LH/RxOVUFvqjErk9GzQUIFeFOVX/6NB4NIpFROKlUHr8",
+	"6/n5+YikDG9+2/w/AAD///SY6KApSQAA",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

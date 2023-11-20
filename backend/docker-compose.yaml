@@ -244,6 +244,9 @@ services:
       - xpack.security.http.ssl.enabled=false
       - xpack.security.transport.ssl.enabled=false
       - discovery.type=single-node
+    ports:
+      - 9200:9200
+      - 9300:9300
 
   kibana:
     image: docker.elastic.co/kibana/kibana:7.17.10
@@ -252,7 +255,9 @@ services:
       - elasticsearch
     environment:
       ELASTICSEARCH_HOSTS: '["http://elasticsearch:9200"]'
-
+    ports:
+      - 5601:5601
+      
   gorse:
     image: zhenghaoz/gorse-in-one
     restart: unless-stopped
