@@ -75,11 +75,11 @@ export function Navbar({ displayAvatar, handleRefresh }) {
           PrometheusTube
         </NavLink>
       </div>
-      <div className="inline-block w-96">
+      <div className="inline-block w-96 flex justify-between">
         <input
           placeholder="Search"
           value={searchParams.get("search") ?? ""}
-          className="w-[calc(100%-24px)] bg-white-300 rounded-full w-full pl-3 p-1 float-left"
+          className="w-[calc(100%-40px)] bg-white-300 rounded-full w-full pl-3 p-1 float-left"
           onChange={async (event) => {
             setSearchParams((prev) => {
               prev.set("search", event.currentTarget.value);
