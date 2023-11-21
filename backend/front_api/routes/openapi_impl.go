@@ -330,6 +330,7 @@ func (s Server) Videos(ctx echo.Context, params VideosParams) error {
 			ThumbnailLoc:  video.ThumbnailLoc,
 			Rating:        video.Rating,
 			VideoDuration: video.VideoDuration,
+			IsMature:      video.IsMature,
 		})
 	}
 

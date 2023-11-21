@@ -105,6 +105,7 @@ type Video struct {
 	ThumbnailLoc  string
 	Rating        int64
 	VideoDuration float32
+	IsMature      bool
 }
 
 type Comment struct {
