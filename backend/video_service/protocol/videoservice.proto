@@ -144,6 +144,7 @@ message videoMetadata {
     float videoDuration = 11;
     string category = 12;
     string thumbnail = 13;
+    bool isMature = 14;
 }
 
 message VideoList {
@@ -162,6 +163,7 @@ message Video {
     string uploadDate = 7;
     int64 authorID = 8;
     float videoDuration = 9;
+    bool isMature = 10;
 }
 
 message videoRating {

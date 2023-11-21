@@ -323,6 +323,7 @@ func (v *VideoModel) GetVideoList(direction videoproto.SortDirection, pageNum in
 			Views:         uint64(video.Source.Views),
 			VideoDuration: float32(video.Source.VideoDuration),
 			Rating:        int64(video.Source.Rating),
+			IsMature:      video.Source.IsMature,
 		}
 
 		resp, err := v.getUserInfo(int64(video.Source.Userid))
@@ -435,8 +436,8 @@ func (v *VideoModel) generateVideoListSQL(direction videoproto.SortDirection, pa
 	queries = append(queries,
 		esquery.Term("is_deleted", false))
 
-	// pl, _ := res.Query(esquery.Bool().Must(queries...).Should(searchQueries...)).MarshalJSON()
-	// log.Errorf("pl: %v", string(pl))
+	pl, _ := res.Query(esquery.Bool().Must(queries...).Should(searchQueries...)).MarshalJSON()
+	log.Errorf("pl: %v", string(pl))
 
 	resp, err := res.Query(esquery.Bool().Must(queries...).Should(searchQueries...)).Aggs(esquery.TermsAgg("cardinalities", "category")).Run(v.esClient, v.esClient.Search.WithContext(context.TODO()))
 	if err != nil {
@@ -488,13 +489,13 @@ type basicVideoInfo struct {
 
 // Information that isn't super straightforward to query for
 func (v *VideoModel) GetVideoInfo(videoID string) (*videoproto.VideoMetadata, error) {
-	sql := "SELECT id, title, description, upload_date, userID, newLink, views, video_duration FROM videos WHERE id=$1 AND is_deleted=false"
+	sql := "SELECT id, title, description, upload_date, userID, newLink, views, video_duration, is_mature FROM videos WHERE id=$1 AND is_deleted=false"
 	var video videoproto.VideoMetadata
 	var authorID, views int64
 
 	row := v.db.QueryRow(sql, videoID)
 
-	err := row.Scan(&video.VideoID, &video.VideoTitle, &video.Description, &video.UploadDate, &authorID, &video.VideoLoc, &views, &video.VideoDuration)
+	err := row.Scan(&video.VideoID, &video.VideoTitle, &video.Description, &video.UploadDate, &authorID, &video.VideoLoc, &views, &video.VideoDuration, &video.IsMature)
 	if err != nil {
 		return nil, err
 	}

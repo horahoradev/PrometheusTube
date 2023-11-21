@@ -1981,6 +1981,8 @@ func (m *VideoMetadata) validate(all bool) error {
 
 	// no validation rules for Thumbnail
 
+	// no validation rules for IsMature
+
 	if len(errors) > 0 {
 		return VideoMetadataMultiError(errors)
 	}
@@ -2261,6 +2263,8 @@ func (m *Video) validate(all bool) error {
 	// no validation rules for AuthorID
 
 	// no validation rules for VideoDuration
+
+	// no validation rules for IsMature
 
 	if len(errors) > 0 {
 		return VideoMultiError(errors)
