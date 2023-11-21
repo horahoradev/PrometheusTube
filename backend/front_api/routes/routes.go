@@ -155,6 +155,7 @@ type VideoDetail struct {
 	RecommendedVideos []Video
 	L                 *LoggedInUserData
 	VideoDuration     float32
+	IsMature          bool
 }
 
 type ProfileData struct {

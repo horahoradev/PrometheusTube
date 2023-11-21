@@ -404,6 +404,7 @@ func (s Server) VideoDetail(ctx echo.Context, id float32) error {
 		Tags:             videoInfo.Tags,
 		VideoDuration:    videoInfo.VideoDuration,
 		Thumbnail:        videoInfo.Thumbnail,
+		IsMature:         videoInfo.IsMature,
 
 		// L: profile,
 	}

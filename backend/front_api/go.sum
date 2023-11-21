@@ -314,6 +314,8 @@ github.com/horahoradev/PrometheusTube/backend/video_service v0.0.0-2023111921083
 github.com/horahoradev/PrometheusTube/backend/video_service v0.0.0-20231119210835-8a12a897f741/go.mod h1:uIOrRfuosm6LSm6+Pn1YfJaKhdGWS0WxWZIyasB6YHQ=
 github.com/horahoradev/PrometheusTube/backend/video_service v0.0.0-20231119222119-95aead63e11b h1:uJjq+/6Pi48VUnlKhGD9KAeFKMg2cPAw14ilSgASvvo=
 github.com/horahoradev/PrometheusTube/backend/video_service v0.0.0-20231119222119-95aead63e11b/go.mod h1:uIOrRfuosm6LSm6+Pn1YfJaKhdGWS0WxWZIyasB6YHQ=
+github.com/horahoradev/PrometheusTube/backend/video_service v0.0.0-20231121020509-1ab4cceb72a4 h1:AZXpNcikEyYrxb2cUvRSCJjdZ34/F6IsKyR/GCA7b/8=
+github.com/horahoradev/PrometheusTube/backend/video_service v0.0.0-20231121020509-1ab4cceb72a4/go.mod h1:uIOrRfuosm6LSm6+Pn1YfJaKhdGWS0WxWZIyasB6YHQ=
 github.com/horahoradev/horahora/scheduler v0.0.0-20221218222730-094304eae0b2 h1:h7OEOEGsE35IYzo6D4s3pYbXvgcDVqJUIJZXgAXWfJc=
 github.com/horahoradev/horahora/scheduler v0.0.0-20221218222730-094304eae0b2/go.mod h1:JTfDBAcTqK2BMlt/IUZqU4epuk024VfTteCY0YX7L1M=
 github.com/horahoradev/horahora/user_service v0.0.0-20210710200304-9892f28bcdf0/go.mod h1:c2+68tn7GMxziU+YXln0KRssXWtaB8kYqe8zONW5PN4=
