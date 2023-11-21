@@ -730,7 +730,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
 
 # **followFeed**
-> Array<Videos200ResponseVideosInner> followFeed()
+> Array<Recommendations200ResponseInner> followFeed()
 
 
 ### Example
@@ -763,7 +763,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-**Array<Videos200ResponseVideosInner>**
+**Array<Recommendations200ResponseInner>**
 
 ### Authorization
 
@@ -1053,7 +1053,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
 
 # **recommendations**
-> Array<Videos200ResponseVideosInner> recommendations()
+> Array<Recommendations200ResponseInner> recommendations()
 
 
 ### Example
@@ -1092,7 +1092,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-**Array<Videos200ResponseVideosInner>**
+**Array<Recommendations200ResponseInner>**
 
 ### Authorization
 

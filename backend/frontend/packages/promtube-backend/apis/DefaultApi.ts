@@ -13,10 +13,10 @@ import { ArchiveRequests200ResponseInner } from '../models/ArchiveRequests200Res
 import { Comments200ResponseInner } from '../models/Comments200ResponseInner';
 import { GetDanmaku200ResponseInner } from '../models/GetDanmaku200ResponseInner';
 import { GetUnapprovedVideos200ResponseInner } from '../models/GetUnapprovedVideos200ResponseInner';
+import { Recommendations200ResponseInner } from '../models/Recommendations200ResponseInner';
 import { Users200Response } from '../models/Users200Response';
 import { VideoDetail200Response } from '../models/VideoDetail200Response';
 import { Videos200Response } from '../models/Videos200Response';
-import { Videos200ResponseVideosInner } from '../models/Videos200ResponseVideosInner';
 
 /**
  * no description
@@ -1699,13 +1699,13 @@ export class DefaultApiResponseProcessor {
      * @params response Response returned by the server for a request to followFeed
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async followFeed(response: ResponseContext): Promise<Array<Videos200ResponseVideosInner> > {
+     public async followFeed(response: ResponseContext): Promise<Array<Recommendations200ResponseInner> > {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            const body: Array<Videos200ResponseVideosInner> = ObjectSerializer.deserialize(
+            const body: Array<Recommendations200ResponseInner> = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "Array<Videos200ResponseVideosInner>", ""
-            ) as Array<Videos200ResponseVideosInner>;
+                "Array<Recommendations200ResponseInner>", ""
+            ) as Array<Recommendations200ResponseInner>;
             return body;
         }
         if (isCodeInRange("0", response.httpStatusCode)) {
@@ -1714,10 +1714,10 @@ export class DefaultApiResponseProcessor {
 
         // Work around for missing responses in specification, e.g. for petstore.yaml
         if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
-            const body: Array<Videos200ResponseVideosInner> = ObjectSerializer.deserialize(
+            const body: Array<Recommendations200ResponseInner> = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "Array<Videos200ResponseVideosInner>", ""
-            ) as Array<Videos200ResponseVideosInner>;
+                "Array<Recommendations200ResponseInner>", ""
+            ) as Array<Recommendations200ResponseInner>;
             return body;
         }
 
@@ -1876,13 +1876,13 @@ export class DefaultApiResponseProcessor {
      * @params response Response returned by the server for a request to recommendations
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async recommendations(response: ResponseContext): Promise<Array<Videos200ResponseVideosInner> > {
+     public async recommendations(response: ResponseContext): Promise<Array<Recommendations200ResponseInner> > {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            const body: Array<Videos200ResponseVideosInner> = ObjectSerializer.deserialize(
+            const body: Array<Recommendations200ResponseInner> = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "Array<Videos200ResponseVideosInner>", ""
-            ) as Array<Videos200ResponseVideosInner>;
+                "Array<Recommendations200ResponseInner>", ""
+            ) as Array<Recommendations200ResponseInner>;
             return body;
         }
         if (isCodeInRange("0", response.httpStatusCode)) {
@@ -1891,10 +1891,10 @@ export class DefaultApiResponseProcessor {
 
         // Work around for missing responses in specification, e.g. for petstore.yaml
         if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
-            const body: Array<Videos200ResponseVideosInner> = ObjectSerializer.deserialize(
+            const body: Array<Recommendations200ResponseInner> = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "Array<Videos200ResponseVideosInner>", ""
-            ) as Array<Videos200ResponseVideosInner>;
+                "Array<Recommendations200ResponseInner>", ""
+            ) as Array<Recommendations200ResponseInner>;
             return body;
         }
 

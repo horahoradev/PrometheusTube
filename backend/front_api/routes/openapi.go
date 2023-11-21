@@ -3109,6 +3109,7 @@ type UsersResponse struct {
 		Videos            *[]struct {
 			AuthorID      *float32 `json:"AuthorID,omitempty"`
 			AuthorName    *string  `json:"AuthorName,omitempty"`
+			IsMature      *bool    `json:"IsMature,omitempty"`
 			Rating        *float32 `json:"Rating,omitempty"`
 			ThumbnailLoc  *string  `json:"ThumbnailLoc,omitempty"`
 			Title         *string  `json:"Title,omitempty"`
@@ -3153,6 +3154,7 @@ type VideosResponse struct {
 		Videos            *[]struct {
 			AuthorID      *float32 `json:"AuthorID,omitempty"`
 			AuthorName    *string  `json:"AuthorName,omitempty"`
+			IsMature      *bool    `json:"IsMature,omitempty"`
 			Rating        *float32 `json:"Rating,omitempty"`
 			ThumbnailLoc  *string  `json:"ThumbnailLoc,omitempty"`
 			Title         *string  `json:"Title,omitempty"`
@@ -3185,6 +3187,7 @@ type VideoDetailResponse struct {
 	JSON200      *struct {
 		AuthorID         *float32                `json:"AuthorID,omitempty"`
 		Comments         *map[string]interface{} `json:"Comments,omitempty"`
+		IsMature         *bool                   `json:"IsMature,omitempty"`
 		MPDLoc           *string                 `json:"MPDLoc,omitempty"`
 		ProfilePicture   *string                 `json:"ProfilePicture,omitempty"`
 		Rating           *float32                `json:"Rating,omitempty"`
@@ -4094,6 +4097,7 @@ func ParseUsersResponse(rsp *http.Response) (*UsersResponse, error) {
 			Videos            *[]struct {
 				AuthorID      *float32 `json:"AuthorID,omitempty"`
 				AuthorName    *string  `json:"AuthorName,omitempty"`
+				IsMature      *bool    `json:"IsMature,omitempty"`
 				Rating        *float32 `json:"Rating,omitempty"`
 				ThumbnailLoc  *string  `json:"ThumbnailLoc,omitempty"`
 				Title         *string  `json:"Title,omitempty"`
@@ -4142,6 +4146,7 @@ func ParseVideosResponse(rsp *http.Response) (*VideosResponse, error) {
 			Videos            *[]struct {
 				AuthorID      *float32 `json:"AuthorID,omitempty"`
 				AuthorName    *string  `json:"AuthorName,omitempty"`
+				IsMature      *bool    `json:"IsMature,omitempty"`
 				Rating        *float32 `json:"Rating,omitempty"`
 				ThumbnailLoc  *string  `json:"ThumbnailLoc,omitempty"`
 				Title         *string  `json:"Title,omitempty"`
@@ -4178,6 +4183,7 @@ func ParseVideoDetailResponse(rsp *http.Response) (*VideoDetailResponse, error) 
 		var dest struct {
 			AuthorID         *float32                `json:"AuthorID,omitempty"`
 			Comments         *map[string]interface{} `json:"Comments,omitempty"`
+			IsMature         *bool                   `json:"IsMature,omitempty"`
 			MPDLoc           *string                 `json:"MPDLoc,omitempty"`
 			ProfilePicture   *string                 `json:"ProfilePicture,omitempty"`
 			Rating           *float32                `json:"Rating,omitempty"`
@@ -5885,11 +5891,11 @@ var swaggerSpec = []string{
 	"0ENKNKnXlfVy0qCpuE9Vqq8yBcaJXVyjQneLNVudnbgl5fCOiO2AbLW43S2sw+0O1xo//hS15z6HWypS",
 	"kThwwpUPNvKpSukfHbDzg4ce3KGpxG3DJrdlA+8tJdunDec8bjFHfSz2FrT9ivKz/tTtO7Ey6m9oXj4Y",
 	"kpOe5L2VrmLd+18w4Q3XF2VG5hv97BJF39C/BAtfxLohC8aLu1qe1eSfQ9zU711VrUL3Jcu/51c7acah",
-	"lmGel9+4q7+hs7y97xsqpg9FNh5sfar3bm2bbq0nRfgx95u94aPh3LvdUXerA1FHhDuVVa0aqobosqLp",
-	"u18rpPuz73mrywhHTv5yd4MG+98CHffp3VFf/rQvGToXr88MGzmq8r+CtyokZZzETK/93tzv95o9yXsg",
-	"eQ8kDYGkflaHCKcoLTGTe/3+TwPd78OZqZOajW6nKD5KsfbrAA6isfyqrRqsdPnlZhKCWt3CjkYyWahj",
-	"elBb2D8S+K7NEMxyjZ1PthUZoLnLZoZoZpX/LH/RxOVUFvqjErk9GzQUIFeFOVX/6NB4NIpFROKlUHr8",
-	"6/n5+YikDG9+2/w/AAD///SY6KApSQAA",
+	"lmGel9+4q7+hs7y97xsqpg9FNh5sfaoX6tZeqRwg3jvGf7JerieB+DG3n73BpeFUvN1BeKvjUkeEOxVd",
+	"rdqthuiyoum7myuk+7PveaurCkdO/nI3hwb7Xwod92HeUd8FtS8oOpe2zwwqOaryv4J3LiRlnMRMr/2+",
+	"3u8Vmz3Je5h5DzOdwkz9nA8RTlFaIiqPCf2fJLrfh7NaJzUb+05RuJRi7dc9HMRq+UVcNVjp8jBSv9xM",
+	"QkCsW+fRR+NkoY7pbm1ZxpFm4RoYwfzZ+IjJtpoDNHfZzBDNLDSe5WuauJzKfn9UErhnoYYC5Kowtuqf",
+	"MxqPRrGISLwUSo9/PT8/H5GU4c1vm/8HAAD//6vLy1eDSQAA",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

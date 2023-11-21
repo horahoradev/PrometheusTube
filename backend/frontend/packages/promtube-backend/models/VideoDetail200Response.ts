@@ -27,6 +27,7 @@ export class VideoDetail200Response {
     'uploadDate'?: string;
     'comments'?: any;
     'thumbnail'?: string;
+    'isMature'?: boolean;
     'tags'?: Array<string>;
     'videoDuration'?: number;
 
@@ -115,6 +116,12 @@ export class VideoDetail200Response {
             "name": "thumbnail",
             "baseName": "Thumbnail",
             "type": "string",
+            "format": ""
+        },
+        {
+            "name": "isMature",
+            "baseName": "IsMature",
+            "type": "boolean",
             "format": ""
         },
         {

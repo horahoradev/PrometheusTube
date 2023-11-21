@@ -7,6 +7,7 @@ import { json, redirect, createCookie } from "@remix-run/node";
 import { Suspense } from "react";
 import * as React from "react";
 import { ClientOnly } from "remix-utils/client-only";
+import Cookies from "js-cookie";
 
 import { useApi } from "~/lib/oapi";
 import { useLoaderData, NavLink, useSearchParams } from "@remix-run/react";
@@ -67,6 +68,11 @@ export default function Video() {
     useLoaderData<typeof loader>();
   let api = useApi();
 
+  // oh great heavens
+  // why is there no better way to do this LMAO
+  const showMature = (Cookies.get("mature") ?? "false") == "true";
+  console.log(showMature);
+
   const [isHydrated, setIsHydrated] = useState(false);
   useEffect(() => {
     setIsHydrated(true);
@@ -98,6 +104,10 @@ export default function Video() {
     //     });
   };
 
+  if (isHydrated && video.isMature && !showMature) {
+    return <div>This video is for mature audiences only, bucko. Change your content visibility settings if you're over 18.</div>
+  }
+
   return (
     <div>
       <Navbar displayAvatar={banner}></Navbar>
@@ -122,7 +132,7 @@ export default function Video() {
           </div>
           <div className="mt-4">
 
-        <Button          color="primary"
+        <Button color="primary"
           className="text-single-100 w-full"
           variant="contained" onClick={()=>api.approveVideo(video.videoID, false)}>Approve, suitable for ages under 18</Button>
       </div>

@@ -616,7 +616,7 @@ func (v *VideoModel) ApproveVideo(userID, videoID int, mature bool) error {
 		return err
 	}
 
-	if err = v.MarkApprovals(); err != nil {
+	if err = v.MarkVideoApproved(fmt.Sprintf("%d", videoID), mature); err != nil {
 		return err
 	}
 
@@ -628,25 +628,25 @@ type Approval struct {
 	Mature  bool   `db:"mature"`
 }
 
-func (v *VideoModel) MarkApprovals() error {
-	var approvals []Approval
-	sql := "SELECT video_id, mature FROM approvals GROUP BY (video_id, mature) HAVING count(*) >= 1"
+// func (v *VideoModel) MarkApprovals() error {
+// 	var approvals []Approval
+// 	sql := "SELECT video_id, mature FROM approvals GROUP BY (video_id, mature) HAVING count(*) >= 1"
 
-	if err := v.db.Select(&approvals, sql); err != nil {
-		log.Errorf("Failed to retrieve video approvals. Err: %s", err)
-		return err
-	}
+// 	if err := v.db.Select(&approvals, sql); err != nil {
+// 		log.Errorf("Failed to retrieve video approvals. Err: %s", err)
+// 		return err
+// 	}
 
-	for _, approval := range approvals {
-		err := v.MarkVideoApproved(approval.VideoID, approval.Mature)
-		if err != nil {
-			// Log and move on
-			log.Errorf("Could not mark video %s as approved. Err: %s", approval.VideoID, err)
-		}
-	}
+// 	for _, approval := range approvals {
+// 		err := v.MarkVideoApproved(approval.VideoID, approval.Mature)
+// 		if err != nil {
+// 			// Log and move on
+// 			log.Errorf("Could not mark video %s as approved. Err: %s", approval.VideoID, err)
+// 		}
+// 	}
 
-	return nil
-}
+// 	return nil
+// }
 
 func (v *VideoModel) DeleteComment(commentID, userID int64) error {
 	sql := "DELETE from comments WHERE id = $1 AND user_id = $2"

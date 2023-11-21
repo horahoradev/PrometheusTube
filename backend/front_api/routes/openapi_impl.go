@@ -535,6 +535,7 @@ func (s Server) Users(c echo.Context, idInt int, params UsersParams) error {
 			ThumbnailLoc:  video.ThumbnailLoc,
 			Rating:        video.Rating,
 			VideoDuration: video.VideoDuration,
+			IsMature:      video.IsMature,
 		}
 
 		data.Videos = append(data.Videos, v)

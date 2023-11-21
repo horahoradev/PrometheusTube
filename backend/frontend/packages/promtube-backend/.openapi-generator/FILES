@@ -17,6 +17,7 @@ models/Comments200ResponseInner.ts
 models/GetDanmaku200ResponseInner.ts
 models/GetUnapprovedVideos200ResponseInner.ts
 models/ObjectSerializer.ts
+models/Recommendations200ResponseInner.ts
 models/Users200Response.ts
 models/VideoDetail200Response.ts
 models/Videos200Response.ts

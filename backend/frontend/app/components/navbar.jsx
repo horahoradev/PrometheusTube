@@ -13,7 +13,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ChangePassword from "./changepassword";
 
-export function Navbar({ displayAvatar, handleRefresh }) {
+export function Navbar({ displayAvatar, handleRefresh, mature, showSearch, setMature }) {
   const [isHydrated, setIsHydrated] = useState(false);
   useEffect(() => {
     setIsHydrated(true);
@@ -32,8 +32,6 @@ export function Navbar({ displayAvatar, handleRefresh }) {
   const [openReset, setOpenReset] = React.useState(false);
   const handleOpenReset = () => setOpenReset(true);
   const handleCloseReset = () => setOpenReset(false);
-
-  let notPromptedForMaturity = UserState((state) => Cookies.get("mature") == undefined);
 
   const [openMature, setOpenMature] = React.useState(false);
   const handleOpenMature = () => setOpenMature(true);
@@ -75,7 +73,7 @@ export function Navbar({ displayAvatar, handleRefresh }) {
           PrometheusTube
         </NavLink>
       </div>
-      <div className="inline-block w-96 flex justify-between">
+      { showSearch ? <div className="inline-block w-96 flex justify-between">
         <input
           placeholder="Search"
           value={searchParams.get("search") ?? ""}
@@ -88,7 +86,7 @@ export function Navbar({ displayAvatar, handleRefresh }) {
           }}
         />
         <Cog6ToothIcon onClick={handleOpenMature} className="w-5 mt-1 ml-1"></Cog6ToothIcon>
-      </div>
+        </div> : null }
       <div className="inline-block text-right w-36 ">
         {!loggedIn || !isHydrated ? (
           <span className="float-left">
@@ -180,7 +178,7 @@ export function Navbar({ displayAvatar, handleRefresh }) {
         aria-labelledby="modal-modal-mature"
         aria-describedby="modal-modal-mature"
       >
-        <Mature handleRefresh={handleRefresh} closeWindow={handleCloseMature}></Mature>
+        <Mature setMatureS={setMature} handleRefresh={handleRefresh} mature={mature} closeWindow={handleCloseMature}></Mature>
       </Modal>
       <Modal
         open={openReset}

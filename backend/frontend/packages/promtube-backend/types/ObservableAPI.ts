@@ -7,6 +7,7 @@ import { ArchiveRequests200ResponseInner } from '../models/ArchiveRequests200Res
 import { Comments200ResponseInner } from '../models/Comments200ResponseInner';
 import { GetDanmaku200ResponseInner } from '../models/GetDanmaku200ResponseInner';
 import { GetUnapprovedVideos200ResponseInner } from '../models/GetUnapprovedVideos200ResponseInner';
+import { Recommendations200ResponseInner } from '../models/Recommendations200ResponseInner';
 import { Users200Response } from '../models/Users200Response';
 import { VideoDetail200Response } from '../models/VideoDetail200Response';
 import { Videos200Response } from '../models/Videos200Response';
@@ -325,7 +326,7 @@ export class ObservableDefaultApi {
      * Upvote a video
      * @param showMature show mature
      */
-    public followFeed(showMature: boolean, _options?: Configuration): Observable<Array<Videos200ResponseVideosInner>> {
+    public followFeed(showMature: boolean, _options?: Configuration): Observable<Array<Recommendations200ResponseInner>> {
         const requestContextPromise = this.requestFactory.followFeed(showMature, _options);
 
         // build promise chain
@@ -466,7 +467,7 @@ export class ObservableDefaultApi {
      * @param showMature user ID
      * @param cookie auth cookies etc
      */
-    public recommendations(id: number, showMature: boolean, cookie?: string, _options?: Configuration): Observable<Array<Videos200ResponseVideosInner>> {
+    public recommendations(id: number, showMature: boolean, cookie?: string, _options?: Configuration): Observable<Array<Recommendations200ResponseInner>> {
         const requestContextPromise = this.requestFactory.recommendations(id, showMature, cookie, _options);
 
         // build promise chain

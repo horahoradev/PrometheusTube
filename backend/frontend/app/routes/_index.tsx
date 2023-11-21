@@ -2,7 +2,7 @@ import Categories from "app/components/categories";
 import Pages from "app/components/pagination";
 import VideocardList from "app/components/videocard";
 import loadable from "@loadable/component";
-import { Suspense, us } from "react";
+import { Suspense, us, useState } from "react";
 import { Videos200Response } from "node_modules/promtube-backend";
 import { useApi } from "~/lib/oapi";
 import { json, redirect, createCookie } from "@remix-run/node";
@@ -52,7 +52,7 @@ export async function loader({ request }) {
   const cookieExists =
     (await cookie.parse(request.headers.get("Cookie"))) !== null;
   // wtf is with the builtin dogshit cookie api? what the hell, remix?
-  const showMature = parse(request.headers.get("Cookie")).mature ?? false;
+  const showMature = (parse(request.headers.get("Cookie")).mature ?? "false") == "true";
   let api = useApi();
   let videoData = await api.videos(
     showMature, // oh GOD
@@ -64,12 +64,12 @@ export async function loader({ request }) {
     categoryEncoded
   );
 
-  return { videos: videoData, banner: cookieExists };
+  return { videos: videoData, banner: cookieExists, mature: showMature };
 }
 
 export default function Home() {
-  const { videos, banner } = useLoaderData<typeof loader>();
-
+  const { videos, banner, mature } = useLoaderData<typeof loader>();
+  const [matureS, setMature] = useState(mature);
 const navigate = useNavigate();
 const handleRefresh = () => {
   navigate('.', { replace: true })
@@ -77,7 +77,7 @@ const handleRefresh = () => {
 
   return (
     <div>
-      <Navbar handleRefresh={handleRefresh} displayAvatar={banner}></Navbar>
+      <Navbar mature={matureS} showSearch={true} setMature={setMature} handleRefresh={handleRefresh} displayAvatar={banner}></Navbar>
       <div className="bg-white-200 min-h-screen">
         <div className="px-6 w-full min-h-[calc(100%-53px)] flex flex-col justify-between">
           <div>

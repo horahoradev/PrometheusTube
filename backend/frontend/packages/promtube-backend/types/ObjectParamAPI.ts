@@ -6,6 +6,7 @@ import { ArchiveRequests200ResponseInner } from '../models/ArchiveRequests200Res
 import { Comments200ResponseInner } from '../models/Comments200ResponseInner';
 import { GetDanmaku200ResponseInner } from '../models/GetDanmaku200ResponseInner';
 import { GetUnapprovedVideos200ResponseInner } from '../models/GetUnapprovedVideos200ResponseInner';
+import { Recommendations200ResponseInner } from '../models/Recommendations200ResponseInner';
 import { Users200Response } from '../models/Users200Response';
 import { VideoDetail200Response } from '../models/VideoDetail200Response';
 import { Videos200Response } from '../models/Videos200Response';
@@ -651,7 +652,7 @@ export class ObjectDefaultApi {
      * Upvote a video
      * @param param the request object
      */
-    public followFeed(param: DefaultApiFollowFeedRequest, options?: Configuration): Promise<Array<Videos200ResponseVideosInner>> {
+    public followFeed(param: DefaultApiFollowFeedRequest, options?: Configuration): Promise<Array<Recommendations200ResponseInner>> {
         return this.api.followFeed(param.showMature,  options).toPromise();
     }
 
@@ -699,7 +700,7 @@ export class ObjectDefaultApi {
      * Get list of videos
      * @param param the request object
      */
-    public recommendations(param: DefaultApiRecommendationsRequest, options?: Configuration): Promise<Array<Videos200ResponseVideosInner>> {
+    public recommendations(param: DefaultApiRecommendationsRequest, options?: Configuration): Promise<Array<Recommendations200ResponseInner>> {
         return this.api.recommendations(param.id, param.showMature, param.cookie,  options).toPromise();
     }
 

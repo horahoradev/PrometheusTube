@@ -217,6 +217,8 @@ paths:
                           type: number
                         VideoDuration:
                           type: number
+                        IsMature:
+                          type: boolean
                   Categories:
                     type: array
                     items:
@@ -275,6 +277,8 @@ paths:
                     type: object
                   Thumbnail:
                     type: string
+                  IsMature:
+                    type: boolean
                   Tags:
                     type: array
                     items:
@@ -473,6 +477,8 @@ paths:
                           type: number
                         VideoDuration:
                           type: number
+                        IsMature:
+                          type: boolean
         default:
           description: Unexpected error
   /upvote/{id}:
