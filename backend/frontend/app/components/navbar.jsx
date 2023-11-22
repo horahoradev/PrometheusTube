@@ -12,8 +12,18 @@ import { useEffect, useState } from "react";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ChangePassword from "./changepassword";
+import { getSelectorsByUserAgent } from "react-device-detect";
 
-export function Navbar({ displayAvatar, handleRefresh, mature, showSearch, setMature }) {
+export function Navbar({
+  displayAvatar,
+  handleRefresh,
+  mature,
+  showSearch,
+  setMature,
+  userAgent,
+}) {
+  const { isMobile } = getSelectorsByUserAgent(userAgent);
+
   const [isHydrated, setIsHydrated] = useState(false);
   useEffect(() => {
     setIsHydrated(true);
@@ -42,7 +52,6 @@ export function Navbar({ displayAvatar, handleRefresh, mature, showSearch, setMa
   let uid = UserState((state) => state.UID);
   let admin = UserState((state) => state.admin);
 
-
   // menu nav stuff
   const [anchorEl, setAnchorEl] = React.useState(null);
   const openMenu = Boolean(anchorEl);
@@ -64,30 +73,45 @@ export function Navbar({ displayAvatar, handleRefresh, mature, showSearch, setMa
   }
 
   return (
-    <div className="flex justify-between bg-white-50 w-screen py-2 px-6">
-      <div className="col-start-1 pt-1 self-start w-36">
-        <NavLink
-          className="text-cherry-red-100 font-extrabold text-text-single-400"
-          to="/"
-        >
-          PrometheusTube
-        </NavLink>
-      </div>
-      { showSearch ? <div className="inline-block w-96 flex justify-between">
-        <input
-          placeholder="Search"
-          value={searchParams.get("search") ?? ""}
-          className="w-[calc(100%-40px)] bg-white-300 rounded-full w-full pl-3 p-1 float-left"
-          onChange={async (event) => {
-            setSearchParams((prev) => {
-              prev.set("search", event.currentTarget.value);
-              return prev;
-            });
-          }}
-        />
-        <Cog6ToothIcon onClick={handleOpenMature} className="w-5 mt-1 ml-1"></Cog6ToothIcon>
-        </div> : null }
-      <div className="inline-block text-right w-36 ">
+    <div
+      className={
+        isMobile
+          ? "flex justify-end bg-white-50 w-screen py-2 px-6"
+          : "flex justify-between bg-white-50 w-screen py-2 px-6"
+      }
+    >
+      {!isMobile ? (
+        <div className="col-start-1 pt-1 self-start w-36">
+          <NavLink
+            className="text-cherry-red-100 font-extrabold text-text-single-400"
+            to="/"
+          >
+            PrometheusTube
+          </NavLink>
+        </div>
+      ) : null}
+      {showSearch ? (
+        <div className="inline-block w-96 flex justify-between">
+          <div className="my-auto	w-full">
+            <input
+              placeholder="Search"
+              value={searchParams.get("search") ?? ""}
+              className="w-full bg-white-300 rounded-full  h-8 pl-3 p-1 float-left"
+              onChange={async (event) => {
+                setSearchParams((prev) => {
+                  prev.set("search", event.currentTarget.value);
+                  return prev;
+                });
+              }}
+            />
+          </div>
+          <Cog6ToothIcon
+            onClick={handleOpenMature}
+            className="w-5 my-auto	 ml-1"
+          ></Cog6ToothIcon>
+        </div>
+      ) : null}
+      <div className="inline-block text-right w-36">
         {!loggedIn || !isHydrated ? (
           <span className="float-left">
             <span>
@@ -133,16 +157,16 @@ export function Navbar({ displayAvatar, handleRefresh, mature, showSearch, setMa
                 <MenuItem>Profile</MenuItem>
               </NavLink>
               <MenuItem onClick={handleOpenReset}>Reset Password</MenuItem>
-              {admin ? <NavLink to={"/archive-requests/"}>
-                <MenuItem>Archive requests</MenuItem>
-              </NavLink>
-              : null
-              }
-              {admin ? <NavLink to={"/video-downloads/"}>
-                <MenuItem>Download approvals</MenuItem>
-              </NavLink>
-              : null
-              }
+              {admin ? (
+                <NavLink to={"/archive-requests/"}>
+                  <MenuItem>Archive requests</MenuItem>
+                </NavLink>
+              ) : null}
+              {admin ? (
+                <NavLink to={"/video-downloads/"}>
+                  <MenuItem>Download approvals</MenuItem>
+                </NavLink>
+              ) : null}
               <MenuItem onClick={handleLogout}>Logout</MenuItem>
             </Menu>
           </span>
@@ -154,10 +178,12 @@ export function Navbar({ displayAvatar, handleRefresh, mature, showSearch, setMa
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Register setRegister={() => {
+        <Register
+          setRegister={() => {
             setOpen();
             setShowAvatar(true);
-          }}></Register>
+          }}
+        ></Register>
       </Modal>
       <Modal
         open={openLogin}
@@ -178,7 +204,12 @@ export function Navbar({ displayAvatar, handleRefresh, mature, showSearch, setMa
         aria-labelledby="modal-modal-mature"
         aria-describedby="modal-modal-mature"
       >
-        <Mature setMatureS={setMature} handleRefresh={handleRefresh} mature={mature} closeWindow={handleCloseMature}></Mature>
+        <Mature
+          setMatureS={setMature}
+          handleRefresh={handleRefresh}
+          mature={mature}
+          closeWindow={handleCloseMature}
+        ></Mature>
       </Modal>
       <Modal
         open={openReset}

@@ -12,19 +12,20 @@ import { Footer } from "app/components/footer";
 import { useLoaderData, NavLink, useSearchParams } from "@remix-run/react";
 import { jwtDecode } from "jwt-decode";
 import { UserState } from "~/state";
-import {parse} from "cookie-parse";
+import { parse } from "cookie-parse";
 import { useNavigate } from "@remix-run/react";
 import { MetaFunction } from "@remix-run/node";
-
-export const meta: MetaFunction<typeof loader> = ({
-  data,
-}) => {
+import { hydrate } from "react-dom";
+import { useEffect } from "react";
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
-    {title: "PrometheusTube"},
-    {description: "Steal fire (videos) from the Gods (other video sites)"},
-    {"og:description": "Steal fire (videos) from the Gods (other video sites)"},
-    {"og:title": "PrometheusTube"},
-   ];
+    { title: "PrometheusTube" },
+    { description: "Steal fire (videos) from the Gods (other video sites)" },
+    {
+      "og:description": "Steal fire (videos) from the Gods (other video sites)",
+    },
+    { "og:title": "PrometheusTube" },
+  ];
 };
 
 export async function loader({ request }) {
@@ -39,7 +40,10 @@ export async function loader({ request }) {
       ? searchParams.get("search")
       : "none"
   ) as unknown as string;
-  let encoded = searchParams.get("category") !== null ? searchParams.get("category") : "undefined";
+  let encoded =
+    searchParams.get("category") !== null
+      ? searchParams.get("category")
+      : "undefined";
   const categoryEncoded = utf8Encode.encode(encoded) as unknown as string;
 
   // let jwtParsed = jwtDecode(
@@ -49,10 +53,11 @@ export async function loader({ request }) {
   // setLoggedIn(cookieExists);
   // setUserID(jwtParsed["uid"]);
   const cookie = createCookie("jwt", {});
-  const cookieExists =
-    (await cookie.parse(request.headers.get("Cookie"))) !== null;
+  const cook = request.headers.get("Cookie");
+  const cookieExists = cookie.parse(cook) !== undefined;
   // wtf is with the builtin dogshit cookie api? what the hell, remix?
-  const showMature = (parse(request.headers.get("Cookie")).mature ?? "false") == "true";
+  const showMature =
+    (parse(request.headers.get("Cookie") ?? "").mature ?? "false") == "true";
   let api = useApi();
   let videoData = await api.videos(
     showMature, // oh GOD
@@ -64,24 +69,44 @@ export async function loader({ request }) {
     categoryEncoded
   );
 
-  return { videos: videoData, banner: cookieExists, mature: showMature };
+  return {
+    videos: videoData,
+    banner: cookieExists,
+    mature: showMature,
+    userAgent: request.headers.get("user-agent"),
+  };
 }
 
 export default function Home() {
-  const { videos, banner, mature } = useLoaderData<typeof loader>();
+  const { videos, banner, mature, userAgent } = useLoaderData<typeof loader>();
   const [matureS, setMature] = useState(mature);
-const navigate = useNavigate();
-const handleRefresh = () => {
-  navigate('.', { replace: true })
-}
+  const navigate = useNavigate();
+  const handleRefresh = () => {
+    navigate(".", { replace: true });
+  };
+
+  const [isHydrated, setIsHydrated] = useState(false);
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
 
   return (
     <div>
-      <Navbar mature={matureS} showSearch={true} setMature={setMature} handleRefresh={handleRefresh} displayAvatar={banner}></Navbar>
+      <Navbar
+        userAgent={userAgent}
+        mature={matureS}
+        showSearch={true}
+        setMature={setMature}
+        handleRefresh={handleRefresh}
+        displayAvatar={banner}
+      ></Navbar>
       <div className="bg-white-200 min-h-screen">
         <div className="px-6 w-full min-h-[calc(100%-53px)] flex flex-col justify-between">
           <div>
-            <Categories></Categories>
+            <Categories
+              userAgent={userAgent}
+              hydrated={isHydrated}
+            ></Categories>
             <div className="mt-6">
               <VideocardList videos={videos.videos}></VideocardList>
             </div>

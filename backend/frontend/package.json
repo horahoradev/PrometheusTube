@@ -33,6 +33,7 @@
     "nightwind": "^1.1.13",
     "promtube-backend": "file:packages/promtube-backend",
     "react": "^18.2.0",
+    "react-device-detect": "^2.2.3",
     "react-dom": "^18.2.0",
     "remix-utils": "^7.1.0",
     "sort-by": "^1.2.0",

@@ -9,9 +9,16 @@ import { VideoDetail200Response } from "node_modules/promtube-backend";
 import { useApi } from "~/lib/oapi";
 import moment from "moment";
 import { UserState } from "~/state";
-
-
-export const VideoPlayer = ({options, onReady, videoInp, Cookie, comments}) => {
+import { getSelectorsByUserAgent } from "react-device-detect";
+export const VideoPlayer = ({
+  options,
+  onReady,
+  videoInp,
+  Cookie,
+  comments,
+  userAgent,
+}) => {
+  const { isMobile } = getSelectorsByUserAgent(userAgent);
   const videoRef = React.useRef(null);
   const playerRef = React.useRef(null);
   let video: VideoDetail200Response = videoInp;
@@ -65,9 +72,7 @@ export const VideoPlayer = ({options, onReady, videoInp, Cookie, comments}) => {
 
   return (
     <div data-vjs-player>
-      <Suspense>
-        <div ref={videoRef} />
-      </Suspense>
+      <div className={isMobile ? "w-screen" : null} ref={videoRef} />
       {/* video controls */}
       <div className="bg-white-300 p-2">
         <span className="text-special-heading-4">{video.title}</span>
@@ -103,7 +108,9 @@ export const VideoPlayer = ({options, onReady, videoInp, Cookie, comments}) => {
           <span className="align-middle ml-1">{video.views}</span>
           {/* TODO */}
           <span className="ml-4">{"OtoMAD"}</span>
-          <span className="ml-4">Uploaded {moment(video.uploadDate, "YYYY-MM-DDTh:mm:ssZ").fromNow()}</span>
+          <span className="ml-4">
+            Uploaded {moment(video.uploadDate, "YYYY-MM-DDTh:mm:ssZ").fromNow()}
+          </span>
         </span>
         <div className="mt-3">
           {video.tags?.map((item) => (
@@ -116,7 +123,11 @@ export const VideoPlayer = ({options, onReady, videoInp, Cookie, comments}) => {
           ))}
         </div>
       </div>
-      <Comments commentsInp={comments} videoID={video.videoID} cookie={Cookie}></Comments>
+      <Comments
+        commentsInp={comments}
+        videoID={video.videoID}
+        cookie={Cookie}
+      ></Comments>
     </div>
   );
 };

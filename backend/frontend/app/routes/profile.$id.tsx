@@ -10,7 +10,7 @@ import { Users200Response } from "node_modules/promtube-backend";
 import { useLoaderData, NavLink, useSearchParams } from "@remix-run/react";
 import { json, redirect, createCookie } from "@remix-run/node";
 import { Footer } from "~/components/footer";
-import {parse} from "cookie-parse";
+import { parse } from "cookie-parse";
 const VideocardList = loadable(() => import("app/components/videocard"), {
   ssr: false,
 });
@@ -24,14 +24,18 @@ export async function loader({ request, params }) {
   let api = useApi();
   let userData: Users200Response = await api.users(params.id, showMature);
 
-  return { user: userData, banner: cookieExists };
+  return {
+    user: userData,
+    banner: cookieExists,
+    userAgent: request.headers.get("user-agent"),
+  };
 }
 
 export default function Profile() {
-  const { user, banner } = useLoaderData<typeof loader>();
+  const { user, banner, userAgent } = useLoaderData<typeof loader>();
   return (
     <div>
-      <Navbar displayAvatar={banner}></Navbar>
+      <Navbar userAgent={userAgent} displayAvatar={banner}></Navbar>
       <div className="bg-white-200 min-h-screen">
         <div className="px-6 w-full min-h-screen">
           <div className="flex justify-center">
