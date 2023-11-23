@@ -25,14 +25,18 @@ const VideoPlayer = loadable(() => import("app/components/videoplayer"), {
 });
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
-  return [
-    { title: data.video.title },
-    { description: data.video.videoDescription },
-    { "twitter:card": "summary_large_image" },
-    { "og:description": data.video.videoDescription },
-    { "og:image": data.video.thumbnail },
-    { "og:title": data.video.title },
-  ];
+  if (data.video.isMature) {
+    return [];
+  } else {
+    return [
+      { title: data.video.title },
+      { description: data.video.videoDescription },
+      { "twitter:card": "summary_large_image" },
+      { "og:description": data.video.videoDescription },
+      { "og:image": data.video.thumbnail },
+      { "og:title": data.video.title },
+    ];
+  }
 };
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -72,7 +76,6 @@ export default function Video() {
   // oh great heavens
   // why is there no better way to do this LMAO
   const showMature = (Cookies.get("mature") ?? "false") == "true";
-  console.log(showMature);
 
   const [isHydrated, setIsHydrated] = useState(false);
   useEffect(() => {

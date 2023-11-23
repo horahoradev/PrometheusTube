@@ -62,8 +62,8 @@ export async function loader({ request }) {
   let videoData = await api.videos(
     showMature, // oh GOD
     searchEncoded,
-    searchParams.get("sortCategory") ?? undefined,
-    searchParams.get("order") ?? "desc",
+    searchParams.get("sort") ?? "views",
+    searchParams.get("direction") ?? "desc",
     "false",
     parseInt(searchParams.get("page") ?? "1"),
     categoryEncoded
@@ -84,6 +84,19 @@ export default function Home() {
   const handleRefresh = () => {
     navigate(".", { replace: true });
   };
+
+  let [searchParams, setSearchParams] = useSearchParams();
+  let sort = searchParams.get("sort") ?? "views";
+  let setSort = (e) => setSearchParams((prev) => {
+    prev.set("sort", e);
+    return prev;
+  });
+
+  let dir = searchParams.get("direction") ?? "desc";
+  let setDir = (e) => setSearchParams((prev) => {
+    prev.set("direction", e);
+    return prev;
+  });
 
   const [isHydrated, setIsHydrated] = useState(false);
   useEffect(() => {
@@ -106,6 +119,10 @@ export default function Home() {
             <Categories
               userAgent={userAgent}
               hydrated={isHydrated}
+              sortCategory={sort}
+              sortDirection={dir}
+              setSortCategory={setSort}
+              setSortDirection={setDir}
             ></Categories>
             <div className="mt-6">
               <VideocardList videos={videos.videos}></VideocardList>
