@@ -105,13 +105,13 @@ export default function Register({ setRegister }) {
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
-          <div className="flex justify-around items-center my-2 mx-0">
+          {/* <div className="flex justify-around items-center my-2 mx-0">
             <span>
               Already have an account?
               <a className="underline text-primary-blue-400 ml-1">Log in</a>
             </span>
-          </div>
-          <div>
+          </div> */}
+          <div className="mt-3">
             <Button
               color="primary"
               className="text-single-100 w-full"
