@@ -315,7 +315,7 @@ func (g GRPCServer) EmailValidation(ctx context.Context, in *proto.ValidationReq
 
 	// 3. Send the email
 	email := &postmark.Email{
-		From:       "hmbaldwin@ucdavis.edu",
+		From:       "otoman@prometheus.tube",
 		To:         in.Email,
 		TemplateID: 33247218,
 		TemplateModel: map[string]interface{}{
