@@ -10,22 +10,6 @@ module.exports = {
       "3xl": "2024px",
     },
     extend: {
-      typography: (theme) => ({
-        DEFAULT: {
-          css: {
-            a: {
-              "font-size": "18px, 30px",
-            },
-          },
-        },
-      }),
-      container: {
-        padding: {
-          DEFAULT: "2rem",
-          md: "3rem",
-          xl: "4rem",
-        },
-      },
       spacing: {
         1: "4px",
         2: "8px",
