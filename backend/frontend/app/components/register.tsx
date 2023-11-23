@@ -5,16 +5,17 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
-import Stepper from '@mui/material/Stepper';
+import Stepper from "@mui/material/Stepper";
 import { useApi } from "~/lib/oapi";
-import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
-import Typography from '@mui/material/Typography';
+import Step from "@mui/material/Step";
+import StepLabel from "@mui/material/StepLabel";
+import Typography from "@mui/material/Typography";
 import React from "react";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import { UserState } from "~/state";
-
+import TermsOfService from "./terms-of-service";
+import PrivacyPolicy from "./privacy-policy";
 const style = {
   position: "absolute",
   top: "50%",
@@ -26,8 +27,7 @@ const style = {
   p: 3,
 };
 
-const steps = ['Email validation', 'Registration'];
-
+const steps = ["Email validation", "Registration"];
 
 export default function Register({ setRegister }) {
   const [username, setUsername] = React.useState("");
@@ -91,82 +91,90 @@ export default function Register({ setRegister }) {
           );
         })}
       </Stepper>
-      {activeStep == 0 ? <div>
-        <div className="text-heading-3 flex justify-around">Register</div>
-      <div className="mt-4">
-        <TextField
-          className="w-full"
-          required
-          id="outlined-required"
-          label="Email"
-          size="small"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-      </div>
-      <div className="flex justify-around items-center my-2 mx-0">
-        <span>
-          Already have an account?
-          <a className="underline text-primary-blue-400 ml-1">Log in</a>
-        </span>
-      </div>
-      <div>
-        <Button
-          color="primary"
-          className="text-single-100 w-full"
-          variant="contained"
-          onClick={RegisterOne}
-        >
-          Next
-        </Button>
-      </div>
-      </div> :  <div><div className="text-heading-3 flex justify-around">Register</div>
-      <div className="mt-4">
-        <TextField
-          className="w-full"
-          required
-          id="outlined-required"
-          label="Username"
-          size="small"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
+      {activeStep == 0 ? (
+        <div>
+          <div className="text-heading-3 flex justify-around">Register</div>
+          <div className="mt-4">
+            <TextField
+              className="w-full"
+              required
+              id="outlined-required"
+              label="Email"
+              size="small"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+          <div className="flex justify-around items-center my-2 mx-0">
+            <span>
+              Already have an account?
+              <a className="underline text-primary-blue-400 ml-1">Log in</a>
+            </span>
+          </div>
+          <div>
+            <Button
+              color="primary"
+              className="text-single-100 w-full"
+              variant="contained"
+              onClick={RegisterOne}
+            >
+              Next
+            </Button>
+            <div>
+              By clicking next, you agree to the{" "}
+              <TermsOfService></TermsOfService> and{" "}
+              <PrivacyPolicy></PrivacyPolicy>
+            </div>
+          </div>
         </div>
-        <div className="mt-4">
-
-                <TextField
-          className="w-full"
-          required
-          id="outlined-required"
-          label="Password"
-          size="small"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+      ) : (
+        <div>
+          <div className="text-heading-3 flex justify-around">Register</div>
+          <div className="mt-4">
+            <TextField
+              className="w-full"
+              required
+              id="outlined-required"
+              label="Username"
+              size="small"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </div>
+          <div className="mt-4">
+            <TextField
+              className="w-full"
+              required
+              id="outlined-required"
+              label="Password"
+              size="small"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          <div className="mt-4">
+            <TextField
+              className="w-full"
+              required
+              id="outlined-required"
+              label="Verification code"
+              size="small"
+              value={verification}
+              onChange={(e) => setVerification(parseInt(e.target.value))}
+            />
+          </div>
+          <div className="mt-4">
+            <Button
+              color="primary"
+              className="text-single-100 w-full"
+              variant="contained"
+              onClick={RegisterTwo}
+            >
+              Register
+            </Button>
+          </div>
         </div>
-              <div className="mt-4">
-
-                <TextField
-          className="w-full"
-          required
-          id="outlined-required"
-          label="Verification code"
-          size="small"
-          value={verification}
-          onChange={(e) => setVerification(parseInt(e.target.value))}
-        />
-        </div>
-        <div className="mt-4">
-          <Button
-          color="primary"
-          className="text-single-100 w-full"
-          variant="contained"
-          onClick={RegisterTwo}
-        >
-          Register
-        </Button>
-        </div>
-      </div>}
+      )}
     </Box>
   );
 }
