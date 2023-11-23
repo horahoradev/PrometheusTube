@@ -31,10 +31,13 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
     return [
       { title: data.video.title },
       { description: data.video.videoDescription },
-      { "twitter:card": "summary_large_image" },
-      { "og:description": data.video.videoDescription },
-      { "og:image": data.video.thumbnail },
-      { "og:title": data.video.title },
+      { property: "twitter:card", content: "summary_large_image" },
+      { property: "twitter:title", content: data.video.title },
+      { property: "twitter:description", content: data.video.videoDescription },
+      { property: "twitter:image", content: data.video.thumbnail },
+      { property: "og:description", content: data.video.videoDescription },
+      { property: "og:image", content: data.video.thumbnail },
+      { property: "og:title", content: data.video.title },
     ];
   }
 };
