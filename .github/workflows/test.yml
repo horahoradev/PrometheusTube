@@ -11,10 +11,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build the stack localhost
-        run: echo "localhost" | ./backend/up.sh
+        run: cd backend && echo "localhost" | ./up.sh
         if: always()
       - name: Run integration API tests
-        run: cd backend/tests && go build main.go && ./tests
+        run: cd tests && go build main.go && ./tests
         if: always()
       - name: print relevant logs (videoservice)
         run: docker logs $(docker ps | grep "videoservice" | awk '{print $1}')
@@ -50,7 +50,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
       - name: Build the stack localhost
-        run: echo "localhost" | ./backend/up.sh
+        run: cd backend && echo "localhost" | ./up.sh
         if: always()
       - name: publish main
         uses: pennsignals/publish_docker-compose@v0.2.5
