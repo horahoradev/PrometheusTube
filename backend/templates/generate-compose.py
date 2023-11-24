@@ -1,9 +1,10 @@
 from jinja2 import Environment, FileSystemLoader
 from Crypto.PublicKey import RSA
 import os
+import sys
 
 if __name__ == '__main__':
-    origin = input("What is the origin FQDN? Domain only, no scheme (e.g. www.horahora.org)")
+    origin = sys.argv[1]
 
     # compose file
     env = Environment(loader=FileSystemLoader("./templates"))
