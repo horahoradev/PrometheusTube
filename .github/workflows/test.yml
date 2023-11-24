@@ -53,8 +53,8 @@ jobs:
         run: cd backend && ./up.sh
         if: always()
       - name: publish main
-        uses: pennsignals/publish_docker-compose@v0.2.6-rc.1
         working-directory: ./backend
+        uses: pennsignals/publish_docker-compose@v0.2.6-rc.1
         with:
           version: main
           docker_compose: "docker-compose.yaml" # required
