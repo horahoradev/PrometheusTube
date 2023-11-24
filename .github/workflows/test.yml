@@ -59,4 +59,4 @@ jobs:
         uses: pennsignals/publish_docker-compose@v0.2.6-rc.1
         with:
           version: main
-          docker_compose: "docker-compose.yaml" # required
+          docker_compose: "docker-compose.yml" # required
