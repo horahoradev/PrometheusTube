@@ -14,7 +14,7 @@ jobs:
         run: cd backend && touch .secrets.env && echo "localhost" | ./up.sh
         if: always()
       - name: Run integration API tests
-        run: cd tests && go build main.go && ./tests
+        run: cd backend/tests && go build . && ./tests
         if: always()
       - name: print relevant logs (videoservice)
         run: docker logs $(docker ps | grep "videoservice" | awk '{print $1}')
