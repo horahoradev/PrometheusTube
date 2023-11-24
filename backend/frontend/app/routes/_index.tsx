@@ -40,6 +40,7 @@ export async function loader({ request }) {
       ? searchParams.get("search")
       : "none"
   ) as unknown as string;
+  console.log(searchEncoded);
   let encoded =
     searchParams.get("category") !== null
       ? searchParams.get("category")
@@ -87,16 +88,18 @@ export default function Home() {
 
   let [searchParams, setSearchParams] = useSearchParams();
   let sort = searchParams.get("sort") ?? "views";
-  let setSort = (e) => setSearchParams((prev) => {
-    prev.set("sort", e);
-    return prev;
-  });
+  let setSort = (e) =>
+    setSearchParams((prev) => {
+      prev.set("sort", e);
+      return prev;
+    });
 
   let dir = searchParams.get("direction") ?? "desc";
-  let setDir = (e) => setSearchParams((prev) => {
-    prev.set("direction", e);
-    return prev;
-  });
+  let setDir = (e) =>
+    setSearchParams((prev) => {
+      prev.set("direction", e);
+      return prev;
+    });
 
   const [isHydrated, setIsHydrated] = useState(false);
   useEffect(() => {
