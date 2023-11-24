@@ -1,6 +1,6 @@
 #!/bin/bash
 set -euo pipefail -x
-# git submodule update --recursive
+touch .secrets.env
 
 DOCKER_DEFAULT_PLATFORM=linux/amd64  DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 docker build -f Dockerfile.template -t gen . && docker run -v $(pwd):/gen -t gen localhost
 

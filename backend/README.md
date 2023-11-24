@@ -6,18 +6,29 @@ The architecture is microservice-based (a holdover from a time when I had a more
 
 ## Usage Instructions (START HERE)
 
-Warning: parts of this backend are esoteric, and reflect the structure of my brain. Be warned...
-
 1. sudo ./up.sh (unless your user has been added to the docker group)
-   1. respond to requests for input (answer "localhost")
-2. visit http://localhost:3000
+2. wait until completion, then visit http://localhost:3000
 
 That's it for basic usage, and should work. If that doesn't work, bug me on Discord.
 
+## Advanced Configuration
+
+1. replace "localhost" in up.sh with the fully-qualified domain name of the server on which you're accessing the service (e.g. for me, it's prometheus.tube)
+2. configure templates/env.j2 ORIGIN_FQDN appropriately (e.g. if you're using https, turn https on)
+3. configure front_api/openapi/openapi.yaml servers.url with your origin FQDN, then regenerate (run from project root):
+
+```
+sudo docker run --rm -v $(pwd):/local openapitools/openapi-generator-cli generate -i /local/backend/front_api/openapi/api.yaml --additional-properties=npmName=kirakirabackend,supportsES6=true    -g typescript     -o /local/backend/frontend/packages/promtube-backend && sudo chown -R $USER: backend/frontend/packages/promtube-backend && rm -r backend/frontend/node_modules && cd backend/frontend && npm install
+```
+
+that should do it.
+
+Additionally, we currently use postmark for email verifications (should you choose to have user registrations). To make this work, you need to include a .secrets.env file with POSTMARK_API_TOKEN.
+
 ## Architecture
 
-![](https://github.com/KIRAKIRA-DOUGA/KIRAKIRA-golang-backend/blob/master/KIRAKIRA_backend.png?raw=true)
-KIRAKIRA's architecture is microservice-based. The main microservices are:
+![](https://github.com/horahoradev/PrometheusTube/blob/main/backend/promtube_backend.png?raw=true)
+PrometheusTube's architecture is microservice-based. The main microservices are:
 
 - `front_api`: which is the RESTful API to the rest of the services
 - `userservice`: which does all authentication and handles user storage/permissions
