@@ -50,10 +50,10 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
       - name: Build the stack localhost
-        run: cd backend && ./up.sh
+        run: cd backend && echo "localhost" | ./up.sh
         if: always()
       - name: publish main
-        uses: pennsignals/publish_docker-compose@v0.2.6
+        uses: pennsignals/publish_docker-compose@v0.2.6-rc.1
         with:
           version: main
           docker_compose: "docker-compose.yml" # required
