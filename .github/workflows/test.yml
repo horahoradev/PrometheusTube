@@ -10,17 +10,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      # - name: Build the stack alternative origin
-      #   run: echo "nginx" | ./backend/up.sh
-      #   if: always()
-      # - name: Run Selenium tests
-      #   run: cd selenium && sleep 90 && sudo docker run --net horahora_default $(docker build -q .)
-      #   if: always()
       - name: Build the stack localhost
         run: echo "localhost" | ./backend/up.sh
         if: always()
       - name: Run integration API tests
-        run: cd backend/tests && go run main.go
+        run: cd backend/tests && go build main.go && ./tests
         if: always()
       - name: print relevant logs (videoservice)
         run: docker logs $(docker ps | grep "videoservice" | awk '{print $1}')
