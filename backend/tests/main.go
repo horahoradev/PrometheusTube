@@ -70,7 +70,7 @@ func main() {
 		break
 	}
 
-	// time.Sleep(time.Second * 60)
+	time.Sleep(time.Second * 90)
 	err = approveVideoDownload(client, "1")
 	if err != nil {
 		log.Errorf("Failed to approve: %v", err)
