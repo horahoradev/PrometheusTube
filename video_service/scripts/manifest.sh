@@ -13,7 +13,8 @@ cd /tmp
 # -out ${1}.mpd
 
 packager \
-  in=${1}_audio.m4a,stream=audio,output=${1}_audio.m4a \
-  in=${1}_360p.mp4,stream=video,output=${1}_360p.mp4 \
-  in=${1}_720p.mp4,stream=video,output=${1}_720p.mp4 \
-  --mpd_output ${1}.mpd
+  in=${1}_audio.m4a,stream=audio,output=${1}_audio.m4a,playlist_name=${1}_audio.m3u8 \
+  in=${1}_360p.mp4,stream=video,output=${1}_360p.mp4,playlist_name=${1}_video_360p.m3u8 \
+  in=${1}_720p.mp4,stream=video,output=${1}_720p.mp4,playlist_name=${1}_video_720p.m3u8 \
+  --hls_master_playlist_output ${1}.mpd
+  # so i know it's not an mpd but i have a hard dependency on this file extension LOL

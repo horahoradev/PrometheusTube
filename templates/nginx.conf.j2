@@ -15,7 +15,7 @@ server {
     }
 
     location ~* /otomads/([a-zA-Z0-9\-]*)(\.mpd) {
-        more_set_headers "Content-Type: application/dash+xml";
+        more_set_headers "Content-Type: application/x-mpegURL";
         set $backend_service horaminio;
         proxy_pass http://$backend_service:9000$request_uri;
     }

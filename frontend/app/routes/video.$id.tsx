@@ -36,7 +36,11 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
       { name: "twitter:description", content: data.video.videoDescription },
       { name: "twitter:image", content: data.video.thumbnail },
       { name: "twitter:domain", content: "prometheus.tube" },
-      { name: "twitter:url", content: "https://prometheus.tube/video/" + data.video.videoID?.toString() },
+      {
+        name: "twitter:url",
+        content:
+          "https://prometheus.tube/video/" + data.video.videoID?.toString(),
+      },
       { property: "og:description", content: data.video.videoDescription },
       { property: "og:image", content: data.video.thumbnail },
       { property: "og:title", content: data.video.title },
@@ -95,7 +99,7 @@ export default function Video() {
     sources: [
       {
         src: video.mPDLoc,
-        type: "application/dash+xml",
+        type: "application/x-mpegURL",
       },
     ],
   };
