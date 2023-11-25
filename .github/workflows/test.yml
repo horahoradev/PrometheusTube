@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build the stack localhost
-        run: cd backend && echo "localhost" | ./up.sh
+        run: ./up.sh
         if: always()
       - name: Run integration API tests
         run: cd tests && go build . && ./tests
