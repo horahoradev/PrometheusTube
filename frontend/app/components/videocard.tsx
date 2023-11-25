@@ -1,4 +1,4 @@
-import { NavLink, useSearchParams} from "@remix-run/react";
+import { NavLink, useSearchParams } from "@remix-run/react";
 import { HandThumbUpIcon, EyeIcon } from "@heroicons/react/24/outline";
 import Avatar from "@mui/material/Avatar";
 import ImageList from "@mui/material/ImageList";
@@ -13,7 +13,7 @@ import { useApi } from "~/lib/oapi";
 import { Videos200ResponseVideosInner } from "node_modules/promtube-backend";
 import { json, MetaFunction } from "@remix-run/node";
 
-export default function VideocardList({videos}) {
+export default function VideocardList({ videos }) {
   return (
     <ImageList
       className="mt-3 overflow-visible index-video-list"
@@ -21,40 +21,44 @@ export default function VideocardList({videos}) {
       // rowWidth={450}
       gap={6}
     >
-      {videos === undefined ? <div></div> : videos.map((item) => (
-        <ImageListItem key={item.videoID}>
-          <img
-            className="rounded-lg !w-128 !h-64"
-            srcSet={`${item.thumbnailLoc}`}
-            src={`${item.thumbnailLoc}`}
-            alt={item.title}
-            loading="lazy"
-          />
-          <ImageListItemBar
-            subtitle={
-              <span>
-                <NavLink to={"/video/" + item.videoID}>
-                  <div className="font-semibold text-white-900 text-text-single-400">
-                    {item.title}
-                  </div>
-                </NavLink>
-                <div className="mt-1 text-white-800 text-text-single-400 font-medium">
-                  <NavLink to={'/profile/' + item.authorID}>{item.authorName}</NavLink>
-                </div>
-                <NavLink to={"/video/" + item.videoID}>
-                  <div className="mt-1 text-white-700 text-text-single-upper-200">
-                    <HandThumbUpIcon className="w-5 inline-block relative align-middle" />
-                    <span className="align-middle ml-1">{item.rating}</span>
-                    <EyeIcon className="ml-2 w-5 inline-block relative align-middle" />
-                    <span className="align-middle ml-1">{item.views}</span>
-                  </div>
-                </NavLink>
-              </span>
-            }
-            position="below"
-          />
-        </ImageListItem>
-      ))}
+      {videos === undefined ? (
+        <div></div>
+      ) : (
+        videos.map((item) => (
+          <ImageListItem key={item.videoID}>
+            <NavLink to={"/video/" + item.videoID}>
+              <img
+                className="rounded-lg !w-128 !h-64"
+                srcSet={`${item.thumbnailLoc}`}
+                src={`${item.thumbnailLoc}`}
+                alt={item.title}
+                loading="lazy"
+              />
+              <ImageListItemBar
+                subtitle={
+                  <span>
+                    <div className="font-semibold text-white-900 text-text-single-400">
+                      {item.title}
+                    </div>
+                    <div className="mt-1 text-white-800 text-text-single-400 font-medium">
+                      <NavLink to={"/profile/" + item.authorID}>
+                        {item.authorName}
+                      </NavLink>
+                    </div>
+                    <div className="mt-1 text-white-700 text-text-single-upper-200">
+                      <HandThumbUpIcon className="w-5 inline-block relative align-middle" />
+                      <span className="align-middle ml-1">{item.rating}</span>
+                      <EyeIcon className="ml-2 w-5 inline-block relative align-middle" />
+                      <span className="align-middle ml-1">{item.views}</span>
+                    </div>
+                  </span>
+                }
+                position="below"
+              />
+            </NavLink>
+          </ImageListItem>
+        ))
+      )}
     </ImageList>
   );
 }

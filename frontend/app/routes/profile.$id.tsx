@@ -17,9 +17,10 @@ const VideocardList = loadable(() => import("app/components/videocard"), {
 
 export async function loader({ request, params }) {
   const cookie = createCookie("jwt", {});
-  const cookieExists =
-    (await cookie.parse(request.headers.get("Cookie"))) !== null;
-  const showMature = parse(request.headers.get("Cookie")).mature ?? false;
+  const cook = request.headers.get("Cookie");
+  const cookieExists = cookie.parse(cook) !== undefined;
+  const showMature =
+    (parse(request.headers.get("Cookie") ?? "").mature ?? "false") == "true";
 
   let api = useApi();
   let userData: Users200Response = await api.users(params.id, showMature);

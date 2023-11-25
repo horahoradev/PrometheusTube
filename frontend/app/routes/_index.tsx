@@ -40,7 +40,6 @@ export async function loader({ request }) {
       ? searchParams.get("search")
       : "none"
   ) as unknown as string;
-  console.log(searchEncoded);
   let encoded =
     searchParams.get("category") !== null
       ? searchParams.get("category")
