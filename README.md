@@ -33,7 +33,7 @@ Additionally, we currently use postmark for email verifications (should you choo
 
 ## Architecture
 
-![](https://github.com/horahoradev/PrometheusTube/blob/main/promtube_backend.png?raw=true)
+![](https://github.com/horahoradev/PrometheusTube/blob/main/promtube_backend_1.png?raw=true)
 PrometheusTube's architecture is microservice-based. The main microservices are:
 
 - `front_api`: which is the RESTful API to the rest of the services
