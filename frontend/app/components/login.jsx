@@ -28,7 +28,6 @@ export default function Login({ setLogin }) {
   let setUID = UserState((state) => state.setUID);
   let setAdmin = UserState((state) => state.setAdmin);
 
-
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
 

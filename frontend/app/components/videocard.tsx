@@ -41,9 +41,7 @@ export default function VideocardList({ videos }) {
                       {item.title}
                     </div>
                     <div className="mt-1 text-white-800 text-text-single-400 font-medium">
-                      <NavLink to={"/profile/" + item.authorID}>
-                        {item.authorName}
-                      </NavLink>
+                      {item.authorName}
                     </div>
                     <div className="mt-1 text-white-700 text-text-single-upper-200">
                       <HandThumbUpIcon className="w-5 inline-block relative align-middle" />
