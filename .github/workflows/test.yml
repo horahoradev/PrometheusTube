@@ -14,7 +14,7 @@ jobs:
         run: cd backend && echo "localhost" | ./up.sh
         if: always()
       - name: Run integration API tests
-        run: cd backend/tests && go build . && ./tests
+        run: cd tests && go build . && ./tests
         if: always()
       - name: print relevant logs (videoservice)
         run: docker logs $(docker ps | grep "videoservice" | awk '{print $1}')
@@ -36,9 +36,6 @@ jobs:
         if: always()
   release:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./backend
     steps:
       - uses: actions/checkout@v2
       - name: Log in to the Container registry
@@ -53,7 +50,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
       - name: Build the stack localhost
-        run: ./up.sh && cp docker-compose.yml ..
+        run: ./up.sh
         if: always()
       - name: publish main
         uses: pennsignals/publish_docker-compose@v0.2.6-rc.1
