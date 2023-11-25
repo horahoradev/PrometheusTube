@@ -53,7 +53,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
       - name: Build the stack localhost
-        run: ./up.sh
+        run: ./up.sh && cp docker-compose.yml ..
         if: always()
       - name: publish main
         uses: pennsignals/publish_docker-compose@v0.2.6-rc.1
