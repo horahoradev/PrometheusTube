@@ -16,7 +16,7 @@ services:
       labels:
         name: frontapi
     {%- else -%}
-    image: ghcr.io/horahoradev/horahora/horahora.frontapi:main
+      image: ghcr.io/horahoradev/prometheustube/front_api:master
     {% endif %}
     depends_on:
       - postgres
@@ -57,7 +57,7 @@ services:
         org.opencontainers.image.source: https://github.com/horahoradev/horahora
         name: scheduler
     {%- else -%}
-    image: ghcr.io/horahoradev/horahora/horahora.scheduler:main
+      image: ghcr.io/horahoradev/prometheustube/scheduler:master
     {% endif %}
     depends_on:
       - postgres
@@ -95,7 +95,7 @@ services:
         org.opencontainers.image.source: https://github.com/horahoradev/horahora
         name: videoservice
     {%- else -%}
-    image: ghcr.io/horahoradev/horahora/horahora.videoservice:main
+      image: ghcr.io/horahoradev/prometheustube/videoservice:master
     {% endif %}
     depends_on:
       - postgres
@@ -142,7 +142,7 @@ services:
         org.opencontainers.image.source: https://github.com/horahoradev/horahora
         name: userservice
     {%- else -%}
-    image: ghcr.io/horahoradev/horahora/horahora.userservice:main
+      image: ghcr.io/horahoradev/prometheustube/userservice:master
     {% endif %}
     depends_on:
       - postgres
@@ -312,7 +312,7 @@ services:
       ELASTICSEARCH_HOSTS: '["http://elasticsearch:9200"]'
     ports:
       - 5601:5601
-      
+
   gorse:
     image: zhenghaoz/gorse-in-one
     restart: unless-stopped

@@ -34,26 +34,5 @@ jobs:
       - name: print relevant logs (nginx)
         run: docker logs $(docker ps | grep "nginx" | awk '{print $1}')
         if: always()
-  release:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Log in to the Container registry
-        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-      - name: Build the stack localhost
-        run: ./up.sh
-        if: always()
-      - name: publish main
-        uses: pennsignals/publish_docker-compose@v0.2.6-rc.1
-        with:
-          version: main
-          docker_compose: "docker-compose.yml" # required
+      - name: Push images
+        run: ./push.sh

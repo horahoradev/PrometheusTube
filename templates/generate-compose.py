@@ -8,10 +8,10 @@ if __name__ == '__main__':
 
     # compose file
     env = Environment(loader=FileSystemLoader("./templates"))
-    template = env.get_template("docker-compose.yml.j2")
-    f_template = open("docker-compose.yml", "w")
+    template = env.get_template("docker-compose.yaml.j2")
+    f_template = open("docker-compose.yaml", "w")
     f_template.write(template.render(build_images=True))
-    print("Wrote docker-compose.yml")
+    print("Wrote docker-compose.yaml")
 
     # nginx config
     template = env.get_template("nginx.conf.j2")
