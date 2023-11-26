@@ -48,7 +48,7 @@ Since microservices communicate via GRPC, the API for each service is defined by
 ## Useful Commands
 
 ```
-sudo docker run --rm -v $(pwd):/local openapitools/openapi-generator-cli:v7.1.0 generate -i /local/front_api/openapi/api.yaml --additional-properties=npmName=kirakirabackend,basePath=''    -g typescript     -o /local/frontend/packages/promtube-backend && sudo chown -R $USER: frontend/packages/promtube-backend && rm -r frontend/node_modules && cd frontend && npm install --force
+sudo docker run --rm -v $(pwd):/local openapitools/openapi-generator-cli:v7.1.0 generate -i /local/front_api/openapi/api.yaml --additional-properties=npmName=kirakirabackend    -g typescript     -o /local/frontend/packages/promtube-backend && sudo chown -R $USER: frontend/packages/promtube-backend && rm -r frontend/node_modules && cd frontend && npm install --force
 ```
 
 `git checkout HEAD -- packages/kirakira-backend/tsconfig.json packages/kirakira-backend/configuration.ts packages/kirakira-backend/servers.ts packages/kirakira-backend/http/isomorphic-fetch.ts`
