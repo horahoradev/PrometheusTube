@@ -43,6 +43,7 @@ RUN pip install -r requirements.txt && ln -s /yt-dlp/yt-dlp.sh /usr/local/bin/yt
 
 WORKDIR /horahora/scheduler
 
+COPY migrations .
 COPY --from=builder /scheduler.bin /scheduler.bin
 COPY --from=ffmpeg-builder /usr/local/bin/ffmpeg /usr/local/bin/ffmpeg
 
