@@ -29,8 +29,8 @@ export default function VideocardList({ videos }) {
             <NavLink to={"/video/" + item.videoID}>
               <img
                 className="rounded-lg !w-128 !h-64"
-                srcSet={`${item.thumbnailLoc}`}
-                src={`${item.thumbnailLoc}`}
+                srcSet={"/" + `${item.thumbnailLoc}`}
+                src={"/" + `${item.thumbnailLoc}`}
                 alt={item.title}
                 loading="lazy"
               />
