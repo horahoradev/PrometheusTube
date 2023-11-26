@@ -299,6 +299,7 @@ loop:
 	res, err := http.Head(u.String())
 	switch {
 	case err != nil:
+		log.Errorf("receied err trying to reach origin: %v", err)
 		return err
 	case res != nil && res.StatusCode >= 400:
 		return fmt.Errorf("recieved bad status code %v for request to %v", res.StatusCode, videoLoc)
