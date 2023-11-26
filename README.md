@@ -10,16 +10,22 @@ This project is currently pre-release; please wait a week or two while I make th
 
 ## Usage Instructions (START HERE)
 
-1. sudo ./up.sh (unless your user has been added to the docker group)
+### Localhost, or proxying to localhost
+
+1. `docker compose -f docker-compose.prebuilt.yaml up -d`
 2. wait until completion, then visit http://localhost:3000
+   That should do it. If that doesn't work, bug me on Discord.
 
-That's it for basic usage, and should work. If that doesn't work, bug me on Discord.
+### Non-localhost
 
-## Advanced Configuration
+1. Modify front_api/openapi/openapi.yaml with the correct base server.url
+2. Run this from the project root:
 
-1. replace "localhost" in up.sh with the fully-qualified domain name of the server on which you're accessing the service (e.g. for me, it's prometheus.tube)
-2. configure templates/env.j2 ORIGIN_FQDN appropriately (e.g. if you're using https, turn https on)
-3. configure front_api/openapi/openapi.yaml servers.url with your origin FQDN, then regenerate (run from project root):
+```
+sudo docker run --rm -v $(pwd):/local openapitools/openapi-generator-cli:v7.1.0 generate -i /local/front_api/openapi/api.yaml --additional-properties=npmName=kirakirabackend    -g typescript     -o /local/frontend/packages/promtube-backend && sudo chown -R $USER: frontend/packages/promtube-backend && rm -r frontend/node_modules && cd frontend && npm install --force
+```
+
+3. ./up.sh (working on this, you'll need to build from source for now)
 
 ```
 sudo docker run --rm -v $(pwd):/local openapitools/openapi-generator-cli generate -i /local/front_api/openapi/api.yaml --additional-properties=npmName=kirakirabackend,supportsES6=true    -g typescript     -o /local/frontend/packages/promtube-backend && sudo chown -R $USER: frontend/packages/promtube-backend && rm -r frontend/node_modules && cd frontend && npm install
@@ -50,5 +56,3 @@ Since microservices communicate via GRPC, the API for each service is defined by
 ```
 sudo docker run --rm -v $(pwd):/local openapitools/openapi-generator-cli:v7.1.0 generate -i /local/front_api/openapi/api.yaml --additional-properties=npmName=kirakirabackend    -g typescript     -o /local/frontend/packages/promtube-backend && sudo chown -R $USER: frontend/packages/promtube-backend && rm -r frontend/node_modules && cd frontend && npm install --force
 ```
-
-`git checkout HEAD -- packages/kirakira-backend/tsconfig.json packages/kirakira-backend/configuration.ts packages/kirakira-backend/servers.ts packages/kirakira-backend/http/isomorphic-fetch.ts`
