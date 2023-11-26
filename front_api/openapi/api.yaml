@@ -1,6 +1,6 @@
 openapi: "3.0.0"
 servers:
-  - url: http://localhost:3000/api
+  - url: /api
 info:
   version: 0.0.1
   title: Promtube Backend API
@@ -939,7 +939,7 @@ paths:
           description: retry success
         default:
           description: Unexpected error
-          
+
   /delete-archive-request:
     post:
       summary: Retry archive request

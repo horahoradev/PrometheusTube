@@ -283,25 +283,14 @@ loop:
 		log.Errorf("Failed to get video duration, err: %v", err)
 	}
 
-	videoLoc := fmt.Sprintf("%s/%s", g.OriginFQDN, filepath.Base(video.FileData.Name()))
-	u, err := url.Parse(videoLoc)
+	// TODO configurable
+	videoLoc := fmt.Sprintf("%s/%s", "otomads", filepath.Base(video.FileData.Name()))
+	u, err := url.Parse(fmt.Sprintf("%s/%s", g.OriginFQDN, filepath.Base(video.FileData.Name())))
 	if err != nil {
 		return err
 	}
-
-	spl := strings.Split(u.Host, ":")
-	host := spl[0]
-
-	port := "80"
-	if len(spl) == 2 {
-		port = spl[1]
-	}
-
-	switch host {
-	case "localhost":
-		u.Host = fmt.Sprintf("%v:%v", "host.docker.internal", port)
-	default:
-	}
+	// lol fixme
+	u.Host = fmt.Sprintf("%v:%v", "host.docker.internal", "9000")
 
 	log.Infof("Trying to reach origin file at %v", u.String())
 
@@ -437,8 +426,8 @@ func (g GRPCServer) transcodeAndUploadVideos(MaxDLFileSize int64) {
 		}
 
 		if len(videos) == 0 {
-			log.Infof("Failed to fetch unencoded videos, sleeping for 1 minute")
-			<-time.After(time.Second * 60)
+			log.Infof("Failed to fetch unencoded videos, sleeping for 15 seconds")
+			<-time.After(time.Second * 15)
 			continue
 		}
 

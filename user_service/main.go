@@ -3,7 +3,6 @@ package main
 import (
 	"log"
 
-	"github.com/KIRAKIRA-DOUGA/KIRAKIRA-golang-backend/user_service/internal/auth"
 	"github.com/KIRAKIRA-DOUGA/KIRAKIRA-golang-backend/user_service/internal/config"
 	"github.com/KIRAKIRA-DOUGA/KIRAKIRA-golang-backend/user_service/internal/grpcserver"
 
@@ -33,14 +32,9 @@ func main() {
 		log.Fatal(err)
 	}
 
-	privateKey, err := auth.ParsePrivateKey(conf.RSAKeypair)
-	if err != nil {
-		log.Fatalf("Could not parse RSA keypair. Err: %s", err)
-	}
-
 	log.Print("Serving traffic")
 
-	err = grpcserver.NewGRPCServer(conf.DbConn, privateKey, conf.GRPCPort)
+	err = grpcserver.NewGRPCServer(conf.DbConn, conf.RSAKeypair, conf.GRPCPort)
 	if err != nil {
 		log.Fatalf("gRPC server terminated with error: %s", err)
 	}

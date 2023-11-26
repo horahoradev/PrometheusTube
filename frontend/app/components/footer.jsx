@@ -20,7 +20,7 @@ export function Footer() {
     <div className="mt-2 flex justify-between bg-white-50 w-screen py-2 px-10  ">
       <TermsOfService></TermsOfService>
       <PrivacyPolicy></PrivacyPolicy>
-      {/* <Discord></Discord> */}
+      <Discord></Discord>
     </div>
   );
 }

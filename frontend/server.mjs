@@ -17,6 +17,14 @@ app.use(
     changeOrigin: true,
   })
 );
+app.use(
+  "/otomads",
+  createProxyMiddleware({
+    target: "http://localhost:9000",
+    changeOrigin: true,
+  })
+);
+
 app.all("*", createRequestHandler({ build }));
 
 app.listen(3000, () => {

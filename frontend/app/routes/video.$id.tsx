@@ -98,7 +98,7 @@ export default function Video() {
     controls: true,
     sources: [
       {
-        src: video.mPDLoc,
+        src: "/" + video.mPDLoc,
         type: "application/x-mpegURL",
       },
     ],
