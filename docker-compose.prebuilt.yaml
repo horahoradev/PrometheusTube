@@ -150,7 +150,7 @@ services:
       - horaminio
     volumes:
       - ${STORAGE_ROOT:-.}/static:/etc/nginx/html/static/images
-      - ${STORAGE_ROOT:-.}/nginx.conf:/etc/nginx/templates/nginx.conf # put the nginx config file in the storage root before you start the process.
+      - ${STORAGE_ROOT:-.}/nginx.conf:/etc/nginx/nginx.conf # put the nginx config file in the storage root before you start the process.
       - ${STORAGE_ROOT:-.}/videos/otomads:/etc/nginx/html/otomads
   redis:
     image: "redis:alpine"
