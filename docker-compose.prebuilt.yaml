@@ -1,0 +1,202 @@
+# top level version is optional
+# https://docs.docker.com/compose/compose-file/#version-top-level-element
+
+# top level name is governed by `COMPOSE_PROJECT_NAME` env var instead
+# https://docs.docker.com/compose/compose-file/#name-top-level-element
+
+services:
+  frontapi:
+    image: ghcr.io/horahoradev/prometheustube/front_api:master
+    
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    environment:
+      - UserServiceGRPCAddress=userservice:7777
+      - VideoServiceGRPCAddress=videoservice:7777
+      - SchedulerServiceGRPCAddress=scheduler:7777
+      - PartyServiceGRPCAddress=partyservice:7777
+      - JaegerAddress=
+      - GOLANG_PROTOBUF_REGISTRATION_CONFLICT=warn
+    volumes:
+      - ./front_api:/horahora/front_api
+
+  rabbitmq:
+    build:
+      context: activemq
+      labels:
+        name: activemq
+      dockerfile: Dockerfile
+    restart: unless-stopped
+
+  scheduler:
+    image: ghcr.io/horahoradev/prometheustube/scheduler:master
+    
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    environment:
+      - pgs_host=postgres
+      - pgs_port=5432
+      - pgs_user=admin
+      - pgs_pass=password
+      - pgs_db=scheduler
+      - VideoServiceGRPCAddress=videoservice:7777
+      - NumberOfRetries=1
+      - SocksConn=
+      - SyncPollDelay=1m
+      - MaxDLFileSize=300
+      - AcceptLanguage=ja
+      - rabbit_host=rabbitmq
+      - rabbit_port=61613
+      - rabbit_user=guest
+      - rabbit_pass=guest
+      - GOLANG_PROTOBUF_REGISTRATION_CONFLICT=warn
+      - GRPCPort=7777
+    volumes:
+      - ./scheduler:/horahora/scheduler
+
+  videoservice:
+    image: ghcr.io/horahoradev/prometheustube/videoservice:master
+    
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - redis_host=redis
+      - redis_port=6379
+      - redis_pass=
+      - MaxDailyUploadMB=3000
+      - pgs_host=postgres
+      - pgs_port=5432
+      - pgs_user=admin
+      - pgs_pass=password
+      - pgs_db=videoservice
+      - UserServiceGRPCAddress=userservice:7777
+      - BucketName=otomads
+      - Local=false
+      - OriginFQDN=http://localhost:9000/otomads
+      - AWS_DEFAULT_REGION=
+      - JaegerAddress=
+      - StorageBackend=s3
+      - StorageAPIID=minioadmin
+      - StorageAPIKey=minioadmin
+      - StorageEndpoint=http://horaminio:9000
+      - ApprovalThreshold=1
+      - MaxDLFileSize=300
+      - GOLANG_PROTOBUF_REGISTRATION_CONFLICT=warn
+      - GRPCPort=7777
+    volumes:
+      - ./video_service:/horahora/videoservice
+      - $HOME/.aws/:/root/.aws/:ro
+
+  userservice:
+    image: ghcr.io/horahoradev/prometheustube/userservice:master
+    
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    env_file:
+      - ./.secrets.env
+    environment:
+      - pgs_host=postgres
+      - pgs_port=5432
+      - pgs_user=admin
+      - pgs_pass=password
+      - pgs_db=userservice
+      - GRPCPort=7777
+    volumes:
+      - ./user_service:/horahora/userservice
+
+  postgres:
+    image: ghcr.io/horahoradev/prometheustube/postgres:master
+    
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgresdata_dev:/var/lib/postgresql/data
+
+  frontend:
+    image: ghcr.io/horahoradev/prometheustube/frontend:master
+    
+    restart: unless-stopped
+
+  horaminio:
+    image: ghcr.io/horahoradev/prometheustube/minio:master
+    
+    restart: unless-stopped
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+      - MINIO_CACHE=off
+    volumes:
+      - ./videos:/data
+
+  nginx:
+    image: anroe/nginx-headers-more
+    restart: unless-stopped
+    ports:
+      - "9000:80" # backwards compatibility issue
+      - "443:443"
+    depends_on:
+      - frontapi
+      - userservice
+      - videoservice
+      - horaminio
+    volumes:
+      - ./static:/etc/nginx/html/static/images
+      - ./configs/nginx.conf:/etc/nginx/templates/default.conf.template
+      - ./videos/otomads:/etc/nginx/html/otomads
+  redis:
+    image: "redis:alpine"
+    restart: always
+
+  elasticsearch:
+    image: elasticsearch:7.17.10
+    restart: unless-stopped
+    environment:
+      - xpack.security.enabled=false
+      - xpack.security.http.ssl.enabled=false
+      - xpack.security.transport.ssl.enabled=false
+      - discovery.type=single-node
+    ports:
+      - 9200:9200
+      - 9300:9300
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.17.10
+    restart: unless-stopped
+    depends_on:
+      - elasticsearch
+    environment:
+      ELASTICSEARCH_HOSTS: '["http://elasticsearch:9200"]'
+    ports:
+      - 5601:5601
+
+  gorse:
+    image: zhenghaoz/gorse-in-one
+    restart: unless-stopped
+    environment:
+      # Use Redis as cache storage backend.
+      GORSE_CACHE_STORE: redis://redis:6379
+      # Use MySQL as data storage backend.
+      GORSE_DATA_STORE: postgres://admin:password@postgres:5432/gorse?sslmode=disable
+    command: >
+      -c /etc/gorse/config.toml
+      --log-path /var/log/gorse/master.log
+      --cache-path /var/lib/gorse/master_cache.data
+    volumes:
+      # Mount the configuration file.
+      - ./config.toml:/etc/gorse/config.toml
+    depends_on:
+      - redis
+      - postgres
+
+volumes:
+  
+  postgresdata_dev: {}
+  
