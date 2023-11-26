@@ -20,11 +20,7 @@ services:
       - GOLANG_PROTOBUF_REGISTRATION_CONFLICT=warn
 
   rabbitmq:
-    build:
-      context: activemq
-      labels:
-        name: activemq
-      dockerfile: Dockerfile
+    image: ghcr.io/horahoradev/prometheustube/activemq:master
     restart: unless-stopped
 
   scheduler:
