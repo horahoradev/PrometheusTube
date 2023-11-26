@@ -2,7 +2,7 @@
 
 Steal fire (videos) from the Gods (other video sites)
 
-This project is under very active development.
+This project is under very active development. Join the Discord: https://discord.gg/p5rzTkGMRt
 
 Demo site: https://prometheus.tube
 
