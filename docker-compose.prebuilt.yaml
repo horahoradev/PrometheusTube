@@ -138,9 +138,6 @@ services:
       - userservice
       - videoservice
       - horaminio
-    volumes:
-      - ./static:/etc/nginx/html/static/images
-      - ./videos/otomads:/etc/nginx/html/otomads
 
   redis:
     image: "redis:alpine"

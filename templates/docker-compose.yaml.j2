@@ -66,8 +66,6 @@ services:
       - rabbit_pass=guest
       - GOLANG_PROTOBUF_REGISTRATION_CONFLICT=warn
       - GRPCPort=7777
-    volumes:
-      - ./scheduler:/horahora/scheduler
 
   videoservice:
     {% if build_images %}
@@ -110,7 +108,6 @@ services:
       - GOLANG_PROTOBUF_REGISTRATION_CONFLICT=warn
       - GRPCPort=7777
     volumes:
-      - ./video_service:/horahora/videoservice
       - $HOME/.aws/:/root/.aws/:ro
 
   userservice:
@@ -136,8 +133,6 @@ services:
       - pgs_pass=password
       - pgs_db=userservice
       - GRPCPort=7777
-    volumes:
-      - ./user_service:/horahora/userservice
 
   postgres:
     {% if build_images %}
@@ -202,9 +197,6 @@ services:
       - userservice
       - videoservice
       - horaminio
-    volumes:
-      - ./static:/etc/nginx/html/static/images
-      - ./videos/otomads:/etc/nginx/html/otomads
 
   redis:
     image: "redis:alpine"
