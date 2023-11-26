@@ -1,4 +1,4 @@
-import { ResponseContext, RequestContext, HttpFile } from '../http/http';
+import { ResponseContext, RequestContext, HttpFile, HttpInfo } from '../http/http';
 import { Configuration} from '../configuration'
 
 import { ArchiveEvents200ResponseInner } from '../models/ArchiveEvents200ResponseInner';
@@ -556,8 +556,24 @@ export class ObjectDefaultApi {
      * Retry archive request
      * @param param the request object
      */
+    public approveDownloadWithHttpInfo(param: DefaultApiApproveDownloadRequest, options?: Configuration): Promise<HttpInfo<void>> {
+        return this.api.approveDownloadWithHttpInfo(param.videoID, param.cookie,  options).toPromise();
+    }
+
+    /**
+     * Retry archive request
+     * @param param the request object
+     */
     public approveDownload(param: DefaultApiApproveDownloadRequest, options?: Configuration): Promise<void> {
         return this.api.approveDownload(param.videoID, param.cookie,  options).toPromise();
+    }
+
+    /**
+     * Retry archive request
+     * @param param the request object
+     */
+    public approveVideoWithHttpInfo(param: DefaultApiApproveVideoRequest, options?: Configuration): Promise<HttpInfo<void>> {
+        return this.api.approveVideoWithHttpInfo(param.videoID, param.mature, param.cookie,  options).toPromise();
     }
 
     /**
@@ -572,8 +588,24 @@ export class ObjectDefaultApi {
      * Get archive events
      * @param param the request object
      */
+    public archiveEventsWithHttpInfo(param: DefaultApiArchiveEventsRequest, options?: Configuration): Promise<HttpInfo<Array<ArchiveEvents200ResponseInner>>> {
+        return this.api.archiveEventsWithHttpInfo(param.downloadID,  options).toPromise();
+    }
+
+    /**
+     * Get archive events
+     * @param param the request object
+     */
     public archiveEvents(param: DefaultApiArchiveEventsRequest, options?: Configuration): Promise<Array<ArchiveEvents200ResponseInner>> {
         return this.api.archiveEvents(param.downloadID,  options).toPromise();
+    }
+
+    /**
+     * Get archive requests
+     * @param param the request object
+     */
+    public archiveRequestsWithHttpInfo(param: DefaultApiArchiveRequestsRequest = {}, options?: Configuration): Promise<HttpInfo<Array<ArchiveRequests200ResponseInner>>> {
+        return this.api.archiveRequestsWithHttpInfo(param.cookie,  options).toPromise();
     }
 
     /**
@@ -588,8 +620,24 @@ export class ObjectDefaultApi {
      * Get archive requests
      * @param param the request object
      */
+    public auditEventsWithHttpInfo(param: DefaultApiAuditEventsRequest, options?: Configuration): Promise<HttpInfo<Array<ArchiveRequests200ResponseInner>>> {
+        return this.api.auditEventsWithHttpInfo(param.pageNumber, param.id, param.cookie,  options).toPromise();
+    }
+
+    /**
+     * Get archive requests
+     * @param param the request object
+     */
     public auditEvents(param: DefaultApiAuditEventsRequest, options?: Configuration): Promise<Array<ArchiveRequests200ResponseInner>> {
         return this.api.auditEvents(param.pageNumber, param.id, param.cookie,  options).toPromise();
+    }
+
+    /**
+     * Comment on a video
+     * @param param the request object
+     */
+    public commentWithHttpInfo(param: DefaultApiCommentRequest, options?: Configuration): Promise<HttpInfo<void>> {
+        return this.api.commentWithHttpInfo(param.parent, param.content, param.videoID, param.cookie,  options).toPromise();
     }
 
     /**
@@ -604,8 +652,24 @@ export class ObjectDefaultApi {
      * Get comments for video ID
      * @param param the request object
      */
+    public commentsWithHttpInfo(param: DefaultApiCommentsRequest, options?: Configuration): Promise<HttpInfo<Array<Comments200ResponseInner>>> {
+        return this.api.commentsWithHttpInfo(param.id,  options).toPromise();
+    }
+
+    /**
+     * Get comments for video ID
+     * @param param the request object
+     */
     public comments(param: DefaultApiCommentsRequest, options?: Configuration): Promise<Array<Comments200ResponseInner>> {
         return this.api.comments(param.id,  options).toPromise();
+    }
+
+    /**
+     * Create new danmaku
+     * @param param the request object
+     */
+    public createDanmakuWithHttpInfo(param: DefaultApiCreateDanmakuRequest, options?: Configuration): Promise<HttpInfo<void>> {
+        return this.api.createDanmakuWithHttpInfo(param.videoID, param.timestamp, param.message, param.type, param.color, param.fontSize,  options).toPromise();
     }
 
     /**
@@ -620,8 +684,24 @@ export class ObjectDefaultApi {
      * Retry archive request
      * @param param the request object
      */
+    public deleteArchiveRequestWithHttpInfo(param: DefaultApiDeleteArchiveRequestRequest, options?: Configuration): Promise<HttpInfo<void>> {
+        return this.api.deleteArchiveRequestWithHttpInfo(param.downloadID, param.cookie,  options).toPromise();
+    }
+
+    /**
+     * Retry archive request
+     * @param param the request object
+     */
     public deleteArchiveRequest(param: DefaultApiDeleteArchiveRequestRequest, options?: Configuration): Promise<void> {
         return this.api.deleteArchiveRequest(param.downloadID, param.cookie,  options).toPromise();
+    }
+
+    /**
+     * Delete a comment
+     * @param param the request object
+     */
+    public deleteCommentWithHttpInfo(param: DefaultApiDeleteCommentRequest, options?: Configuration): Promise<HttpInfo<void>> {
+        return this.api.deleteCommentWithHttpInfo(param.id, param.cookie,  options).toPromise();
     }
 
     /**
@@ -636,8 +716,24 @@ export class ObjectDefaultApi {
      * Create new email validation
      * @param param the request object
      */
+    public emailValidationWithHttpInfo(param: DefaultApiEmailValidationRequest, options?: Configuration): Promise<HttpInfo<void>> {
+        return this.api.emailValidationWithHttpInfo(param.email,  options).toPromise();
+    }
+
+    /**
+     * Create new email validation
+     * @param param the request object
+     */
     public emailValidation(param: DefaultApiEmailValidationRequest, options?: Configuration): Promise<void> {
         return this.api.emailValidation(param.email,  options).toPromise();
+    }
+
+    /**
+     * Upvote a video
+     * @param param the request object
+     */
+    public followWithHttpInfo(param: DefaultApiFollowRequest, options?: Configuration): Promise<HttpInfo<void>> {
+        return this.api.followWithHttpInfo(param.id,  options).toPromise();
     }
 
     /**
@@ -652,8 +748,24 @@ export class ObjectDefaultApi {
      * Upvote a video
      * @param param the request object
      */
+    public followFeedWithHttpInfo(param: DefaultApiFollowFeedRequest, options?: Configuration): Promise<HttpInfo<Array<Recommendations200ResponseInner>>> {
+        return this.api.followFeedWithHttpInfo(param.showMature,  options).toPromise();
+    }
+
+    /**
+     * Upvote a video
+     * @param param the request object
+     */
     public followFeed(param: DefaultApiFollowFeedRequest, options?: Configuration): Promise<Array<Recommendations200ResponseInner>> {
         return this.api.followFeed(param.showMature,  options).toPromise();
+    }
+
+    /**
+     * Get danmaku for video
+     * @param param the request object
+     */
+    public getDanmakuWithHttpInfo(param: DefaultApiGetDanmakuRequest, options?: Configuration): Promise<HttpInfo<Array<GetDanmaku200ResponseInner>>> {
+        return this.api.getDanmakuWithHttpInfo(param.id,  options).toPromise();
     }
 
     /**
@@ -668,8 +780,24 @@ export class ObjectDefaultApi {
      * Retry archive request
      * @param param the request object
      */
+    public getUnapprovedVideosWithHttpInfo(param: DefaultApiGetUnapprovedVideosRequest = {}, options?: Configuration): Promise<HttpInfo<Array<GetUnapprovedVideos200ResponseInner>>> {
+        return this.api.getUnapprovedVideosWithHttpInfo(param.cookie,  options).toPromise();
+    }
+
+    /**
+     * Retry archive request
+     * @param param the request object
+     */
     public getUnapprovedVideos(param: DefaultApiGetUnapprovedVideosRequest = {}, options?: Configuration): Promise<Array<GetUnapprovedVideos200ResponseInner>> {
         return this.api.getUnapprovedVideos(param.cookie,  options).toPromise();
+    }
+
+    /**
+     * Log the user in
+     * @param param the request object
+     */
+    public loginWithHttpInfo(param: DefaultApiLoginRequest, options?: Configuration): Promise<HttpInfo<void>> {
+        return this.api.loginWithHttpInfo(param.username, param.password,  options).toPromise();
     }
 
     /**
@@ -684,8 +812,24 @@ export class ObjectDefaultApi {
      * Log user out
      * @param param the request object
      */
+    public logoutWithHttpInfo(param: DefaultApiLogoutRequest = {}, options?: Configuration): Promise<HttpInfo<void>> {
+        return this.api.logoutWithHttpInfo( options).toPromise();
+    }
+
+    /**
+     * Log user out
+     * @param param the request object
+     */
     public logout(param: DefaultApiLogoutRequest = {}, options?: Configuration): Promise<void> {
         return this.api.logout( options).toPromise();
+    }
+
+    /**
+     * Create new archive request
+     * @param param the request object
+     */
+    public newArchiveRequestWithHttpInfo(param: DefaultApiNewArchiveRequestRequest, options?: Configuration): Promise<HttpInfo<void>> {
+        return this.api.newArchiveRequestWithHttpInfo(param.url, param.cookie,  options).toPromise();
     }
 
     /**
@@ -700,8 +844,24 @@ export class ObjectDefaultApi {
      * Get list of videos
      * @param param the request object
      */
+    public recommendationsWithHttpInfo(param: DefaultApiRecommendationsRequest, options?: Configuration): Promise<HttpInfo<Array<Recommendations200ResponseInner>>> {
+        return this.api.recommendationsWithHttpInfo(param.id, param.showMature, param.cookie,  options).toPromise();
+    }
+
+    /**
+     * Get list of videos
+     * @param param the request object
+     */
     public recommendations(param: DefaultApiRecommendationsRequest, options?: Configuration): Promise<Array<Recommendations200ResponseInner>> {
         return this.api.recommendations(param.id, param.showMature, param.cookie,  options).toPromise();
+    }
+
+    /**
+     * Register user
+     * @param param the request object
+     */
+    public registerWithHttpInfo(param: DefaultApiRegisterRequest, options?: Configuration): Promise<HttpInfo<void>> {
+        return this.api.registerWithHttpInfo(param.username, param.password, param.email, param.verificationCode,  options).toPromise();
     }
 
     /**
@@ -716,8 +876,24 @@ export class ObjectDefaultApi {
      * Reset password
      * @param param the request object
      */
+    public resetPasswordWithHttpInfo(param: DefaultApiResetPasswordRequest, options?: Configuration): Promise<HttpInfo<void>> {
+        return this.api.resetPasswordWithHttpInfo(param.oldpassword, param.newpassword, param.cookie,  options).toPromise();
+    }
+
+    /**
+     * Reset password
+     * @param param the request object
+     */
     public resetPassword(param: DefaultApiResetPasswordRequest, options?: Configuration): Promise<void> {
         return this.api.resetPassword(param.oldpassword, param.newpassword, param.cookie,  options).toPromise();
+    }
+
+    /**
+     * Retry archive request
+     * @param param the request object
+     */
+    public retryArchiveRequestWithHttpInfo(param: DefaultApiRetryArchiveRequestRequest, options?: Configuration): Promise<HttpInfo<void>> {
+        return this.api.retryArchiveRequestWithHttpInfo(param.downloadID, param.cookie,  options).toPromise();
     }
 
     /**
@@ -732,8 +908,24 @@ export class ObjectDefaultApi {
      * Retry archive request
      * @param param the request object
      */
+    public unapproveDownloadWithHttpInfo(param: DefaultApiUnapproveDownloadRequest, options?: Configuration): Promise<HttpInfo<void>> {
+        return this.api.unapproveDownloadWithHttpInfo(param.videoID, param.cookie,  options).toPromise();
+    }
+
+    /**
+     * Retry archive request
+     * @param param the request object
+     */
     public unapproveDownload(param: DefaultApiUnapproveDownloadRequest, options?: Configuration): Promise<void> {
         return this.api.unapproveDownload(param.videoID, param.cookie,  options).toPromise();
+    }
+
+    /**
+     * Update user\'s profile
+     * @param param the request object
+     */
+    public updateProfileWithHttpInfo(param: DefaultApiUpdateProfileRequest, options?: Configuration): Promise<HttpInfo<void>> {
+        return this.api.updateProfileWithHttpInfo(param.username, param.gender, param.birthdate, param.bio,  options).toPromise();
     }
 
     /**
@@ -748,8 +940,24 @@ export class ObjectDefaultApi {
      * Upload a new video
      * @param param the request object
      */
+    public uploadWithHttpInfo(param: DefaultApiUploadRequest, options?: Configuration): Promise<HttpInfo<void>> {
+        return this.api.uploadWithHttpInfo(param.tags, param.title, param.description, param.category, param.filename,  options).toPromise();
+    }
+
+    /**
+     * Upload a new video
+     * @param param the request object
+     */
     public upload(param: DefaultApiUploadRequest, options?: Configuration): Promise<void> {
         return this.api.upload(param.tags, param.title, param.description, param.category, param.filename,  options).toPromise();
+    }
+
+    /**
+     * Get user video data
+     * @param param the request object
+     */
+    public upvoteWithHttpInfo(param: DefaultApiUpvoteRequest, options?: Configuration): Promise<HttpInfo<void>> {
+        return this.api.upvoteWithHttpInfo(param.id, param.score, param.cookie,  options).toPromise();
     }
 
     /**
@@ -764,8 +972,24 @@ export class ObjectDefaultApi {
      * Upvote a video
      * @param param the request object
      */
+    public upvoteVideoWithHttpInfo(param: DefaultApiUpvoteVideoRequest, options?: Configuration): Promise<HttpInfo<void>> {
+        return this.api.upvoteVideoWithHttpInfo(param.id, param.score, param.cookie,  options).toPromise();
+    }
+
+    /**
+     * Upvote a video
+     * @param param the request object
+     */
     public upvoteVideo(param: DefaultApiUpvoteVideoRequest, options?: Configuration): Promise<void> {
         return this.api.upvoteVideo(param.id, param.score, param.cookie,  options).toPromise();
+    }
+
+    /**
+     * Get user video data
+     * @param param the request object
+     */
+    public usersWithHttpInfo(param: DefaultApiUsersRequest, options?: Configuration): Promise<HttpInfo<Users200Response>> {
+        return this.api.usersWithHttpInfo(param.id, param.showMature,  options).toPromise();
     }
 
     /**
@@ -780,8 +1004,24 @@ export class ObjectDefaultApi {
      * Get list of videos
      * @param param the request object
      */
+    public videoDetailWithHttpInfo(param: DefaultApiVideoDetailRequest, options?: Configuration): Promise<HttpInfo<VideoDetail200Response>> {
+        return this.api.videoDetailWithHttpInfo(param.id,  options).toPromise();
+    }
+
+    /**
+     * Get list of videos
+     * @param param the request object
+     */
     public videoDetail(param: DefaultApiVideoDetailRequest, options?: Configuration): Promise<VideoDetail200Response> {
         return this.api.videoDetail(param.id,  options).toPromise();
+    }
+
+    /**
+     * Get list of videos
+     * @param param the request object
+     */
+    public videosWithHttpInfo(param: DefaultApiVideosRequest, options?: Configuration): Promise<HttpInfo<Videos200Response>> {
+        return this.api.videosWithHttpInfo(param.showMature, param.search, param.sortCategory, param.order, param.unapproved, param.pageNumber, param.category,  options).toPromise();
     }
 
     /**

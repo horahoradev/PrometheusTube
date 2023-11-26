@@ -1,7 +1,7 @@
 // TODO: better import syntax?
 import {BaseAPIRequestFactory, RequiredError, COLLECTION_FORMATS} from './baseapi';
 import {Configuration} from '../configuration';
-import {RequestContext, HttpMethod, ResponseContext, HttpFile} from '../http/http';
+import {RequestContext, HttpMethod, ResponseContext, HttpFile, HttpInfo} from '../http/http';
 import {ObjectSerializer} from '../models/ObjectSerializer';
 import {ApiException} from './exception';
 import {canConsumeForm, isCodeInRange} from '../util';
@@ -1347,10 +1347,10 @@ export class DefaultApiResponseProcessor {
      * @params response Response returned by the server for a request to approveDownload
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async approveDownload(response: ResponseContext): Promise<void > {
+     public async approveDownloadWithHttpInfo(response: ResponseContext): Promise<HttpInfo<void >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            return;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, undefined);
         }
         if (isCodeInRange("0", response.httpStatusCode)) {
             throw new ApiException<undefined>(response.httpStatusCode, "Unexpected error", undefined, response.headers);
@@ -1362,7 +1362,7 @@ export class DefaultApiResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "void", ""
             ) as void;
-            return body;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
         throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
@@ -1375,10 +1375,10 @@ export class DefaultApiResponseProcessor {
      * @params response Response returned by the server for a request to approveVideo
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async approveVideo(response: ResponseContext): Promise<void > {
+     public async approveVideoWithHttpInfo(response: ResponseContext): Promise<HttpInfo<void >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            return;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, undefined);
         }
         if (isCodeInRange("0", response.httpStatusCode)) {
             throw new ApiException<undefined>(response.httpStatusCode, "Unexpected error", undefined, response.headers);
@@ -1390,7 +1390,7 @@ export class DefaultApiResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "void", ""
             ) as void;
-            return body;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
         throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
@@ -1403,14 +1403,14 @@ export class DefaultApiResponseProcessor {
      * @params response Response returned by the server for a request to archiveEvents
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async archiveEvents(response: ResponseContext): Promise<Array<ArchiveEvents200ResponseInner> > {
+     public async archiveEventsWithHttpInfo(response: ResponseContext): Promise<HttpInfo<Array<ArchiveEvents200ResponseInner> >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
             const body: Array<ArchiveEvents200ResponseInner> = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "Array<ArchiveEvents200ResponseInner>", ""
             ) as Array<ArchiveEvents200ResponseInner>;
-            return body;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
         if (isCodeInRange("0", response.httpStatusCode)) {
             throw new ApiException<undefined>(response.httpStatusCode, "Unexpected error", undefined, response.headers);
@@ -1422,7 +1422,7 @@ export class DefaultApiResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "Array<ArchiveEvents200ResponseInner>", ""
             ) as Array<ArchiveEvents200ResponseInner>;
-            return body;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
         throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
@@ -1435,14 +1435,14 @@ export class DefaultApiResponseProcessor {
      * @params response Response returned by the server for a request to archiveRequests
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async archiveRequests(response: ResponseContext): Promise<Array<ArchiveRequests200ResponseInner> > {
+     public async archiveRequestsWithHttpInfo(response: ResponseContext): Promise<HttpInfo<Array<ArchiveRequests200ResponseInner> >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
             const body: Array<ArchiveRequests200ResponseInner> = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "Array<ArchiveRequests200ResponseInner>", ""
             ) as Array<ArchiveRequests200ResponseInner>;
-            return body;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
         if (isCodeInRange("0", response.httpStatusCode)) {
             throw new ApiException<undefined>(response.httpStatusCode, "Unexpected error", undefined, response.headers);
@@ -1454,7 +1454,7 @@ export class DefaultApiResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "Array<ArchiveRequests200ResponseInner>", ""
             ) as Array<ArchiveRequests200ResponseInner>;
-            return body;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
         throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
@@ -1467,14 +1467,14 @@ export class DefaultApiResponseProcessor {
      * @params response Response returned by the server for a request to auditEvents
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async auditEvents(response: ResponseContext): Promise<Array<ArchiveRequests200ResponseInner> > {
+     public async auditEventsWithHttpInfo(response: ResponseContext): Promise<HttpInfo<Array<ArchiveRequests200ResponseInner> >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
             const body: Array<ArchiveRequests200ResponseInner> = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "Array<ArchiveRequests200ResponseInner>", ""
             ) as Array<ArchiveRequests200ResponseInner>;
-            return body;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
         if (isCodeInRange("0", response.httpStatusCode)) {
             throw new ApiException<undefined>(response.httpStatusCode, "Unexpected error", undefined, response.headers);
@@ -1486,7 +1486,7 @@ export class DefaultApiResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "Array<ArchiveRequests200ResponseInner>", ""
             ) as Array<ArchiveRequests200ResponseInner>;
-            return body;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
         throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
@@ -1499,10 +1499,10 @@ export class DefaultApiResponseProcessor {
      * @params response Response returned by the server for a request to comment
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async comment(response: ResponseContext): Promise<void > {
+     public async commentWithHttpInfo(response: ResponseContext): Promise<HttpInfo<void >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            return;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, undefined);
         }
         if (isCodeInRange("0", response.httpStatusCode)) {
             throw new ApiException<undefined>(response.httpStatusCode, "Unexpected error", undefined, response.headers);
@@ -1514,7 +1514,7 @@ export class DefaultApiResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "void", ""
             ) as void;
-            return body;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
         throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
@@ -1527,14 +1527,14 @@ export class DefaultApiResponseProcessor {
      * @params response Response returned by the server for a request to comments
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async comments(response: ResponseContext): Promise<Array<Comments200ResponseInner> > {
+     public async commentsWithHttpInfo(response: ResponseContext): Promise<HttpInfo<Array<Comments200ResponseInner> >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
             const body: Array<Comments200ResponseInner> = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "Array<Comments200ResponseInner>", ""
             ) as Array<Comments200ResponseInner>;
-            return body;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
         if (isCodeInRange("0", response.httpStatusCode)) {
             throw new ApiException<undefined>(response.httpStatusCode, "Unexpected error", undefined, response.headers);
@@ -1546,7 +1546,7 @@ export class DefaultApiResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "Array<Comments200ResponseInner>", ""
             ) as Array<Comments200ResponseInner>;
-            return body;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
         throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
@@ -1559,10 +1559,10 @@ export class DefaultApiResponseProcessor {
      * @params response Response returned by the server for a request to createDanmaku
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async createDanmaku(response: ResponseContext): Promise<void > {
+     public async createDanmakuWithHttpInfo(response: ResponseContext): Promise<HttpInfo<void >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            return;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, undefined);
         }
         if (isCodeInRange("0", response.httpStatusCode)) {
             throw new ApiException<undefined>(response.httpStatusCode, "Unexpected error", undefined, response.headers);
@@ -1574,7 +1574,7 @@ export class DefaultApiResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "void", ""
             ) as void;
-            return body;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
         throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
@@ -1587,10 +1587,10 @@ export class DefaultApiResponseProcessor {
      * @params response Response returned by the server for a request to deleteArchiveRequest
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async deleteArchiveRequest(response: ResponseContext): Promise<void > {
+     public async deleteArchiveRequestWithHttpInfo(response: ResponseContext): Promise<HttpInfo<void >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            return;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, undefined);
         }
         if (isCodeInRange("0", response.httpStatusCode)) {
             throw new ApiException<undefined>(response.httpStatusCode, "Unexpected error", undefined, response.headers);
@@ -1602,7 +1602,7 @@ export class DefaultApiResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "void", ""
             ) as void;
-            return body;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
         throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
@@ -1615,10 +1615,10 @@ export class DefaultApiResponseProcessor {
      * @params response Response returned by the server for a request to deleteComment
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async deleteComment(response: ResponseContext): Promise<void > {
+     public async deleteCommentWithHttpInfo(response: ResponseContext): Promise<HttpInfo<void >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            return;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, undefined);
         }
         if (isCodeInRange("0", response.httpStatusCode)) {
             throw new ApiException<undefined>(response.httpStatusCode, "Unexpected error", undefined, response.headers);
@@ -1630,7 +1630,7 @@ export class DefaultApiResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "void", ""
             ) as void;
-            return body;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
         throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
@@ -1643,10 +1643,10 @@ export class DefaultApiResponseProcessor {
      * @params response Response returned by the server for a request to emailValidation
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async emailValidation(response: ResponseContext): Promise<void > {
+     public async emailValidationWithHttpInfo(response: ResponseContext): Promise<HttpInfo<void >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            return;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, undefined);
         }
         if (isCodeInRange("0", response.httpStatusCode)) {
             throw new ApiException<undefined>(response.httpStatusCode, "Unexpected error", undefined, response.headers);
@@ -1658,7 +1658,7 @@ export class DefaultApiResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "void", ""
             ) as void;
-            return body;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
         throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
@@ -1671,10 +1671,10 @@ export class DefaultApiResponseProcessor {
      * @params response Response returned by the server for a request to follow
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async follow(response: ResponseContext): Promise<void > {
+     public async followWithHttpInfo(response: ResponseContext): Promise<HttpInfo<void >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            return;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, undefined);
         }
         if (isCodeInRange("0", response.httpStatusCode)) {
             throw new ApiException<undefined>(response.httpStatusCode, "Unexpected error", undefined, response.headers);
@@ -1686,7 +1686,7 @@ export class DefaultApiResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "void", ""
             ) as void;
-            return body;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
         throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
@@ -1699,14 +1699,14 @@ export class DefaultApiResponseProcessor {
      * @params response Response returned by the server for a request to followFeed
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async followFeed(response: ResponseContext): Promise<Array<Recommendations200ResponseInner> > {
+     public async followFeedWithHttpInfo(response: ResponseContext): Promise<HttpInfo<Array<Recommendations200ResponseInner> >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
             const body: Array<Recommendations200ResponseInner> = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "Array<Recommendations200ResponseInner>", ""
             ) as Array<Recommendations200ResponseInner>;
-            return body;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
         if (isCodeInRange("0", response.httpStatusCode)) {
             throw new ApiException<undefined>(response.httpStatusCode, "Unexpected error", undefined, response.headers);
@@ -1718,7 +1718,7 @@ export class DefaultApiResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "Array<Recommendations200ResponseInner>", ""
             ) as Array<Recommendations200ResponseInner>;
-            return body;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
         throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
@@ -1731,14 +1731,14 @@ export class DefaultApiResponseProcessor {
      * @params response Response returned by the server for a request to getDanmaku
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async getDanmaku(response: ResponseContext): Promise<Array<GetDanmaku200ResponseInner> > {
+     public async getDanmakuWithHttpInfo(response: ResponseContext): Promise<HttpInfo<Array<GetDanmaku200ResponseInner> >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
             const body: Array<GetDanmaku200ResponseInner> = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "Array<GetDanmaku200ResponseInner>", ""
             ) as Array<GetDanmaku200ResponseInner>;
-            return body;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
         // Work around for missing responses in specification, e.g. for petstore.yaml
@@ -1747,7 +1747,7 @@ export class DefaultApiResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "Array<GetDanmaku200ResponseInner>", ""
             ) as Array<GetDanmaku200ResponseInner>;
-            return body;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
         throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
@@ -1760,14 +1760,14 @@ export class DefaultApiResponseProcessor {
      * @params response Response returned by the server for a request to getUnapprovedVideos
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async getUnapprovedVideos(response: ResponseContext): Promise<Array<GetUnapprovedVideos200ResponseInner> > {
+     public async getUnapprovedVideosWithHttpInfo(response: ResponseContext): Promise<HttpInfo<Array<GetUnapprovedVideos200ResponseInner> >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
             const body: Array<GetUnapprovedVideos200ResponseInner> = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "Array<GetUnapprovedVideos200ResponseInner>", ""
             ) as Array<GetUnapprovedVideos200ResponseInner>;
-            return body;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
         if (isCodeInRange("0", response.httpStatusCode)) {
             throw new ApiException<undefined>(response.httpStatusCode, "Unexpected error", undefined, response.headers);
@@ -1779,7 +1779,7 @@ export class DefaultApiResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "Array<GetUnapprovedVideos200ResponseInner>", ""
             ) as Array<GetUnapprovedVideos200ResponseInner>;
-            return body;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
         throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
@@ -1792,10 +1792,10 @@ export class DefaultApiResponseProcessor {
      * @params response Response returned by the server for a request to login
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async login(response: ResponseContext): Promise<void > {
+     public async loginWithHttpInfo(response: ResponseContext): Promise<HttpInfo<void >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            return;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, undefined);
         }
         if (isCodeInRange("0", response.httpStatusCode)) {
             throw new ApiException<undefined>(response.httpStatusCode, "Unexpected error", undefined, response.headers);
@@ -1807,7 +1807,7 @@ export class DefaultApiResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "void", ""
             ) as void;
-            return body;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
         throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
@@ -1820,10 +1820,10 @@ export class DefaultApiResponseProcessor {
      * @params response Response returned by the server for a request to logout
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async logout(response: ResponseContext): Promise<void > {
+     public async logoutWithHttpInfo(response: ResponseContext): Promise<HttpInfo<void >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            return;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, undefined);
         }
         if (isCodeInRange("0", response.httpStatusCode)) {
             throw new ApiException<undefined>(response.httpStatusCode, "Unexpected error", undefined, response.headers);
@@ -1835,7 +1835,7 @@ export class DefaultApiResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "void", ""
             ) as void;
-            return body;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
         throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
@@ -1848,10 +1848,10 @@ export class DefaultApiResponseProcessor {
      * @params response Response returned by the server for a request to newArchiveRequest
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async newArchiveRequest(response: ResponseContext): Promise<void > {
+     public async newArchiveRequestWithHttpInfo(response: ResponseContext): Promise<HttpInfo<void >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            return;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, undefined);
         }
         if (isCodeInRange("0", response.httpStatusCode)) {
             throw new ApiException<undefined>(response.httpStatusCode, "Unexpected error", undefined, response.headers);
@@ -1863,7 +1863,7 @@ export class DefaultApiResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "void", ""
             ) as void;
-            return body;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
         throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
@@ -1876,14 +1876,14 @@ export class DefaultApiResponseProcessor {
      * @params response Response returned by the server for a request to recommendations
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async recommendations(response: ResponseContext): Promise<Array<Recommendations200ResponseInner> > {
+     public async recommendationsWithHttpInfo(response: ResponseContext): Promise<HttpInfo<Array<Recommendations200ResponseInner> >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
             const body: Array<Recommendations200ResponseInner> = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "Array<Recommendations200ResponseInner>", ""
             ) as Array<Recommendations200ResponseInner>;
-            return body;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
         if (isCodeInRange("0", response.httpStatusCode)) {
             throw new ApiException<undefined>(response.httpStatusCode, "Unexpected error", undefined, response.headers);
@@ -1895,7 +1895,7 @@ export class DefaultApiResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "Array<Recommendations200ResponseInner>", ""
             ) as Array<Recommendations200ResponseInner>;
-            return body;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
         throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
@@ -1908,10 +1908,10 @@ export class DefaultApiResponseProcessor {
      * @params response Response returned by the server for a request to register
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async register(response: ResponseContext): Promise<void > {
+     public async registerWithHttpInfo(response: ResponseContext): Promise<HttpInfo<void >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            return;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, undefined);
         }
         if (isCodeInRange("0", response.httpStatusCode)) {
             throw new ApiException<undefined>(response.httpStatusCode, "Unexpected error", undefined, response.headers);
@@ -1923,7 +1923,7 @@ export class DefaultApiResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "void", ""
             ) as void;
-            return body;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
         throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
@@ -1936,10 +1936,10 @@ export class DefaultApiResponseProcessor {
      * @params response Response returned by the server for a request to resetPassword
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async resetPassword(response: ResponseContext): Promise<void > {
+     public async resetPasswordWithHttpInfo(response: ResponseContext): Promise<HttpInfo<void >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            return;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, undefined);
         }
         if (isCodeInRange("0", response.httpStatusCode)) {
             throw new ApiException<undefined>(response.httpStatusCode, "Unexpected error", undefined, response.headers);
@@ -1951,7 +1951,7 @@ export class DefaultApiResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "void", ""
             ) as void;
-            return body;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
         throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
@@ -1964,10 +1964,10 @@ export class DefaultApiResponseProcessor {
      * @params response Response returned by the server for a request to retryArchiveRequest
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async retryArchiveRequest(response: ResponseContext): Promise<void > {
+     public async retryArchiveRequestWithHttpInfo(response: ResponseContext): Promise<HttpInfo<void >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            return;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, undefined);
         }
         if (isCodeInRange("0", response.httpStatusCode)) {
             throw new ApiException<undefined>(response.httpStatusCode, "Unexpected error", undefined, response.headers);
@@ -1979,7 +1979,7 @@ export class DefaultApiResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "void", ""
             ) as void;
-            return body;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
         throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
@@ -1992,10 +1992,10 @@ export class DefaultApiResponseProcessor {
      * @params response Response returned by the server for a request to unapproveDownload
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async unapproveDownload(response: ResponseContext): Promise<void > {
+     public async unapproveDownloadWithHttpInfo(response: ResponseContext): Promise<HttpInfo<void >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            return;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, undefined);
         }
         if (isCodeInRange("0", response.httpStatusCode)) {
             throw new ApiException<undefined>(response.httpStatusCode, "Unexpected error", undefined, response.headers);
@@ -2007,7 +2007,7 @@ export class DefaultApiResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "void", ""
             ) as void;
-            return body;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
         throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
@@ -2020,10 +2020,10 @@ export class DefaultApiResponseProcessor {
      * @params response Response returned by the server for a request to updateProfile
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async updateProfile(response: ResponseContext): Promise<void > {
+     public async updateProfileWithHttpInfo(response: ResponseContext): Promise<HttpInfo<void >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            return;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, undefined);
         }
         if (isCodeInRange("0", response.httpStatusCode)) {
             throw new ApiException<undefined>(response.httpStatusCode, "Unexpected error", undefined, response.headers);
@@ -2035,7 +2035,7 @@ export class DefaultApiResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "void", ""
             ) as void;
-            return body;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
         throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
@@ -2048,10 +2048,10 @@ export class DefaultApiResponseProcessor {
      * @params response Response returned by the server for a request to upload
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async upload(response: ResponseContext): Promise<void > {
+     public async uploadWithHttpInfo(response: ResponseContext): Promise<HttpInfo<void >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            return;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, undefined);
         }
         if (isCodeInRange("0", response.httpStatusCode)) {
             throw new ApiException<undefined>(response.httpStatusCode, "Unexpected error", undefined, response.headers);
@@ -2063,7 +2063,7 @@ export class DefaultApiResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "void", ""
             ) as void;
-            return body;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
         throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
@@ -2076,10 +2076,10 @@ export class DefaultApiResponseProcessor {
      * @params response Response returned by the server for a request to upvote
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async upvote(response: ResponseContext): Promise<void > {
+     public async upvoteWithHttpInfo(response: ResponseContext): Promise<HttpInfo<void >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            return;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, undefined);
         }
         if (isCodeInRange("0", response.httpStatusCode)) {
             throw new ApiException<undefined>(response.httpStatusCode, "Unexpected error", undefined, response.headers);
@@ -2091,7 +2091,7 @@ export class DefaultApiResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "void", ""
             ) as void;
-            return body;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
         throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
@@ -2104,10 +2104,10 @@ export class DefaultApiResponseProcessor {
      * @params response Response returned by the server for a request to upvoteVideo
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async upvoteVideo(response: ResponseContext): Promise<void > {
+     public async upvoteVideoWithHttpInfo(response: ResponseContext): Promise<HttpInfo<void >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            return;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, undefined);
         }
         if (isCodeInRange("0", response.httpStatusCode)) {
             throw new ApiException<undefined>(response.httpStatusCode, "Unexpected error", undefined, response.headers);
@@ -2119,7 +2119,7 @@ export class DefaultApiResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "void", ""
             ) as void;
-            return body;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
         throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
@@ -2132,14 +2132,14 @@ export class DefaultApiResponseProcessor {
      * @params response Response returned by the server for a request to users
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async users(response: ResponseContext): Promise<Users200Response > {
+     public async usersWithHttpInfo(response: ResponseContext): Promise<HttpInfo<Users200Response >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
             const body: Users200Response = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "Users200Response", ""
             ) as Users200Response;
-            return body;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
         if (isCodeInRange("0", response.httpStatusCode)) {
             throw new ApiException<undefined>(response.httpStatusCode, "Unexpected error", undefined, response.headers);
@@ -2151,7 +2151,7 @@ export class DefaultApiResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "Users200Response", ""
             ) as Users200Response;
-            return body;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
         throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
@@ -2164,14 +2164,14 @@ export class DefaultApiResponseProcessor {
      * @params response Response returned by the server for a request to videoDetail
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async videoDetail(response: ResponseContext): Promise<VideoDetail200Response > {
+     public async videoDetailWithHttpInfo(response: ResponseContext): Promise<HttpInfo<VideoDetail200Response >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
             const body: VideoDetail200Response = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "VideoDetail200Response", ""
             ) as VideoDetail200Response;
-            return body;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
         if (isCodeInRange("0", response.httpStatusCode)) {
             throw new ApiException<undefined>(response.httpStatusCode, "Unexpected error", undefined, response.headers);
@@ -2183,7 +2183,7 @@ export class DefaultApiResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "VideoDetail200Response", ""
             ) as VideoDetail200Response;
-            return body;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
         throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
@@ -2196,14 +2196,14 @@ export class DefaultApiResponseProcessor {
      * @params response Response returned by the server for a request to videos
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async videos(response: ResponseContext): Promise<Videos200Response > {
+     public async videosWithHttpInfo(response: ResponseContext): Promise<HttpInfo<Videos200Response >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
             const body: Videos200Response = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "Videos200Response", ""
             ) as Videos200Response;
-            return body;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
         if (isCodeInRange("0", response.httpStatusCode)) {
             throw new ApiException<undefined>(response.httpStatusCode, "Unexpected error", undefined, response.headers);
@@ -2215,7 +2215,7 @@ export class DefaultApiResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "Videos200Response", ""
             ) as Videos200Response;
-            return body;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
         throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);

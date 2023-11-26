@@ -1,4 +1,4 @@
-import { ResponseContext, RequestContext, HttpFile } from '../http/http';
+import { ResponseContext, RequestContext, HttpFile, HttpInfo } from '../http/http';
 import { Configuration} from '../configuration'
 import { Observable, of, from } from '../rxjsStub';
 import {mergeMap, map} from  '../rxjsStub';
@@ -36,7 +36,7 @@ export class ObservableDefaultApi {
      * @param videoID video ID to download
      * @param cookie auth cookies etc
      */
-    public approveDownload(videoID: number, cookie?: string, _options?: Configuration): Observable<void> {
+    public approveDownloadWithHttpInfo(videoID: number, cookie?: string, _options?: Configuration): Observable<HttpInfo<void>> {
         const requestContextPromise = this.requestFactory.approveDownload(videoID, cookie, _options);
 
         // build promise chain
@@ -51,8 +51,17 @@ export class ObservableDefaultApi {
                 for (let middleware of this.configuration.middleware) {
                     middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
                 }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.approveDownload(rsp)));
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.approveDownloadWithHttpInfo(rsp)));
             }));
+    }
+
+    /**
+     * Retry archive request
+     * @param videoID video ID to download
+     * @param cookie auth cookies etc
+     */
+    public approveDownload(videoID: number, cookie?: string, _options?: Configuration): Observable<void> {
+        return this.approveDownloadWithHttpInfo(videoID, cookie, _options).pipe(map((apiResponse: HttpInfo<void>) => apiResponse.data));
     }
 
     /**
@@ -61,7 +70,7 @@ export class ObservableDefaultApi {
      * @param mature auth cookies etc
      * @param cookie auth cookies etc
      */
-    public approveVideo(videoID: number, mature?: boolean, cookie?: string, _options?: Configuration): Observable<void> {
+    public approveVideoWithHttpInfo(videoID: number, mature?: boolean, cookie?: string, _options?: Configuration): Observable<HttpInfo<void>> {
         const requestContextPromise = this.requestFactory.approveVideo(videoID, mature, cookie, _options);
 
         // build promise chain
@@ -76,15 +85,25 @@ export class ObservableDefaultApi {
                 for (let middleware of this.configuration.middleware) {
                     middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
                 }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.approveVideo(rsp)));
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.approveVideoWithHttpInfo(rsp)));
             }));
+    }
+
+    /**
+     * Retry archive request
+     * @param videoID video ID to download
+     * @param mature auth cookies etc
+     * @param cookie auth cookies etc
+     */
+    public approveVideo(videoID: number, mature?: boolean, cookie?: string, _options?: Configuration): Observable<void> {
+        return this.approveVideoWithHttpInfo(videoID, mature, cookie, _options).pipe(map((apiResponse: HttpInfo<void>) => apiResponse.data));
     }
 
     /**
      * Get archive events
      * @param downloadID download id to filter on
      */
-    public archiveEvents(downloadID: string, _options?: Configuration): Observable<Array<ArchiveEvents200ResponseInner>> {
+    public archiveEventsWithHttpInfo(downloadID: string, _options?: Configuration): Observable<HttpInfo<Array<ArchiveEvents200ResponseInner>>> {
         const requestContextPromise = this.requestFactory.archiveEvents(downloadID, _options);
 
         // build promise chain
@@ -99,15 +118,23 @@ export class ObservableDefaultApi {
                 for (let middleware of this.configuration.middleware) {
                     middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
                 }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.archiveEvents(rsp)));
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.archiveEventsWithHttpInfo(rsp)));
             }));
+    }
+
+    /**
+     * Get archive events
+     * @param downloadID download id to filter on
+     */
+    public archiveEvents(downloadID: string, _options?: Configuration): Observable<Array<ArchiveEvents200ResponseInner>> {
+        return this.archiveEventsWithHttpInfo(downloadID, _options).pipe(map((apiResponse: HttpInfo<Array<ArchiveEvents200ResponseInner>>) => apiResponse.data));
     }
 
     /**
      * Get archive requests
      * @param cookie auth cookies etc
      */
-    public archiveRequests(cookie?: string, _options?: Configuration): Observable<Array<ArchiveRequests200ResponseInner>> {
+    public archiveRequestsWithHttpInfo(cookie?: string, _options?: Configuration): Observable<HttpInfo<Array<ArchiveRequests200ResponseInner>>> {
         const requestContextPromise = this.requestFactory.archiveRequests(cookie, _options);
 
         // build promise chain
@@ -122,8 +149,16 @@ export class ObservableDefaultApi {
                 for (let middleware of this.configuration.middleware) {
                     middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
                 }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.archiveRequests(rsp)));
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.archiveRequestsWithHttpInfo(rsp)));
             }));
+    }
+
+    /**
+     * Get archive requests
+     * @param cookie auth cookies etc
+     */
+    public archiveRequests(cookie?: string, _options?: Configuration): Observable<Array<ArchiveRequests200ResponseInner>> {
+        return this.archiveRequestsWithHttpInfo(cookie, _options).pipe(map((apiResponse: HttpInfo<Array<ArchiveRequests200ResponseInner>>) => apiResponse.data));
     }
 
     /**
@@ -132,7 +167,7 @@ export class ObservableDefaultApi {
      * @param id user id to filter on
      * @param cookie auth cookies etc
      */
-    public auditEvents(pageNumber: number, id: number, cookie?: string, _options?: Configuration): Observable<Array<ArchiveRequests200ResponseInner>> {
+    public auditEventsWithHttpInfo(pageNumber: number, id: number, cookie?: string, _options?: Configuration): Observable<HttpInfo<Array<ArchiveRequests200ResponseInner>>> {
         const requestContextPromise = this.requestFactory.auditEvents(pageNumber, id, cookie, _options);
 
         // build promise chain
@@ -147,8 +182,18 @@ export class ObservableDefaultApi {
                 for (let middleware of this.configuration.middleware) {
                     middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
                 }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.auditEvents(rsp)));
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.auditEventsWithHttpInfo(rsp)));
             }));
+    }
+
+    /**
+     * Get archive requests
+     * @param pageNumber content page number
+     * @param id user id to filter on
+     * @param cookie auth cookies etc
+     */
+    public auditEvents(pageNumber: number, id: number, cookie?: string, _options?: Configuration): Observable<Array<ArchiveRequests200ResponseInner>> {
+        return this.auditEventsWithHttpInfo(pageNumber, id, cookie, _options).pipe(map((apiResponse: HttpInfo<Array<ArchiveRequests200ResponseInner>>) => apiResponse.data));
     }
 
     /**
@@ -158,7 +203,7 @@ export class ObservableDefaultApi {
      * @param videoID comment\&#39;s video ID
      * @param cookie auth cookies etc
      */
-    public comment(parent: number, content: string, videoID: number, cookie?: string, _options?: Configuration): Observable<void> {
+    public commentWithHttpInfo(parent: number, content: string, videoID: number, cookie?: string, _options?: Configuration): Observable<HttpInfo<void>> {
         const requestContextPromise = this.requestFactory.comment(parent, content, videoID, cookie, _options);
 
         // build promise chain
@@ -173,15 +218,26 @@ export class ObservableDefaultApi {
                 for (let middleware of this.configuration.middleware) {
                     middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
                 }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.comment(rsp)));
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.commentWithHttpInfo(rsp)));
             }));
+    }
+
+    /**
+     * Comment on a video
+     * @param parent parent comment ID
+     * @param content comment message
+     * @param videoID comment\&#39;s video ID
+     * @param cookie auth cookies etc
+     */
+    public comment(parent: number, content: string, videoID: number, cookie?: string, _options?: Configuration): Observable<void> {
+        return this.commentWithHttpInfo(parent, content, videoID, cookie, _options).pipe(map((apiResponse: HttpInfo<void>) => apiResponse.data));
     }
 
     /**
      * Get comments for video ID
      * @param id video ID
      */
-    public comments(id: number, _options?: Configuration): Observable<Array<Comments200ResponseInner>> {
+    public commentsWithHttpInfo(id: number, _options?: Configuration): Observable<HttpInfo<Array<Comments200ResponseInner>>> {
         const requestContextPromise = this.requestFactory.comments(id, _options);
 
         // build promise chain
@@ -196,8 +252,16 @@ export class ObservableDefaultApi {
                 for (let middleware of this.configuration.middleware) {
                     middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
                 }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.comments(rsp)));
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.commentsWithHttpInfo(rsp)));
             }));
+    }
+
+    /**
+     * Get comments for video ID
+     * @param id video ID
+     */
+    public comments(id: number, _options?: Configuration): Observable<Array<Comments200ResponseInner>> {
+        return this.commentsWithHttpInfo(id, _options).pipe(map((apiResponse: HttpInfo<Array<Comments200ResponseInner>>) => apiResponse.data));
     }
 
     /**
@@ -209,7 +273,7 @@ export class ObservableDefaultApi {
      * @param color comment color
      * @param fontSize comment font size
      */
-    public createDanmaku(videoID: number, timestamp: string, message: string, type: string, color: string, fontSize: string, _options?: Configuration): Observable<void> {
+    public createDanmakuWithHttpInfo(videoID: number, timestamp: string, message: string, type: string, color: string, fontSize: string, _options?: Configuration): Observable<HttpInfo<void>> {
         const requestContextPromise = this.requestFactory.createDanmaku(videoID, timestamp, message, type, color, fontSize, _options);
 
         // build promise chain
@@ -224,8 +288,21 @@ export class ObservableDefaultApi {
                 for (let middleware of this.configuration.middleware) {
                     middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
                 }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.createDanmaku(rsp)));
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.createDanmakuWithHttpInfo(rsp)));
             }));
+    }
+
+    /**
+     * Create new danmaku
+     * @param videoID video ID for danmaku
+     * @param timestamp timestamp for danmaku
+     * @param message message
+     * @param type type of comment
+     * @param color comment color
+     * @param fontSize comment font size
+     */
+    public createDanmaku(videoID: number, timestamp: string, message: string, type: string, color: string, fontSize: string, _options?: Configuration): Observable<void> {
+        return this.createDanmakuWithHttpInfo(videoID, timestamp, message, type, color, fontSize, _options).pipe(map((apiResponse: HttpInfo<void>) => apiResponse.data));
     }
 
     /**
@@ -233,7 +310,7 @@ export class ObservableDefaultApi {
      * @param downloadID download ID of the request to retry
      * @param cookie auth cookies etc
      */
-    public deleteArchiveRequest(downloadID: number, cookie?: string, _options?: Configuration): Observable<void> {
+    public deleteArchiveRequestWithHttpInfo(downloadID: number, cookie?: string, _options?: Configuration): Observable<HttpInfo<void>> {
         const requestContextPromise = this.requestFactory.deleteArchiveRequest(downloadID, cookie, _options);
 
         // build promise chain
@@ -248,8 +325,17 @@ export class ObservableDefaultApi {
                 for (let middleware of this.configuration.middleware) {
                     middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
                 }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.deleteArchiveRequest(rsp)));
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.deleteArchiveRequestWithHttpInfo(rsp)));
             }));
+    }
+
+    /**
+     * Retry archive request
+     * @param downloadID download ID of the request to retry
+     * @param cookie auth cookies etc
+     */
+    public deleteArchiveRequest(downloadID: number, cookie?: string, _options?: Configuration): Observable<void> {
+        return this.deleteArchiveRequestWithHttpInfo(downloadID, cookie, _options).pipe(map((apiResponse: HttpInfo<void>) => apiResponse.data));
     }
 
     /**
@@ -257,7 +343,7 @@ export class ObservableDefaultApi {
      * @param id comment ID
      * @param cookie auth cookies etc
      */
-    public deleteComment(id: number, cookie?: string, _options?: Configuration): Observable<void> {
+    public deleteCommentWithHttpInfo(id: number, cookie?: string, _options?: Configuration): Observable<HttpInfo<void>> {
         const requestContextPromise = this.requestFactory.deleteComment(id, cookie, _options);
 
         // build promise chain
@@ -272,15 +358,24 @@ export class ObservableDefaultApi {
                 for (let middleware of this.configuration.middleware) {
                     middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
                 }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.deleteComment(rsp)));
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.deleteCommentWithHttpInfo(rsp)));
             }));
+    }
+
+    /**
+     * Delete a comment
+     * @param id comment ID
+     * @param cookie auth cookies etc
+     */
+    public deleteComment(id: number, cookie?: string, _options?: Configuration): Observable<void> {
+        return this.deleteCommentWithHttpInfo(id, cookie, _options).pipe(map((apiResponse: HttpInfo<void>) => apiResponse.data));
     }
 
     /**
      * Create new email validation
      * @param email email
      */
-    public emailValidation(email: string, _options?: Configuration): Observable<void> {
+    public emailValidationWithHttpInfo(email: string, _options?: Configuration): Observable<HttpInfo<void>> {
         const requestContextPromise = this.requestFactory.emailValidation(email, _options);
 
         // build promise chain
@@ -295,15 +390,23 @@ export class ObservableDefaultApi {
                 for (let middleware of this.configuration.middleware) {
                     middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
                 }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.emailValidation(rsp)));
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.emailValidationWithHttpInfo(rsp)));
             }));
+    }
+
+    /**
+     * Create new email validation
+     * @param email email
+     */
+    public emailValidation(email: string, _options?: Configuration): Observable<void> {
+        return this.emailValidationWithHttpInfo(email, _options).pipe(map((apiResponse: HttpInfo<void>) => apiResponse.data));
     }
 
     /**
      * Upvote a video
      * @param id user ID
      */
-    public follow(id: number, _options?: Configuration): Observable<void> {
+    public followWithHttpInfo(id: number, _options?: Configuration): Observable<HttpInfo<void>> {
         const requestContextPromise = this.requestFactory.follow(id, _options);
 
         // build promise chain
@@ -318,15 +421,23 @@ export class ObservableDefaultApi {
                 for (let middleware of this.configuration.middleware) {
                     middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
                 }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.follow(rsp)));
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.followWithHttpInfo(rsp)));
             }));
+    }
+
+    /**
+     * Upvote a video
+     * @param id user ID
+     */
+    public follow(id: number, _options?: Configuration): Observable<void> {
+        return this.followWithHttpInfo(id, _options).pipe(map((apiResponse: HttpInfo<void>) => apiResponse.data));
     }
 
     /**
      * Upvote a video
      * @param showMature show mature
      */
-    public followFeed(showMature: boolean, _options?: Configuration): Observable<Array<Recommendations200ResponseInner>> {
+    public followFeedWithHttpInfo(showMature: boolean, _options?: Configuration): Observable<HttpInfo<Array<Recommendations200ResponseInner>>> {
         const requestContextPromise = this.requestFactory.followFeed(showMature, _options);
 
         // build promise chain
@@ -341,15 +452,23 @@ export class ObservableDefaultApi {
                 for (let middleware of this.configuration.middleware) {
                     middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
                 }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.followFeed(rsp)));
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.followFeedWithHttpInfo(rsp)));
             }));
+    }
+
+    /**
+     * Upvote a video
+     * @param showMature show mature
+     */
+    public followFeed(showMature: boolean, _options?: Configuration): Observable<Array<Recommendations200ResponseInner>> {
+        return this.followFeedWithHttpInfo(showMature, _options).pipe(map((apiResponse: HttpInfo<Array<Recommendations200ResponseInner>>) => apiResponse.data));
     }
 
     /**
      * Get danmaku for video
      * @param id video ID
      */
-    public getDanmaku(id: number, _options?: Configuration): Observable<Array<GetDanmaku200ResponseInner>> {
+    public getDanmakuWithHttpInfo(id: number, _options?: Configuration): Observable<HttpInfo<Array<GetDanmaku200ResponseInner>>> {
         const requestContextPromise = this.requestFactory.getDanmaku(id, _options);
 
         // build promise chain
@@ -364,15 +483,23 @@ export class ObservableDefaultApi {
                 for (let middleware of this.configuration.middleware) {
                     middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
                 }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.getDanmaku(rsp)));
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.getDanmakuWithHttpInfo(rsp)));
             }));
+    }
+
+    /**
+     * Get danmaku for video
+     * @param id video ID
+     */
+    public getDanmaku(id: number, _options?: Configuration): Observable<Array<GetDanmaku200ResponseInner>> {
+        return this.getDanmakuWithHttpInfo(id, _options).pipe(map((apiResponse: HttpInfo<Array<GetDanmaku200ResponseInner>>) => apiResponse.data));
     }
 
     /**
      * Retry archive request
      * @param cookie auth cookies etc
      */
-    public getUnapprovedVideos(cookie?: string, _options?: Configuration): Observable<Array<GetUnapprovedVideos200ResponseInner>> {
+    public getUnapprovedVideosWithHttpInfo(cookie?: string, _options?: Configuration): Observable<HttpInfo<Array<GetUnapprovedVideos200ResponseInner>>> {
         const requestContextPromise = this.requestFactory.getUnapprovedVideos(cookie, _options);
 
         // build promise chain
@@ -387,8 +514,16 @@ export class ObservableDefaultApi {
                 for (let middleware of this.configuration.middleware) {
                     middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
                 }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.getUnapprovedVideos(rsp)));
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.getUnapprovedVideosWithHttpInfo(rsp)));
             }));
+    }
+
+    /**
+     * Retry archive request
+     * @param cookie auth cookies etc
+     */
+    public getUnapprovedVideos(cookie?: string, _options?: Configuration): Observable<Array<GetUnapprovedVideos200ResponseInner>> {
+        return this.getUnapprovedVideosWithHttpInfo(cookie, _options).pipe(map((apiResponse: HttpInfo<Array<GetUnapprovedVideos200ResponseInner>>) => apiResponse.data));
     }
 
     /**
@@ -396,7 +531,7 @@ export class ObservableDefaultApi {
      * @param username search string
      * @param password sort category
      */
-    public login(username: string, password: string, _options?: Configuration): Observable<void> {
+    public loginWithHttpInfo(username: string, password: string, _options?: Configuration): Observable<HttpInfo<void>> {
         const requestContextPromise = this.requestFactory.login(username, password, _options);
 
         // build promise chain
@@ -411,14 +546,23 @@ export class ObservableDefaultApi {
                 for (let middleware of this.configuration.middleware) {
                     middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
                 }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.login(rsp)));
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.loginWithHttpInfo(rsp)));
             }));
+    }
+
+    /**
+     * Log the user in
+     * @param username search string
+     * @param password sort category
+     */
+    public login(username: string, password: string, _options?: Configuration): Observable<void> {
+        return this.loginWithHttpInfo(username, password, _options).pipe(map((apiResponse: HttpInfo<void>) => apiResponse.data));
     }
 
     /**
      * Log user out
      */
-    public logout(_options?: Configuration): Observable<void> {
+    public logoutWithHttpInfo(_options?: Configuration): Observable<HttpInfo<void>> {
         const requestContextPromise = this.requestFactory.logout(_options);
 
         // build promise chain
@@ -433,8 +577,15 @@ export class ObservableDefaultApi {
                 for (let middleware of this.configuration.middleware) {
                     middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
                 }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.logout(rsp)));
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.logoutWithHttpInfo(rsp)));
             }));
+    }
+
+    /**
+     * Log user out
+     */
+    public logout(_options?: Configuration): Observable<void> {
+        return this.logoutWithHttpInfo(_options).pipe(map((apiResponse: HttpInfo<void>) => apiResponse.data));
     }
 
     /**
@@ -442,7 +593,7 @@ export class ObservableDefaultApi {
      * @param url url to archive
      * @param cookie auth cookies etc
      */
-    public newArchiveRequest(url: string, cookie?: string, _options?: Configuration): Observable<void> {
+    public newArchiveRequestWithHttpInfo(url: string, cookie?: string, _options?: Configuration): Observable<HttpInfo<void>> {
         const requestContextPromise = this.requestFactory.newArchiveRequest(url, cookie, _options);
 
         // build promise chain
@@ -457,8 +608,17 @@ export class ObservableDefaultApi {
                 for (let middleware of this.configuration.middleware) {
                     middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
                 }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.newArchiveRequest(rsp)));
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.newArchiveRequestWithHttpInfo(rsp)));
             }));
+    }
+
+    /**
+     * Create new archive request
+     * @param url url to archive
+     * @param cookie auth cookies etc
+     */
+    public newArchiveRequest(url: string, cookie?: string, _options?: Configuration): Observable<void> {
+        return this.newArchiveRequestWithHttpInfo(url, cookie, _options).pipe(map((apiResponse: HttpInfo<void>) => apiResponse.data));
     }
 
     /**
@@ -467,7 +627,7 @@ export class ObservableDefaultApi {
      * @param showMature user ID
      * @param cookie auth cookies etc
      */
-    public recommendations(id: number, showMature: boolean, cookie?: string, _options?: Configuration): Observable<Array<Recommendations200ResponseInner>> {
+    public recommendationsWithHttpInfo(id: number, showMature: boolean, cookie?: string, _options?: Configuration): Observable<HttpInfo<Array<Recommendations200ResponseInner>>> {
         const requestContextPromise = this.requestFactory.recommendations(id, showMature, cookie, _options);
 
         // build promise chain
@@ -482,8 +642,18 @@ export class ObservableDefaultApi {
                 for (let middleware of this.configuration.middleware) {
                     middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
                 }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.recommendations(rsp)));
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.recommendationsWithHttpInfo(rsp)));
             }));
+    }
+
+    /**
+     * Get list of videos
+     * @param id video ID
+     * @param showMature user ID
+     * @param cookie auth cookies etc
+     */
+    public recommendations(id: number, showMature: boolean, cookie?: string, _options?: Configuration): Observable<Array<Recommendations200ResponseInner>> {
+        return this.recommendationsWithHttpInfo(id, showMature, cookie, _options).pipe(map((apiResponse: HttpInfo<Array<Recommendations200ResponseInner>>) => apiResponse.data));
     }
 
     /**
@@ -493,7 +663,7 @@ export class ObservableDefaultApi {
      * @param email sort category
      * @param verificationCode verification code
      */
-    public register(username: string, password: string, email: string, verificationCode: number, _options?: Configuration): Observable<void> {
+    public registerWithHttpInfo(username: string, password: string, email: string, verificationCode: number, _options?: Configuration): Observable<HttpInfo<void>> {
         const requestContextPromise = this.requestFactory.register(username, password, email, verificationCode, _options);
 
         // build promise chain
@@ -508,8 +678,19 @@ export class ObservableDefaultApi {
                 for (let middleware of this.configuration.middleware) {
                     middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
                 }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.register(rsp)));
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.registerWithHttpInfo(rsp)));
             }));
+    }
+
+    /**
+     * Register user
+     * @param username username to register
+     * @param password sort category
+     * @param email sort category
+     * @param verificationCode verification code
+     */
+    public register(username: string, password: string, email: string, verificationCode: number, _options?: Configuration): Observable<void> {
+        return this.registerWithHttpInfo(username, password, email, verificationCode, _options).pipe(map((apiResponse: HttpInfo<void>) => apiResponse.data));
     }
 
     /**
@@ -518,7 +699,7 @@ export class ObservableDefaultApi {
      * @param newpassword new password
      * @param cookie auth cookies etc
      */
-    public resetPassword(oldpassword: string, newpassword: string, cookie?: string, _options?: Configuration): Observable<void> {
+    public resetPasswordWithHttpInfo(oldpassword: string, newpassword: string, cookie?: string, _options?: Configuration): Observable<HttpInfo<void>> {
         const requestContextPromise = this.requestFactory.resetPassword(oldpassword, newpassword, cookie, _options);
 
         // build promise chain
@@ -533,8 +714,18 @@ export class ObservableDefaultApi {
                 for (let middleware of this.configuration.middleware) {
                     middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
                 }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.resetPassword(rsp)));
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.resetPasswordWithHttpInfo(rsp)));
             }));
+    }
+
+    /**
+     * Reset password
+     * @param oldpassword old password
+     * @param newpassword new password
+     * @param cookie auth cookies etc
+     */
+    public resetPassword(oldpassword: string, newpassword: string, cookie?: string, _options?: Configuration): Observable<void> {
+        return this.resetPasswordWithHttpInfo(oldpassword, newpassword, cookie, _options).pipe(map((apiResponse: HttpInfo<void>) => apiResponse.data));
     }
 
     /**
@@ -542,7 +733,7 @@ export class ObservableDefaultApi {
      * @param downloadID download ID of the request to retry
      * @param cookie auth cookies etc
      */
-    public retryArchiveRequest(downloadID: number, cookie?: string, _options?: Configuration): Observable<void> {
+    public retryArchiveRequestWithHttpInfo(downloadID: number, cookie?: string, _options?: Configuration): Observable<HttpInfo<void>> {
         const requestContextPromise = this.requestFactory.retryArchiveRequest(downloadID, cookie, _options);
 
         // build promise chain
@@ -557,8 +748,17 @@ export class ObservableDefaultApi {
                 for (let middleware of this.configuration.middleware) {
                     middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
                 }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.retryArchiveRequest(rsp)));
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.retryArchiveRequestWithHttpInfo(rsp)));
             }));
+    }
+
+    /**
+     * Retry archive request
+     * @param downloadID download ID of the request to retry
+     * @param cookie auth cookies etc
+     */
+    public retryArchiveRequest(downloadID: number, cookie?: string, _options?: Configuration): Observable<void> {
+        return this.retryArchiveRequestWithHttpInfo(downloadID, cookie, _options).pipe(map((apiResponse: HttpInfo<void>) => apiResponse.data));
     }
 
     /**
@@ -566,7 +766,7 @@ export class ObservableDefaultApi {
      * @param videoID video ID to download
      * @param cookie auth cookies etc
      */
-    public unapproveDownload(videoID: number, cookie?: string, _options?: Configuration): Observable<void> {
+    public unapproveDownloadWithHttpInfo(videoID: number, cookie?: string, _options?: Configuration): Observable<HttpInfo<void>> {
         const requestContextPromise = this.requestFactory.unapproveDownload(videoID, cookie, _options);
 
         // build promise chain
@@ -581,8 +781,17 @@ export class ObservableDefaultApi {
                 for (let middleware of this.configuration.middleware) {
                     middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
                 }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.unapproveDownload(rsp)));
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.unapproveDownloadWithHttpInfo(rsp)));
             }));
+    }
+
+    /**
+     * Retry archive request
+     * @param videoID video ID to download
+     * @param cookie auth cookies etc
+     */
+    public unapproveDownload(videoID: number, cookie?: string, _options?: Configuration): Observable<void> {
+        return this.unapproveDownloadWithHttpInfo(videoID, cookie, _options).pipe(map((apiResponse: HttpInfo<void>) => apiResponse.data));
     }
 
     /**
@@ -592,7 +801,7 @@ export class ObservableDefaultApi {
      * @param birthdate new birthdate
      * @param bio new bio
      */
-    public updateProfile(username: string, gender: string, birthdate: string, bio: string, _options?: Configuration): Observable<void> {
+    public updateProfileWithHttpInfo(username: string, gender: string, birthdate: string, bio: string, _options?: Configuration): Observable<HttpInfo<void>> {
         const requestContextPromise = this.requestFactory.updateProfile(username, gender, birthdate, bio, _options);
 
         // build promise chain
@@ -607,8 +816,19 @@ export class ObservableDefaultApi {
                 for (let middleware of this.configuration.middleware) {
                     middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
                 }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.updateProfile(rsp)));
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.updateProfileWithHttpInfo(rsp)));
             }));
+    }
+
+    /**
+     * Update user\'s profile
+     * @param username new username
+     * @param gender new gender
+     * @param birthdate new birthdate
+     * @param bio new bio
+     */
+    public updateProfile(username: string, gender: string, birthdate: string, bio: string, _options?: Configuration): Observable<void> {
+        return this.updateProfileWithHttpInfo(username, gender, birthdate, bio, _options).pipe(map((apiResponse: HttpInfo<void>) => apiResponse.data));
     }
 
     /**
@@ -619,7 +839,7 @@ export class ObservableDefaultApi {
      * @param category category
      * @param filename 
      */
-    public upload(tags: Array<string>, title: string, description: string, category: string, filename?: Array<HttpFile>, _options?: Configuration): Observable<void> {
+    public uploadWithHttpInfo(tags: Array<string>, title: string, description: string, category: string, filename?: Array<HttpFile>, _options?: Configuration): Observable<HttpInfo<void>> {
         const requestContextPromise = this.requestFactory.upload(tags, title, description, category, filename, _options);
 
         // build promise chain
@@ -634,8 +854,20 @@ export class ObservableDefaultApi {
                 for (let middleware of this.configuration.middleware) {
                     middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
                 }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.upload(rsp)));
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.uploadWithHttpInfo(rsp)));
             }));
+    }
+
+    /**
+     * Upload a new video
+     * @param tags list of video tags
+     * @param title video title
+     * @param description video description
+     * @param category category
+     * @param filename 
+     */
+    public upload(tags: Array<string>, title: string, description: string, category: string, filename?: Array<HttpFile>, _options?: Configuration): Observable<void> {
+        return this.uploadWithHttpInfo(tags, title, description, category, filename, _options).pipe(map((apiResponse: HttpInfo<void>) => apiResponse.data));
     }
 
     /**
@@ -644,7 +876,7 @@ export class ObservableDefaultApi {
      * @param score upvote score
      * @param cookie auth cookies etc
      */
-    public upvote(id: number, score: number, cookie?: string, _options?: Configuration): Observable<void> {
+    public upvoteWithHttpInfo(id: number, score: number, cookie?: string, _options?: Configuration): Observable<HttpInfo<void>> {
         const requestContextPromise = this.requestFactory.upvote(id, score, cookie, _options);
 
         // build promise chain
@@ -659,8 +891,18 @@ export class ObservableDefaultApi {
                 for (let middleware of this.configuration.middleware) {
                     middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
                 }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.upvote(rsp)));
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.upvoteWithHttpInfo(rsp)));
             }));
+    }
+
+    /**
+     * Get user video data
+     * @param id comment ID
+     * @param score upvote score
+     * @param cookie auth cookies etc
+     */
+    public upvote(id: number, score: number, cookie?: string, _options?: Configuration): Observable<void> {
+        return this.upvoteWithHttpInfo(id, score, cookie, _options).pipe(map((apiResponse: HttpInfo<void>) => apiResponse.data));
     }
 
     /**
@@ -669,7 +911,7 @@ export class ObservableDefaultApi {
      * @param score upvote score
      * @param cookie auth cookies etc
      */
-    public upvoteVideo(id: number, score: number, cookie?: string, _options?: Configuration): Observable<void> {
+    public upvoteVideoWithHttpInfo(id: number, score: number, cookie?: string, _options?: Configuration): Observable<HttpInfo<void>> {
         const requestContextPromise = this.requestFactory.upvoteVideo(id, score, cookie, _options);
 
         // build promise chain
@@ -684,8 +926,18 @@ export class ObservableDefaultApi {
                 for (let middleware of this.configuration.middleware) {
                     middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
                 }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.upvoteVideo(rsp)));
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.upvoteVideoWithHttpInfo(rsp)));
             }));
+    }
+
+    /**
+     * Upvote a video
+     * @param id video ID
+     * @param score upvote score
+     * @param cookie auth cookies etc
+     */
+    public upvoteVideo(id: number, score: number, cookie?: string, _options?: Configuration): Observable<void> {
+        return this.upvoteVideoWithHttpInfo(id, score, cookie, _options).pipe(map((apiResponse: HttpInfo<void>) => apiResponse.data));
     }
 
     /**
@@ -693,7 +945,7 @@ export class ObservableDefaultApi {
      * @param id user ID
      * @param showMature user ID
      */
-    public users(id: number, showMature: boolean, _options?: Configuration): Observable<Users200Response> {
+    public usersWithHttpInfo(id: number, showMature: boolean, _options?: Configuration): Observable<HttpInfo<Users200Response>> {
         const requestContextPromise = this.requestFactory.users(id, showMature, _options);
 
         // build promise chain
@@ -708,15 +960,24 @@ export class ObservableDefaultApi {
                 for (let middleware of this.configuration.middleware) {
                     middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
                 }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.users(rsp)));
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.usersWithHttpInfo(rsp)));
             }));
+    }
+
+    /**
+     * Get user video data
+     * @param id user ID
+     * @param showMature user ID
+     */
+    public users(id: number, showMature: boolean, _options?: Configuration): Observable<Users200Response> {
+        return this.usersWithHttpInfo(id, showMature, _options).pipe(map((apiResponse: HttpInfo<Users200Response>) => apiResponse.data));
     }
 
     /**
      * Get list of videos
      * @param id video ID
      */
-    public videoDetail(id: number, _options?: Configuration): Observable<VideoDetail200Response> {
+    public videoDetailWithHttpInfo(id: number, _options?: Configuration): Observable<HttpInfo<VideoDetail200Response>> {
         const requestContextPromise = this.requestFactory.videoDetail(id, _options);
 
         // build promise chain
@@ -731,8 +992,16 @@ export class ObservableDefaultApi {
                 for (let middleware of this.configuration.middleware) {
                     middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
                 }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.videoDetail(rsp)));
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.videoDetailWithHttpInfo(rsp)));
             }));
+    }
+
+    /**
+     * Get list of videos
+     * @param id video ID
+     */
+    public videoDetail(id: number, _options?: Configuration): Observable<VideoDetail200Response> {
+        return this.videoDetailWithHttpInfo(id, _options).pipe(map((apiResponse: HttpInfo<VideoDetail200Response>) => apiResponse.data));
     }
 
     /**
@@ -745,7 +1014,7 @@ export class ObservableDefaultApi {
      * @param pageNumber page number
      * @param category category
      */
-    public videos(showMature: boolean, search?: string, sortCategory?: string, order?: string, unapproved?: string, pageNumber?: number, category?: string, _options?: Configuration): Observable<Videos200Response> {
+    public videosWithHttpInfo(showMature: boolean, search?: string, sortCategory?: string, order?: string, unapproved?: string, pageNumber?: number, category?: string, _options?: Configuration): Observable<HttpInfo<Videos200Response>> {
         const requestContextPromise = this.requestFactory.videos(showMature, search, sortCategory, order, unapproved, pageNumber, category, _options);
 
         // build promise chain
@@ -760,8 +1029,22 @@ export class ObservableDefaultApi {
                 for (let middleware of this.configuration.middleware) {
                     middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
                 }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.videos(rsp)));
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.videosWithHttpInfo(rsp)));
             }));
+    }
+
+    /**
+     * Get list of videos
+     * @param showMature show mature
+     * @param search search string
+     * @param sortCategory sort category
+     * @param order sort category
+     * @param unapproved sort category
+     * @param pageNumber page number
+     * @param category category
+     */
+    public videos(showMature: boolean, search?: string, sortCategory?: string, order?: string, unapproved?: string, pageNumber?: number, category?: string, _options?: Configuration): Observable<Videos200Response> {
+        return this.videosWithHttpInfo(showMature, search, sortCategory, order, unapproved, pageNumber, category, _options).pipe(map((apiResponse: HttpInfo<Videos200Response>) => apiResponse.data));
     }
 
 }

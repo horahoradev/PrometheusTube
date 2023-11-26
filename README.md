@@ -39,8 +39,7 @@ PrometheusTube's architecture is microservice-based. The main microservices are:
 - `videoservice`: which does all video storage, uploads to the origin (e.g. s3/backblaze), queries, transcoding, etc
 - `scheduler`: which handles content archival requests and downloads
 - `gorse`: which handles recommendations
-- 
-  Communication between userservice, videoservice, and scheduler is GRPC-based.
+- Communication between userservice, videoservice, and scheduler is GRPC-based.
 
 Postgresql is used as the database for each service, but Redis is also used for very specific purposes (e.g. distributed locking). Elasticsearch is mirrored from the videodb, and used for video search queries. Schema migrations can be found within the "migrations" directory within each service. As an example, [here's the migrations directory for Videoservice](https://github.com/KIRAKIRA-DOUGA/KIRAKIRA-golang-backend/tree/master/video_service/migrations). Migrations are applied by the relevant services themselves using Goose, a library.
 
@@ -49,7 +48,7 @@ Since microservices communicate via GRPC, the API for each service is defined by
 ## Useful Commands
 
 ```
-sudo docker run --rm -v $(pwd):/local openapitools/openapi-generator-cli generate -i /local/front_api/openapi/api.yaml --additional-properties=npmName=kirakirabackend,supportsES6=true    -g typescript     -o /local/frontend/packages/promtube-backend && sudo chown -R $USER: frontend/packages/promtube-backend && rm -r frontend/node_modules && cd frontend && npm install
+sudo docker run --rm -v $(pwd):/local openapitools/openapi-generator-cli:v7.1.0 generate -i /local/front_api/openapi/api.yaml --additional-properties=npmName=kirakirabackend,basePath=''    -g typescript     -o /local/frontend/packages/promtube-backend && sudo chown -R $USER: frontend/packages/promtube-backend && rm -r frontend/node_modules && cd frontend && npm install --force
 ```
 
 `git checkout HEAD -- packages/kirakira-backend/tsconfig.json packages/kirakira-backend/configuration.ts packages/kirakira-backend/servers.ts packages/kirakira-backend/http/isomorphic-fetch.ts`
