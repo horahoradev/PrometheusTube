@@ -10,30 +10,14 @@ This project is currently pre-release; please wait a week or two while I make th
 
 ## Usage Instructions (START HERE)
 
-### Localhost, or proxying to localhost
+1. Take out .secrets.env from docker-compose.prebuilt.yaml unless using email verification (if so, supply a .secrets.env with POSTMARK_API_TOKEN in the project root)
+2. `docker compose -f docker-compose.prebuilt.yaml pull`
+3. `docker compose -f docker-compose.prebuilt.yaml up -d`
+4. wait until completion, then visit http://localhost:9000 (or whatever your FQDN is if not using localhost)
 
-1. `docker compose -f docker-compose.prebuilt.yaml up -d`
-2. wait until completion, then visit http://localhost:3000
-   That should do it. If that doesn't work, bug me on Discord.
+That should do it. If that doesn't work, bug me on Discord.
 
-### Non-localhost
-
-1. Modify front_api/openapi/openapi.yaml with the correct base server.url
-2. Run this from the project root:
-
-```
-sudo docker run --rm -v $(pwd):/local openapitools/openapi-generator-cli:v7.1.0 generate -i /local/front_api/openapi/api.yaml --additional-properties=npmName=kirakirabackend    -g typescript     -o /local/frontend/packages/promtube-backend && sudo chown -R $USER: frontend/packages/promtube-backend && rm -r frontend/node_modules && cd frontend && npm install --force
-```
-
-3. ./up.sh (working on this, you'll need to build from source for now)
-
-```
-sudo docker run --rm -v $(pwd):/local openapitools/openapi-generator-cli generate -i /local/front_api/openapi/api.yaml --additional-properties=npmName=kirakirabackend,supportsES6=true    -g typescript     -o /local/frontend/packages/promtube-backend && sudo chown -R $USER: frontend/packages/promtube-backend && rm -r frontend/node_modules && cd frontend && npm install
-```
-
-that should do it.
-
-Additionally, we currently use postmark for email verifications (should you choose to have user registrations). To make this work, you need to include a .secrets.env file with POSTMARK_API_TOKEN.
+Additionally, we currently use postmark for email verifications (should you choose to have user registrations). To make this work, you need to include a .secrets.env file with POSTMARK_API_TOKEN. Without .secrets.env,
 
 ## Architecture
 
