@@ -19,3 +19,9 @@ docker push ghcr.io/horahoradev/prometheustube/minio:master
 
 docker tag prometheustube-frontend ghcr.io/horahoradev/prometheustube/frontend:master
 docker push ghcr.io/horahoradev/prometheustube/frontend:master
+
+docker tag prometheustube-nginx ghcr.io/horahoradev/prometheustube/nginx:master
+docker push ghcr.io/horahoradev/prometheustube/nginx:master
+
+docker tag prometheustube-gorse ghcr.io/horahoradev/prometheustube/gorse:master
+docker push ghcr.io/horahoradev/prometheustube/gorse:master

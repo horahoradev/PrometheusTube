@@ -25,8 +25,6 @@ services:
       - PartyServiceGRPCAddress=partyservice:7777
       - JaegerAddress=
       - GOLANG_PROTOBUF_REGISTRATION_CONFLICT=warn
-    volumes:
-      - ./front_api:/horahora/front_api
 
   rabbitmq:
     build:
@@ -188,7 +186,13 @@ services:
       - ./videos:/data
 
   nginx:
-    image: anroe/nginx-headers-more
+    {% if build_images %}
+    build:
+      context: nginx
+      dockerfile: Dockerfile
+    {%- else -%}
+      image: ghcr.io/horahoradev/prometheustube/nginx:master
+    {% endif %}
     restart: unless-stopped
     ports:
       - "9000:80" # backwards compatibility issue
@@ -200,8 +204,8 @@ services:
       - horaminio
     volumes:
       - ./static:/etc/nginx/html/static/images
-      - ./configs/nginx.conf:/etc/nginx/templates/default.conf.template
       - ./videos/otomads:/etc/nginx/html/otomads
+
   redis:
     image: "redis:alpine"
     restart: always
@@ -229,7 +233,13 @@ services:
       - 5601:5601
 
   gorse:
-    image: zhenghaoz/gorse-in-one
+    {% if build_images %}
+    build:
+      context: gorse
+      dockerfile: Dockerfile
+    {%- else -%}
+      image: ghcr.io/horahoradev/prometheustube/gorse:master
+    {% endif %}
     restart: unless-stopped
     environment:
       # Use Redis as cache storage backend.
@@ -240,9 +250,6 @@ services:
       -c /etc/gorse/config.toml
       --log-path /var/log/gorse/master.log
       --cache-path /var/lib/gorse/master_cache.data
-    volumes:
-      # Mount the configuration file.
-      - ./config.toml:/etc/gorse/config.toml
     depends_on:
       - redis
       - postgres
