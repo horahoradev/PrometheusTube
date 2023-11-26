@@ -82,8 +82,7 @@ func main() {
 
 	log.Info("Authenticated and made archival requests")
 
-	for start := time.Now(); time.Since(start) < time.Minute*30; time.Sleep(time.Second * 30) {
-
+	for start := time.Now(); time.Since(start) < time.Minute*15; time.Sleep(time.Second * 30) {
 		err := pageHasVideos(client, "koronba", 1) // title
 		if err != nil {
 			log.Println(err)
