@@ -166,6 +166,8 @@ services:
     {%- else -%}
       image: ghcr.io/horahoradev/prometheustube/frontend:master
     {% endif %}
+    environment:
+      - nginx=true
     restart: unless-stopped
 
   horaminio:

@@ -49,7 +49,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 };
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  let api = useApi();
+  let api = useApi(true, process.env.nginx);
   var detail = await api.videoDetail(params.id);
   const showMature =
     (parse(request.headers.get("Cookie") ?? "").mature ?? "false") == "true";

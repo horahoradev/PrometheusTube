@@ -22,7 +22,7 @@ export async function loader({ request, params }) {
   const showMature =
     (parse(request.headers.get("Cookie") ?? "").mature ?? "false") == "true";
 
-  let api = useApi();
+  let api = useApi(true, process.env.nginx);
   let userData: Users200Response = await api.users(params.id, showMature);
 
   return {

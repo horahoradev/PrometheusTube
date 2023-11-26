@@ -26,7 +26,7 @@ import Paper from "@mui/material/Paper";
 import Cookies from "js-cookie";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  let api = useApi();
+  let api = useApi(true, process.env.nginx);
   let events = await api.archiveRequests(request.headers.get("Cookie"));
   return {
     events: events,

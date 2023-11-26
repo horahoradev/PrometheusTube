@@ -58,7 +58,7 @@ export async function loader({ request }) {
   // wtf is with the builtin dogshit cookie api? what the hell, remix?
   const showMature =
     (parse(request.headers.get("Cookie") ?? "").mature ?? "false") == "true";
-  let api = useApi();
+  let api = useApi(true, process.env.nginx);
   let videoData = await api.videos(
     showMature, // oh GOD
     searchEncoded,

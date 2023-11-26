@@ -122,7 +122,8 @@ services:
 
   frontend:
     image: ghcr.io/horahoradev/prometheustube/frontend:master
-
+    environment:
+      - nginx=true
     restart: unless-stopped
 
   horaminio:
