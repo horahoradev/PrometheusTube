@@ -47,8 +47,6 @@ services:
       - rabbit_pass=guest
       - GOLANG_PROTOBUF_REGISTRATION_CONFLICT=warn
       - GRPCPort=7777
-    volumes:
-      - ./scheduler:/horahora/scheduler
 
   videoservice:
     image: ghcr.io/horahoradev/prometheustube/videoservice:master
@@ -83,7 +81,6 @@ services:
       - GOLANG_PROTOBUF_REGISTRATION_CONFLICT=warn
       - GRPCPort=7777
     volumes:
-      - ./video_service:/horahora/videoservice
       - $HOME/.aws/:/root/.aws/:ro
 
   userservice:
@@ -101,8 +98,6 @@ services:
       - pgs_pass=password
       - pgs_db=userservice
       - GRPCPort=7777
-    volumes:
-      - ./user_service:/horahora/userservice
 
   postgres:
     image: ghcr.io/horahoradev/prometheustube/postgres:master
