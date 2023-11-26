@@ -7,7 +7,7 @@
 services:
   frontapi:
     image: ghcr.io/horahoradev/prometheustube/front_api:master
-    
+
     depends_on:
       - postgres
     restart: unless-stopped
@@ -31,7 +31,7 @@ services:
 
   scheduler:
     image: ghcr.io/horahoradev/prometheustube/scheduler:master
-    
+
     depends_on:
       - postgres
     restart: unless-stopped
@@ -58,7 +58,7 @@ services:
 
   videoservice:
     image: ghcr.io/horahoradev/prometheustube/videoservice:master
-    
+
     depends_on:
       - postgres
     restart: unless-stopped
@@ -94,7 +94,7 @@ services:
 
   userservice:
     image: ghcr.io/horahoradev/prometheustube/userservice:master
-    
+
     depends_on:
       - postgres
     restart: unless-stopped
@@ -112,7 +112,7 @@ services:
 
   postgres:
     image: ghcr.io/horahoradev/prometheustube/postgres:master
-    
+
     restart: unless-stopped
     environment:
       POSTGRES_USER: admin
@@ -122,17 +122,18 @@ services:
 
   frontend:
     image: ghcr.io/horahoradev/prometheustube/frontend:master
-    
+
     restart: unless-stopped
 
   horaminio:
     image: ghcr.io/horahoradev/prometheustube/minio:master
-    
+
     restart: unless-stopped
     environment:
       - MINIO_ROOT_USER=minioadmin
       - MINIO_ROOT_PASSWORD=minioadmin
       - MINIO_CACHE=off
+      - BUCKET_NAME=otomads
     volumes:
       - ./videos:/data
 
@@ -197,6 +198,4 @@ services:
       - postgres
 
 volumes:
-  
   postgresdata_dev: {}
-  
