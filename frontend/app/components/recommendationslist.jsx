@@ -27,8 +27,8 @@ export default function RecommendationsList({ videos }) {
                 <ImageListItem key={item.img}>
                   <img
                     className="rounded-lg"
-                    srcSet={`${item.thumbnailLoc}`}
-                    src={`${item.thumbnailLoc}`}
+                    srcSet={"/" + `${item.thumbnailLoc}`}
+                    src={`"/" + ${item.thumbnailLoc}`}
                     alt={item.title}
                     loading="lazy"
                   />
