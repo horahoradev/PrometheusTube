@@ -50,6 +50,6 @@ export class ServerConfiguration<T extends { [key: string]: string }> implements
     }
 }
 
-export const server1 = new ServerConfiguration<{  }>("http://localhost:9000/api", {  })
+export const server1 = new ServerConfiguration<{  }>("http://nginx:9000/api", {  })
 
 export const servers = [server1];

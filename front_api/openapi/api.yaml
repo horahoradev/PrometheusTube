@@ -1,6 +1,6 @@
 openapi: "3.0.0"
 servers:
-  - url: http://localhost:9000/api
+  - url: http://nginx:9000/api
 info:
   version: 0.0.1
   title: Promtube Backend API

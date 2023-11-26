@@ -1,6 +1,6 @@
 # .DefaultApi
 
-All URIs are relative to *http://localhost:9000/api*
+All URIs are relative to *http://nginx:9000/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
