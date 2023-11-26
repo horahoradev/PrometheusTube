@@ -6,7 +6,7 @@ export function useApi(SSR = false, nginx: string | undefined): api.DefaultApi {
   if (SSR) {
     if (nginx !== undefined) {
       // if we're accessing this from docker, it needs to go to the nginx container
-      server = server = new ServerConfiguration("http://nginx:9000/api", {});
+      server = server = new ServerConfiguration("http://nginx/api", {});
     } else {
       // we're running it locally and proxying to the right place
       server = server = new ServerConfiguration(
