@@ -8,5 +8,5 @@ if __name__ == '__main__':
     env = Environment(loader=FileSystemLoader("./templates"))
     template = env.get_template("docker-compose.yaml.j2")
     f_template = open("docker-compose.yaml", "w")
-    f_template.write(template.render(build_images=False))
+    f_template.write(template.render(build_images=True))
     print("Wrote docker-compose.yaml")
