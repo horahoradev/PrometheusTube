@@ -4,6 +4,10 @@ import (
 	"crypto/rand"
 	"crypto/rsa"
 	"fmt"
+	"io/ioutil"
+	"os"
+
+	crypto "crypto/x509"
 
 	"github.com/caarlos0/env"
 	"github.com/jmoiron/sqlx"
@@ -39,15 +43,33 @@ func New() (*config, error) {
 		return nil, fmt.Errorf("could not connect to postgres. Err: %s", err)
 	}
 
-	key, err := rsa.GenerateKey(rand.Reader, 2048)
-	if err != nil {
-		return nil, err
+	_, err = os.Lstat("/data/jwt_signing_key.pkcs1")
+	var key *rsa.PrivateKey
+	switch {
+		case err == nil:
+			data, err := ioutil.ReadFile("/data/jwt_signing_key.pkcs1")
+			if err != nil {
+				return nil, err
+			}
+
+			key, err = crypto.ParsePKCS1PrivateKey(data)
+			if err != nil {
+				return nil, err
+			}
+		default:
+			key, err = rsa.GenerateKey(rand.Reader, 2048)
+			if err != nil {
+				return nil, err
+			}
+
+			err = ioutil.WriteFile("/data/jwt_signing_key.pkcs1", crypto.MarshalPKCS1PrivateKey(key), 0440)
+			if err != nil {
+				return nil, err
+			}
 	}
 
 	config.RSAKeypair = key
 
-	// log.Infof("RSAKeypair: %s", config.RSAKeypair)
-
 	config.DbConn = conn
-	return &config, err
+	return &config, nil
 }

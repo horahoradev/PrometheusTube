@@ -94,6 +94,8 @@ services:
       - pgs_pass=password
       - pgs_db=userservice
       - GRPCPort=7777
+    volumes:
+      - userservice_data:/data
 
   postgres:
     image: ghcr.io/horahoradev/prometheustube/postgres:master
@@ -180,3 +182,4 @@ services:
 volumes:
   postgresdata_dev: {}
   videodata_dev: {}
+  userservice_data: {}

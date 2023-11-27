@@ -131,6 +131,8 @@ services:
       - pgs_pass=password
       - pgs_db=userservice
       - GRPCPort=7777
+    volumes:
+      - userservice_data:/data
 
   postgres:
     {% if build_images %}
@@ -248,8 +250,10 @@ volumes:
   {% if build_monitoring %}
   postgresdata_dev: {}
   prometheus_data: {}
+  userservice_data: {}
   grafana_data: {}
   {% else %}
   postgresdata_dev: {}
   videodata_dev: {}
+  userservice_data: {}
   {% endif %}
