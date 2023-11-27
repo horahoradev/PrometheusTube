@@ -23,12 +23,12 @@ export default function RecommendationsList({ videos }) {
         {videos.map((item) => (
           <NavLink to={"/video/" + item.videoID}>
             <span>
-              <div className="inline-block relative float-left w-36">
-                <ImageListItem key={item.img}>
+              <div className="inline-block relative float-left w-36 h-24">
+                <ImageListItem key={item.img} className="!h-full">
                   <img
-                    className="rounded-lg"
-                    srcSet={"/" + `${item.thumbnailLoc}`}
-                    src={`"/" + ${item.thumbnailLoc}`}
+                    className="rounded-lg !h-full"
+                    srcSet={`${item.thumbnailLoc}`}
+                    src={`${item.thumbnailLoc}`}
                     alt={item.title}
                     loading="lazy"
                   />

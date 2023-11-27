@@ -13,14 +13,14 @@ app.use(express.static("public"));
 app.use(
   "/api",
   createProxyMiddleware({
-    target: "http://localhost:9000",
+    target: "https://prometheus.tube",
     changeOrigin: true,
   })
 );
 app.use(
   "/otomads",
   createProxyMiddleware({
-    target: "http://localhost:9000",
+    target: "https://prometheus.tube",
     changeOrigin: true,
   })
 );
