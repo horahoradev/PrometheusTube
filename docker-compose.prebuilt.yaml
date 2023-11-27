@@ -192,7 +192,8 @@ services:
       --cache-path /var/lib/gorse/master_cache.data
     volumes:
       # Mount the configuration file.
-      - ${STORAGE_ROOT:-.}/gorse/:/etc/gorse/ # Gorse's config.toml has to exist here
+      # Gorse's config.toml has to exist here
+      - ${STORAGE_ROOT:-.}/gorse/:/etc/gorse/
     depends_on:
       - redis
       - postgres
