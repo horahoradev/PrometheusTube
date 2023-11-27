@@ -24,7 +24,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Cookies from "js-cookie";
-
+import { useEffect, useState } from "react";
 export async function loader({ request, params }: LoaderFunctionArgs) {
   let api = useApi(true, process.env.nginx);
   let events = await api.archiveRequests(request.headers.get("Cookie"));
@@ -36,14 +36,26 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 }
 
 export default function Video() {
-  const { events, banner, userAgent } = useLoaderData<typeof loader>();
+  const { stateEvents, banner, userAgent } = useLoaderData<typeof loader>();
   const [url, setURL] = React.useState("");
+  const [events, setEvents] = React.useState(stateEvents);
 
   async function newArchiveRequest() {
     let api = useApi();
     // GOD NO!!!!!!!!!!!!!!!!!!!!!!!! FIXME
     await api.newArchiveRequest(url, "jwt=" + Cookies.get("jwt"));
+    setVideoCounter((v) => v + 1);
   }
+
+  const [videoCounter, setVideoCounter] = useState(0);
+  useEffect(() => {
+    async function fetchVideos() {
+      let api = useApi();
+      let c = await api.archiveRequests(Cookies.get("jwt"));
+      setEvents(c);
+    }
+    fetchVideos();
+  }, [videoCounter]);
 
   return (
     <div>
@@ -92,7 +104,7 @@ export default function Video() {
                       </TableCell>
                       <TableCell align="left">
                         {row.archivedVideos + row.undownloadableVideos ==
-                        row.currentTotalVideos
+                          row.currentTotalVideos && row.archivedVideos != 0
                           ? "Synced"
                           : "Incomplete"}
                       </TableCell>
