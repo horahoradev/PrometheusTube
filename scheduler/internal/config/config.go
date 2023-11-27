@@ -1,7 +1,6 @@
 package config
 
 import (
-	"flag"
 	"fmt"
 	"time"
 
@@ -10,7 +9,6 @@ import (
 	proto "github.com/KIRAKIRA-DOUGA/KIRAKIRA-golang-backend/video_service/protocol"
 	"github.com/caarlos0/env"
 	"github.com/go-redsync/redsync"
-	stomp "github.com/go-stomp/stomp/v3"
 	grpc_retry "github.com/grpc-ecosystem/go-grpc-middleware/retry"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
@@ -24,17 +22,9 @@ type PostgresInfo struct {
 	Password string `env:"pgs_pass"`
 	Db       string `env:"pgs_db,required"`
 }
-type RabbitmqInfo struct {
-	Hostname string `env:"rabbit_host,required"`
-	Port     int    `env:"rabbit_port,required"`
-	Username string `env:"rabbit_user,required"`
-	Password string `env:"rabbit_pass,required"`
-}
 
 type config struct {
 	PostgresInfo
-	RabbitmqInfo
-	RabbitConn              *stomp.Conn
 	Redlock                 *redsync.Redsync
 	VideoOutputLoc          string
 	VideoServiceGRPCAddress string `env:"VideoServiceGRPCAddress,required"`
@@ -70,26 +60,6 @@ func New() (*config, error) {
 	}
 
 	config.Conn.SetMaxOpenConns(50)
-
-	// Rabbitmq
-	err = env.Parse(&config.RabbitmqInfo)
-	if err != nil {
-		return nil, err
-	}
-
-	var options []func(*stomp.Conn) error = []func(*stomp.Conn) error{
-		stomp.ConnOpt.Login(config.RabbitmqInfo.Username, config.RabbitmqInfo.Password),
-		stomp.ConnOpt.Host("/"),
-		stomp.ConnOpt.HeartBeatGracePeriodMultiplier(5),
-	}
-	var serverAddr = flag.String("server", fmt.Sprintf("%s:%d", config.RabbitmqInfo.Hostname, config.RabbitmqInfo.Port),
-		"STOMP server endpoint")
-
-	conn, err := stomp.Dial("tcp", *serverAddr, options...)
-	if err != nil {
-		return nil, err
-	}
-	config.RabbitConn = conn
 
 	opts := []grpc_retry.CallOption{
 		grpc_retry.WithBackoff(grpc_retry.BackoffExponential(100 * time.Millisecond)),

@@ -7,8 +7,6 @@ import (
 	"errors"
 	"time"
 
-	stomp "github.com/go-stomp/stomp/v3"
-
 	"github.com/go-redsync/redsync"
 	"github.com/horahoradev/horahora/scheduler/internal/models"
 	"github.com/jmoiron/sqlx"
@@ -22,11 +20,10 @@ type poller struct {
 	Db           *sqlx.DB
 	PollingDelay time.Duration
 	Redsync      *redsync.Redsync
-	Rabbit       *stomp.Conn
 }
 
-func NewPoller(db *sqlx.DB, redsync *redsync.Redsync, rabbitmq *stomp.Conn) (poller, error) {
-	return poller{Db: db, PollingDelay: time.Second * 15, Redsync: redsync, Rabbit: rabbitmq}, nil
+func NewPoller(db *sqlx.DB, redsync *redsync.Redsync) (poller, error) {
+	return poller{Db: db, PollingDelay: time.Second * 15, Redsync: redsync}, nil
 }
 
 func (p *poller) PollDatabaseAndSendIntoQueue(ctx context.Context, videoQueue chan *models.VideoDLRequest) error {
@@ -90,7 +87,6 @@ func (p *poller) getVideos() ([]*models.VideoDLRequest, error) {
 			req := models.VideoDLRequest{
 				ParentURL: url,
 				Db:        p.Db,
-				Rabbitmq:  p.Rabbit,
 			}
 
 			err = res.Scan(&req.ID, &req.VideoID, &req.URL, &req.DownloaddID)

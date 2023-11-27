@@ -60,7 +60,7 @@ func main() {
 	// Start one publisher goroutine to poll postgres and send download requests into the channel
 	// could potentially expand this to multiple publishers
 	wg.Add(1)
-	poller, err := schedule.NewPoller(cfg.Conn, cfg.Redlock, cfg.RabbitConn)
+	poller, err := schedule.NewPoller(cfg.Conn, cfg.Redlock)
 	if err != nil {
 		log.Fatalf("Could not create poller. Err: %s", err)
 	}

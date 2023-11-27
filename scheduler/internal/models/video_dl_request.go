@@ -1,17 +1,12 @@
 package models
 
 import (
-	"encoding/json"
 	"fmt"
-	"time"
-
-	stomp "github.com/go-stomp/stomp/v3"
 
 	"github.com/jmoiron/sqlx"
 )
 
 type VideoDLRequest struct {
-	Rabbitmq    *stomp.Conn
 	Db          *sqlx.DB
 	VideoID     string // Foreign ID
 	ID          int    // Domestic ID
@@ -74,36 +69,36 @@ type ProgressNotification struct {
 }
 
 func (v *VideoDLRequest) PublishVideoInprogress(dlStatus int, action string) error {
-	website, err := GetWebsiteFromURL(v.ParentURL)
-	if err != nil {
-		return err
-	}
+	// website, err := GetWebsiteFromURL(v.ParentURL)
+	// if err != nil {
+	// 	return err
+	// }
 
-	dlStatusString := ""
-	if dlStatus == 3 {
-		dlStatusString = "Downloading"
-	} else if dlStatus == 4 {
-		dlStatusString = "Queued"
-	}
+	// dlStatusString := ""
+	// if dlStatus == 3 {
+	// 	dlStatusString = "Downloading"
+	// } else if dlStatus == 4 {
+	// 	dlStatusString = "Queued"
+	// }
 
-	p := ProgressNotification{
-		Video: VideoProgress{
-			VideoID:  v.VideoID,
-			Website:  website,
-			DlStatus: dlStatusString,
-		},
-		Type: action, // insertion or deletion
-	}
+	// p := ProgressNotification{
+	// 	Video: VideoProgress{
+	// 		VideoID:  v.VideoID,
+	// 		Website:  website,
+	// 		DlStatus: dlStatusString,
+	// 	},
+	// 	Type: action, // insertion or deletion
+	// }
 
-	payload, err := json.Marshal(&p)
-	if err != nil {
-		return err
-	}
+	// payload, err := json.Marshal(&p)
+	// if err != nil {
+	// 	return err
+	// }
 
-	err = v.Rabbitmq.Send("/topic/state", "text/json", payload, stomp.SendOpt.Receipt, stomp.SendOpt.Header("persistent", "false"), stomp.SendOpt.Header("expires", fmt.Sprintf("%d", time.Now().Local().UnixMilli()+30000)))
-	if err != nil {
-		return fmt.Errorf("Publish: %v", err)
-	}
+	// err = v.Rabbitmq.Send("/topic/state", "text/json", payload, stomp.SendOpt.Receipt, stomp.SendOpt.Header("persistent", "false"), stomp.SendOpt.Header("expires", fmt.Sprintf("%d", time.Now().Local().UnixMilli()+30000)))
+	// if err != nil {
+	// 	return fmt.Errorf("Publish: %v", err)
+	// }
 
 	return nil
 }
