@@ -150,7 +150,7 @@ services:
       - horaminio
     volumes:
       - ${STORAGE_ROOT:-.}/static:/etc/nginx/html/static/images
-      - ${STORAGE_ROOT:-.}/nginx.conf:/etc/nginx/templates/nginx.conf # put the nginx config file in the storage root before you start the process.
+      - ${STORAGE_ROOT:-.}/nginx_conf/:/etc/nginx/templates/ # put the nginx config here
       - ${STORAGE_ROOT:-.}/videos/otomads:/etc/nginx/html/otomads
   redis:
     image: "redis:alpine"
@@ -193,7 +193,7 @@ services:
     volumes:
       # Mount the configuration file.
       # Gorse's config.toml has to exist here
-      - ${STORAGE_ROOT:-.}/config.toml:/etc/gorse/config.toml
+      - ${STORAGE_ROOT:-.}/gorse/:/etc/gorse/
     depends_on:
       - redis
       - postgres
