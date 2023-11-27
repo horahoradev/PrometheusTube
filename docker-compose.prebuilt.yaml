@@ -19,7 +19,7 @@ services:
       - JaegerAddress=
       - GOLANG_PROTOBUF_REGISTRATION_CONFLICT=warn
     volumes:
-      - ${STORAGE_ROOT:-.}/front_api:/horahora/front_api
+      - ./front_api:/horahora/front_api
 
   rabbitmq:
     build:
@@ -54,7 +54,7 @@ services:
       - GOLANG_PROTOBUF_REGISTRATION_CONFLICT=warn
       - GRPCPort=7777
     volumes:
-      - ${STORAGE_ROOT:-.}/scheduler:/horahora/scheduler
+      - ./scheduler:/horahora/scheduler
 
   videoservice:
     image: ghcr.io/horahoradev/prometheustube/videoservice:master
@@ -88,10 +88,9 @@ services:
       - MaxDLFileSize=300
       - GOLANG_PROTOBUF_REGISTRATION_CONFLICT=warn
       - GRPCPort=7777
-      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-}
-      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:-}
     volumes:
-      - ${STORAGE_ROOT:-.}/video_service:/horahora/videoservice
+      - ./video_service:/horahora/videoservice
+      - $HOME/.aws/:/root/.aws/:ro
 
   userservice:
     image: ghcr.io/horahoradev/prometheustube/userservice:master
@@ -109,7 +108,7 @@ services:
       - pgs_db=userservice
       - GRPCPort=7777
     volumes:
-      - ${STORAGE_ROOT:-.}/user_service:/horahora/userservice
+      - ./user_service:/horahora/userservice
 
   postgres:
     image: ghcr.io/horahoradev/prometheustube/postgres:master
@@ -137,7 +136,7 @@ services:
       - MINIO_CACHE=off
       - BUCKET_NAME=otomads
     volumes:
-      - ${STORAGE_ROOT:-.}/videos:/data
+      - ./videos:/data
 
   nginx:
     image: anroe/nginx-headers-more
@@ -151,9 +150,9 @@ services:
       - videoservice
       - horaminio
     volumes:
-      - ${STORAGE_ROOT:-.}/static:/etc/nginx/html/static/images
-      - ${STORAGE_ROOT:-.}/configs/nginx.conf:/etc/nginx/templates/default.conf.template
-      - ${STORAGE_ROOT:-.}/videos/otomads:/etc/nginx/html/otomads
+      - ./static:/etc/nginx/html/static/images
+      - ./configs/nginx.conf:/etc/nginx/templates/default.conf.template
+      - ./videos/otomads:/etc/nginx/html/otomads
   redis:
     image: "redis:alpine"
     restart: always
@@ -194,7 +193,7 @@ services:
       --cache-path /var/lib/gorse/master_cache.data
     volumes:
       # Mount the configuration file.
-      - ${STORAGE_ROOT:-.}/config.toml:/etc/gorse/config.toml
+      - ./config.toml:/etc/gorse/config.toml
     depends_on:
       - redis
       - postgres
