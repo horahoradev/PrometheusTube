@@ -25,6 +25,3 @@ docker push ghcr.io/horahoradev/prometheustube/nginx:master
 
 docker tag prometheustube-gorse ghcr.io/horahoradev/prometheustube/gorse:master
 docker push ghcr.io/horahoradev/prometheustube/gorse:master
-
-docker tag prometheustube-rabbitmq ghcr.io/horahoradev/prometheustube/activemq:master
-docker push ghcr.io/horahoradev/prometheustube/activemq:master

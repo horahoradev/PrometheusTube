@@ -19,10 +19,6 @@ services:
       - JaegerAddress=
       - GOLANG_PROTOBUF_REGISTRATION_CONFLICT=warn
 
-  rabbitmq:
-    image: ghcr.io/horahoradev/prometheustube/activemq:master
-    restart: unless-stopped
-
   scheduler:
     image: ghcr.io/horahoradev/prometheustube/scheduler:master
 

@@ -26,14 +26,6 @@ services:
       - JaegerAddress=
       - GOLANG_PROTOBUF_REGISTRATION_CONFLICT=warn
 
-  rabbitmq:
-    build:
-      context: activemq
-      labels:
-        name: activemq
-      dockerfile: Dockerfile
-    restart: unless-stopped
-
   scheduler:
     {% if build_images %}
     build:
