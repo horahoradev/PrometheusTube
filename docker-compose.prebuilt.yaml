@@ -80,8 +80,6 @@ services:
       - MaxDLFileSize=300
       - GOLANG_PROTOBUF_REGISTRATION_CONFLICT=warn
       - GRPCPort=7777
-    volumes:
-      - $HOME/.aws/:/root/.aws/:ro
 
   userservice:
     image: ghcr.io/horahoradev/prometheustube/userservice:master
@@ -125,7 +123,7 @@ services:
       - MINIO_CACHE=off
       - BUCKET_NAME=otomads
     volumes:
-      - ./videos:/data
+      - videodata_dev:/data
 
   nginx:
     image: ghcr.io/horahoradev/prometheustube/nginx:master
@@ -183,3 +181,4 @@ services:
 
 volumes:
   postgresdata_dev: {}
+  videodata_dev: {}
