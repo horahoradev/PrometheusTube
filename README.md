@@ -10,6 +10,13 @@ This project is currently pre-release; please wait a week or two while I make th
 
 ## Usage Instructions (START HERE)
 
+### Portainer
+
+1. Add the repo (https://github.com/horahoradev/PrometheusTube) as a source
+2. specify the docker-compose file as: docker-compose.prebuilt.yaml
+
+### Shell
+
 1. `docker compose -f docker-compose.prebuilt.yaml pull`
 2. `docker compose -f docker-compose.prebuilt.yaml up -d`
 3. wait until completion, then visit http://localhost:9000 (or whatever your FQDN is if not using localhost)
