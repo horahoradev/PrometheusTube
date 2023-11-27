@@ -98,8 +98,8 @@ services:
     depends_on:
       - postgres
     restart: unless-stopped
-    env_file:
-      - ./.secrets.env
+#    env_file:
+#      - ./.secrets.env
     environment:
       - pgs_host=postgres
       - pgs_port=5432
