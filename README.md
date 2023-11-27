@@ -10,10 +10,9 @@ This project is currently pre-release; please wait a week or two while I make th
 
 ## Usage Instructions (START HERE)
 
-1. Take out .secrets.env from docker-compose.prebuilt.yaml unless using email verification (if so, supply a .secrets.env with POSTMARK_API_TOKEN in the project root)
-2. `docker compose -f docker-compose.prebuilt.yaml pull`
-3. `docker compose -f docker-compose.prebuilt.yaml up -d`
-4. wait until completion, then visit http://localhost:9000 (or whatever your FQDN is if not using localhost)
+1. `docker compose -f docker-compose.prebuilt.yaml pull`
+2. `docker compose -f docker-compose.prebuilt.yaml up -d`
+3. wait until completion, then visit http://localhost:9000 (or whatever your FQDN is if not using localhost)
 
 That should do it. If that doesn't work, bug me on Discord.
 
