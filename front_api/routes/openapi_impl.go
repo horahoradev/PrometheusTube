@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strconv"
 	"strings"
@@ -22,6 +22,9 @@ import (
 	"github.com/labstack/gommon/log"
 	"github.com/zhenghaoz/gorse/client"
 )
+
+// You can customize this to whichever value you see fit
+const maxThumbnailSize = 500 * 1024 // 500 KB
 
 type Server struct {
 	r RouteHandler
@@ -119,59 +122,47 @@ func (s Server) Upload(ctx echo.Context, params UploadParams) error {
 		return ctx.String(http.StatusForbidden, "Insufficient user status")
 	}
 
-	title := params.Title
-	description := params.Description
-	tags := params.Tags
-
+	// Open files first to validate and get file handles
+  // Close them immediately after; memory efficiency
 	thumbFileHeader, err := ctx.FormFile(thumbnailKey)
 	if err != nil {
 		return err
 	}
-
-	thumbFile, err := thumbFileHeader.Open()
-	if err != nil {
-		return err
-	}
+	defer func() {
+		if thumbFile, err := thumbFileHeader.Open(); err == nil {
+			thumbFile.Close()
+		}
+	}()
 
 	videoFileHeader, err := ctx.FormFile(videoKey)
 	if err != nil {
 		return err
 	}
+	defer func() {
+		if videoFile, err := videoFileHeader.Open(); err == nil {
+			videoFile.Close()
+		}
+	}()
 
-	videoFile, err := videoFileHeader.Open()
-	if err != nil {
-		return err
-	}
-
-	// TODO: rewrite me, this isn't memory efficient
-	videoBytes, err := ioutil.ReadAll(videoFile)
-	if err != nil {
-		return err
-	}
-
-	thumbBytes, err := ioutil.ReadAll(thumbFile)
-	if err != nil {
-		return err
-	}
-
+	// Prepare upload client
 	uploadClient, err := s.r.v.UploadVideo(context.Background())
 	if err != nil {
 		return err
 	}
 
+	// Send metadata chunk
 	metaChunk := &videoproto.InputVideoChunk{
 		Payload: &videoproto.InputVideoChunk_Meta{
 			Meta: &videoproto.InputFileMetadata{
-				Title:             title,
-				Description:       description,
-				AuthorUID:         "0", // TODO can't accept a blank foreign author id??
+				Title:             params.Title,
+				Description:       params.Description,
+				AuthorUID:         "0", // TODO: Verify this placeholder
 				OriginalVideoLink: "0",
 				AuthorUsername:    profile.Username,
-				OriginalSite:      "blank", // todo AAAAAAAAAAAAAAAAAa
+				OriginalSite:      "blank", // TODO: Replace with actual source
 				OriginalID:        "0",
 				DomesticAuthorID:  profile.UserID,
-				Tags:              tags,
-				Thumbnail:         thumbBytes,
+				Tags:              params.Tags,
 				Category:          params.Category,
 			},
 		},
@@ -182,13 +173,53 @@ func (s Server) Upload(ctx echo.Context, params UploadParams) error {
 		return err
 	}
 
-	for byteInd := 0; byteInd < len(videoBytes); byteInd += fileUploadChunkSize {
-		videoByteSlice := videoBytes[byteInd:min(len(videoBytes), byteInd+fileUploadChunkSize)]
-		log.Infof("uploading byte %d", byteInd)
+	// Stream thumbnail separately
+	thumbFile, err := thumbFileHeader.Open()
+	if err != nil {
+		return err
+	}
+	defer thumbFile.Close()
+
+	thumbBytes, err := io.ReadAll(io.LimitReader(thumbFile, maxThumbnailSize))
+	if err != nil {
+		return err
+	}
+
+	// Update metadata with thumbnail
+	updateMetaChunk := &videoproto.InputVideoChunk{
+		Payload: &videoproto.InputVideoChunk_Meta{
+			Meta: &videoproto.InputFileMetadata{
+				Thumbnail: thumbBytes,
+			},
+		},
+	}
+	err = uploadClient.Send(updateMetaChunk)
+	if err != nil {
+		return err
+	}
+
+	// Stream video in chunks
+	videoFile, err := videoFileHeader.Open()
+	if err != nil {
+		return err
+	}
+  // reuse one buffer chunk for streaming therefore more memory efficient
+	defer videoFile.Close()
+
+	chunkBuffer := make([]byte, fileUploadChunkSize)
+	for {
+		bytesRead, err := videoFile.Read(chunkBuffer)
+		if err != nil && err != io.EOF {
+			return err
+		}
+		if bytesRead == 0 {
+			break
+		}
+
 		videoChunk := &videoproto.InputVideoChunk{
 			Payload: &videoproto.InputVideoChunk_Content{
 				Content: &videoproto.FileContent{
-					Data: videoByteSlice,
+					Data: chunkBuffer[:bytesRead],
 				},
 			},
 		}
@@ -199,12 +230,12 @@ func (s Server) Upload(ctx echo.Context, params UploadParams) error {
 		}
 	}
 
+	// Close and receive response
 	resp, err := uploadClient.CloseAndRecv()
 	if err != nil {
 		return err
 	}
 
-	// Redirect to the new video
 	return ctx.JSON(http.StatusOK, resp.VideoID)
 }
 
